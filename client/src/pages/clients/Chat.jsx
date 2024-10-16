@@ -4,7 +4,7 @@ import ChatWindow from "../../components/chat/ChatWindow";
 
 
 
-function Chat() {
+function Chat({user}) {
     const [selectedChat, setSelectedChat] = useState(null);
     const [isChatListVisible, setIsChatListVisible] = useState(true);
 
@@ -17,8 +17,10 @@ function Chat() {
     };
 
     const handleBackToList = () => {
+        setSelectedChat(null)
         setIsChatListVisible(true);
     };
+    const otherParticipant = (chat) => chat.participants.find((part) => part._id !== user._id)
 
     return (
         <div className="flex flex-col h-screen md:pt-20 pb-5 mx-0 px-0 pt-40">
@@ -29,7 +31,7 @@ function Chat() {
                         isChatListVisible ? 'block' : 'hidden'
                     } md:block md:w-1/3 lg:w-1/4 border-r border-gray-300 h-full overflow-y-auto`}
                 >
-                    <ChatList onSelectChat={handleSelectChat} />
+                    <ChatList onSelectChat={handleSelectChat} user={user} otherParticipant={otherParticipant}/>
                 </div>
 
                 {/* ChatWindow */}
@@ -38,22 +40,10 @@ function Chat() {
                         <>
                             <div className="flex-1 overflow-y-auto">
                                 <ChatWindow
-                                    chat={selectedChat}
-                                    onBack={handleBackToList}
+                                    chat={selectedChat} otherParticipant={otherParticipant}
+                                    onBack={handleBackToList} user={user}
                                 />
                             </div>
-
-                            {/* Input Section Fixed at the Bottom */}
-                            {/*<div className="p-4 shadow-lg flex bg-white">*/}
-                            {/*    <input*/}
-                            {/*        type="text"*/}
-                            {/*        placeholder="Type a message..."*/}
-                            {/*        className="flex-1 border border-gray-300 rounded-md p-2 mr-2"*/}
-                            {/*    />*/}
-                            {/*    <button className="bg-blue-500 text-white p-2 rounded-md">*/}
-                            {/*        Send*/}
-                            {/*    </button>*/}
-                            {/*</div>*/}
                         </>
                     ) : (
                         <div className="flex items-center justify-center h-full text-gray-500">

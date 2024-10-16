@@ -12,7 +12,7 @@ const showCategory = async (req,res) => {
 const getAllCategory = async (req,res) => {
     try {
         const category = await Category.find({})
-        res.status(200).json({data:category})
+        res.status(200).json({category})
     }catch (e) {
         res.status(500).json({error:e})
     }

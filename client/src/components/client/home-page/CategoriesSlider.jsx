@@ -1,11 +1,15 @@
 import React from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
+import {useQuery} from "react-query";
+import ClientApi from "../../../api/ClientApi";
+import {useLocation} from "react-router-dom";
 
 function CategoriesSlider() {
-    const x = [{b:"a"}, {b:"b"}, {b:"c"}, {b:"d"}, {b:"e"}, {b:"f"}, {b:"g"}, {b:"h"}, {b:"i"}, {b:"j"}, {b:"k"}, {b:"l"}, {b:"m"}];
-
-
+    const {data:categories=[]} = useQuery('categories',ClientApi.getCategories,{
+        select: (data) => data.data.category,
+        retry: false
+    })
     return (
         <>
             <div className="flex justify-between items-center">
@@ -71,7 +75,7 @@ function CategoriesSlider() {
                 swipeable
 
             >
-                {x.map((item, key) => (
+                {categories.map((item, key) => (
                     <div key={key}
                          className="bg-green-100 p-5 m-2  rounded-lg text-center shadow-md hover:shadow-lg transition">
                         <div className="text-green-500 mb-2 sm:mb-4">

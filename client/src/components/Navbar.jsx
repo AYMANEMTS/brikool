@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {Link, useLocation} from "react-router-dom";
+import {Link} from "react-router-dom";
 import AuthModal from "./auth/AuthModal";
 import LoginIcon from '@mui/icons-material/Login';
 import {Button} from "@mui/material";
@@ -7,31 +7,27 @@ import UserMenu from "./navbarParts/UserMenu";
 import Protected from "../context/Protected";
 import Trudiction from "./navbarParts/Trudiction";
 import DarkMode from "./navbarParts/DarkMode";
+import Search from "./navbarParts/Search";
 
 export default function Navbar() {
     const [isAtTop, setIsAtTop] = useState(true);
     const [open, setOpen] = useState(false)
     const handleOpen = () => setOpen(!open)
-    const {pathname} = useLocation()
     const authenticated = localStorage.getItem('authenticated')
     useEffect(() => {
-        // Scroll event listener to check if scroll position is at the top
         const handleScroll = () => {
             if (window.scrollY === 0) {
-                setIsAtTop(true); // User is at the top
+                setIsAtTop(true);
             } else {
-                setIsAtTop(false); // User scrolled away from the top
+                setIsAtTop(false);
             }
         };
-
-        // Attach event listener
         window.addEventListener('scroll', handleScroll);
-
-        // Cleanup event listener on component unmount
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
     }, []);
+
 
     return (
         <>
@@ -91,32 +87,13 @@ export default function Navbar() {
                             {/* dark mode */}
                             <DarkMode />
                         </div>
-
-
                     </div>
                 </div>
 
-                {isAtTop && pathname !== '/chat' && (
-                    <div
-                        className="hidden md:flex bg-gray-100 border border-transparent focus-within:border-blue-500 focus-within:bg-transparent  px-6 rounded-full h-10 lg:w-2/4 mt-3 mx-auto max-lg:mt-6"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 192.904 192.904"
-                            width="16px"
-                            className="fill-gray-600 mr-3 rotate-90"
-                        >
-                            <path d="M81.229,163.393c-44.294,0-80.44-36.146-80.44-80.44c0-44.294,36.146-80.44,80.44-80.44 c44.294,0,80.44,36.146,80.44,80.44C161.669,127.247,125.523,163.393,81.229,163.393z M81.229,15.998 c-36.048,0-65.436,29.387-65.436,65.436c0,36.048,29.387,65.436,65.436,65.436c36.048,0,65.436-29.387,65.436-65.436 C146.665,45.385,117.277,15.998,81.229,15.998z M97.13,81.229c0-8.199-6.662-14.861-14.861-14.861c-8.199,0-14.861,6.662-14.861,14.861c0,8.199,6.662,14.861,14.861,14.861 C90.468,96.09,97.13,89.428,97.13,81.229z M121.885,111.164c-3.149-3.149-8.224-3.149-11.373,0c-3.149,3.149-3.149,8.224,0,11.373 c3.149,3.149,8.224,3.149,11.373,0C125.034,119.388,125.034,114.313,121.885,111.164z" />
-                        </svg>
-                        <input
-                            type="text"
-                            placeholder="Search..."
-                            className="w-full outline-none bg-transparent text-gray-600 font-semibold text-[15px]"
-                        />
-                    </div>
-                )}
+                {/* search */}
+                <Search isAtTop={isAtTop} />
             </header>
-            <AuthModal open={open} handleOpen={handleOpen}  />
+            <AuthModal open={open} handleOpen={handleOpen}/>
         </>
 
     );

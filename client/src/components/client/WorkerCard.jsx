@@ -28,10 +28,10 @@ export default function WorkerCard({ job }) {
             </h2>
             <p className="text-center text-gray-600 mt-1">{job?.category?.name}</p>
 
-            {/* Contact Icons */}
-            <div className="flex justify-center mt-5">
-                <Contact job={job} />
-            </div>
+            {/*/!* Contact Icons *!/*/}
+            {/*<div className="flex justify-center mt-5">*/}
+            {/*    <Contact job={job} />*/}
+            {/*</div>*/}
 
             {/* Bio Section */}
             <div className="mt-5 flex-grow">

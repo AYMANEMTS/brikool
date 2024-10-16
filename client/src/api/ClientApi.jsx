@@ -16,6 +16,9 @@ const ClientApi = {
     changeStatus: async (id) => await axiosClient.post(`/jobs/${id}/change-status`),
     updateJob: async (id,data) => await axiosClient.put(`/jobs/${id}`,data),
     deleteJob: async (id) => await axiosClient.delete(`/jobs/${id}`),
+    getUserChats: async (userId) => await axiosClient.get(`/chats/user/${userId}/pp`),
+    getChat: async (userId1, userId2) => await axiosClient.get(`/chats/${userId1}/${userId2}`),
+    sendMessage: async (chatId, data) => await axiosClient.post(`/chats/${chatId}/messages`, data),
 
 }
 export default ClientApi

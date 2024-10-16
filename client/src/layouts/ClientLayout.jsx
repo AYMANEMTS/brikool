@@ -32,8 +32,7 @@ function ClientLayout() {
 
 
             {/* Footer */}
-            {/*{pathname === '/chat' ? '' : <Footer/>}*/}
-            <Footer/>
+            {pathname === '/chat' ? '' : <Footer/>}
         </div>
     );
 }

@@ -1,34 +1,25 @@
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
+function formatDate(timestamp) {
     const now = new Date();
+    const date = new Date(timestamp);
 
-    // Check if the date is today
-    const isToday = date.getDate() === now.getDate() &&
-        date.getMonth() === now.getMonth() &&
-        date.getFullYear() === now.getFullYear();
+    const isSameDay = now.toDateString() === date.toDateString();
+    const isYesterday = new Date(now.setDate(now.getDate() - 1)).toDateString() === date.toDateString();
+    const isSameYear = now.getFullYear() === date.getFullYear();
 
-    // If it's today, show relative time
-    if (isToday) {
-        const diffInSeconds = Math.floor((now - date) / 1000);
+    const formatTime = date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+    });
 
-        if (diffInSeconds < 60) {
-            return `${diffInSeconds} second${diffInSeconds !== 1 ? 's' : ''} ago`;
-        } else if (diffInSeconds < 3600) {
-            return `${Math.floor(diffInSeconds / 60)} minute${Math.floor(diffInSeconds / 60) !== 1 ? 's' : ''} ago`;
-        } else if (diffInSeconds < 86400) {
-            return `${Math.floor(diffInSeconds / 3600)} hour${Math.floor(diffInSeconds / 3600) !== 1 ? 's' : ''} ago`;
-        }
+    if (isSameDay) {
+        return formatTime; // Same day, show time only (e.g., 12:40AM)
+    } else if (isYesterday) {
+        return `Yesterday, ${formatTime}`; // Yesterday, show "Yesterday" and time (e.g., Yesterday, 12:40AM)
+    } else if (isSameYear) {
+        return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) + `, ${formatTime}`; // Same year, show month, day, and time (e.g., October 5, 12:30AM)
+    } else {
+        return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) + `, ${formatTime}`; // Different year, show year, month, day, and time (e.g., 2022, March 12, 12:22AM)
     }
-
-    // If it's not today, return formatted date as MM/DD/YYYY HH:MM AM/PM
-    return date.toLocaleString("en-US", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-    }).replace(",", ""); // Remove comma for the desired format
-};
-
+}
 export default formatDate

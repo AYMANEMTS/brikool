@@ -1,0 +1,8 @@
+bugs route id user 
+
+translate
+filters
+recherch
+loading
+notification
+lastupdate in client <s
