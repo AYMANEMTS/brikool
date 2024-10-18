@@ -9,25 +9,28 @@ import formatDate from "../../utils/formatDate";
 import Comments from "../../components/client/worker-details/Comments";
 import RatingComponent from "../../components/client/worker-details/RatingComponent";
 import {useQuery} from "react-query";
-import {useAuth} from "../../context/UserProvider";
 import displayImage from "../../utils/imageFromServer";
+import {useLoading} from "../../context/LoadingProvider";
 
 function WorkerDetails() {
     const {id} = useParams()
     const navigate = useNavigate()
-    const {data:job={},isLoading} = useQuery(['job',id], () =>  ClientApi.getJob(id),{
+    const {startLoading,stopLoading} = useLoading()
+    const {data:job={},isFetching} = useQuery(['job',id], () =>  ClientApi.getJob(id),{
         select: (data => data?.data?.job),
         retry: false,
         refetchOnWindowFocus: false,
         onError:(err => {
-            console.error(err)
+            stopLoading()
             navigate("/")
-        })
+        }),
+        onSuccess: () => stopLoading()
     })
-    const {setIsLoading} = useAuth()
     useEffect(() => {
-        setIsLoading(isLoading)
-    }, [isLoading, setIsLoading]);
+        if (isFetching){
+            startLoading()
+        }
+    }, [isFetching,startLoading]);
     return (
         <>
             <div className=" py-8">

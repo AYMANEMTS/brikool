@@ -1,15 +1,33 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import {useQuery} from "react-query";
+import {useQuery, useQueryClient} from "react-query";
 import ClientApi from "../../../api/ClientApi";
-import {useLocation} from "react-router-dom";
+import {useLoading} from "../../../context/LoadingProvider";
 
 function CategoriesSlider() {
-    const {data:categories=[]} = useQuery('categories',ClientApi.getCategories,{
+    const {startLoading, stopLoading} = useLoading();
+    const queryClient = useQueryClient()
+    const cashedCategories = queryClient.getQueryData('categories')?.data?.data?.category || []
+    const {data:categories=[],isFetching} = useQuery('categories',ClientApi.getCategories,{
+        initialData: cashedCategories.length > 0 ? cashedCategories : undefined,
         select: (data) => data.data.category,
-        retry: false
+        onSuccess: () => stopLoading(),
+        onError:() => stopLoading(),
+        refetchOnWindowFocus: false,
+        retry: 0,
+        cacheTime: 5 * 60 * 1000,
+        staleTime: 1000*60
     })
+
+    useEffect(() => {
+        if (isFetching) {
+            startLoading();
+        } else {
+            stopLoading();
+        }
+    }, [isFetching, startLoading, stopLoading]);
+
     return (
         <>
             <div className="flex justify-between items-center">

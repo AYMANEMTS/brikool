@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth.route');
 const categoryRoutes = require('./routes/category.route');
 const jobRoutes = require('./routes/job.route');
 const chatRoutes = require('./routes/chat.route');
+const notficationRoutes = require('./routes/notification.route')
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -33,6 +34,8 @@ app.use("/", authRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/jobs", jobRoutes);
 app.use('/chats', chatRoutes);
+app.use("/notifications",notficationRoutes)
+
 
 app.use(errorHandler);
 

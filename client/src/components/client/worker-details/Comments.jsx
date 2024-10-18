@@ -16,6 +16,9 @@ function Comments({jobId,commentsData=[]}) {
     const queryClient = useQueryClient()
     const handleComment = async (data) => {
         try {
+            if (!user){
+                return setLoginForm(true)
+            }
             await ClientApi.addComment(jobId,data).catch(e => console.error(e))
             await queryClient.invalidateQueries(['job', jobId])
             reset()
@@ -69,17 +72,14 @@ function Comments({jobId,commentsData=[]}) {
                                        helperText={errors.comment ? errors.comment.message : ''}
                             />
                         </div>
-                        <button type="submit" onClick={(e) => {
-                            e.preventDefault()
-                            return user ? handleSubmit(handleComment) : setLoginForm(!loginForm)
-                        }}
+                        <button type="submit" onClick={handleSubmit(handleComment)}
                                 className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                             Post Comment
                         </button>
                     </form>
                 </div>
             </section>
-            <AuthModal open={loginForm} handleOpen={() => setLoginForm(!loginForm)} redirectRoute={"/worker/"+jobId} />
+            <AuthModal open={loginForm} handleOpen={() => setLoginForm(!loginForm)} redirectRoute={"/worker/"+jobId} swapState={false} />
         </>
     );
 }

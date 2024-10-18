@@ -1,18 +1,31 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import Carousel from "react-multi-carousel";
 import WorkerCard from "../WorkerCard";
-import {useQuery} from "react-query";
+import {useQuery, useQueryClient} from "react-query";
 import ClientApi from "../../../api/ClientApi";
-import {useAuth} from "../../../context/UserProvider";
+
 
 export default function Workers() {
-    const {data:workers=[],isLoading} = useQuery("populaireJobs",ClientApi.getJobs,{
-        select: (data => data.data)
-    })
-    const {setIsLoading} = useAuth()
+    const queryClient = useQueryClient();
+    const cachedWorkers = queryClient.getQueryData('jobs')?.data || [];
+    const [workers, setWorkers] = useState(cachedWorkers || []);
+
+    const { data, isFetching } = useQuery('jobs', ClientApi.getJobs, {
+        initialData: cachedWorkers.length > 0 ? cachedWorkers : undefined,
+        select: (response) => response.data,  // Adjust to match your API response structure
+        refetchOnWindowFocus: false,
+        retry: false,
+        cacheTime: 5 * 60 * 1000,
+        staleTime: 1000*60
+    });
+
     useEffect(() => {
-        setIsLoading(isLoading)
-    }, [isLoading, setIsLoading]);
+        if (data && data.length > 0) {
+            setWorkers(data);
+        }
+    }, [data]);
+
+
     return (
         <div className={"my-4 h-full"}>
             <div className="flex justify-between items-center my-3">

@@ -1,23 +1,23 @@
 import React,{ useEffect, useState } from 'react';
 import ClientApi from '../api/ClientApi';
 import { useNavigate } from 'react-router-dom';
-import {useAuth} from "./UserProvider";
+import {useLoading} from "./LoadingProvider";
 
 const Protected = ({ children }) => {
-    const {setIsLoading} = useAuth()
+    const { startLoading, stopLoading } = useLoading();
     const navigate = useNavigate();
     const [user, setUser] = useState(null)
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                setIsLoading(true)
+                startLoading()
                 const res = await ClientApi.checkAuth(); // Ensure this is correct
                 setUser(res.data.user)
             } catch (error) {
                 console.error("Authentication check failed:", error);
                 navigate('/');
             } finally {
-                setIsLoading(false);
+                stopLoading()
             }
         };
 

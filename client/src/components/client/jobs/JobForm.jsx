@@ -36,7 +36,6 @@ function JobForm({ handleOpen ,user,context}) {
         }
         setFormSteper(formSteper - 1);
     };
-    console.log(context.job)
     const queryClient = useQueryClient()
     const handleNext = async (data) => {
         const contacts = {appel:data.appel,whatssap:data.whatssap,email:data.email,linkedin:data.linkedin}

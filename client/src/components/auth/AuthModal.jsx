@@ -1,12 +1,14 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { Modal, ModalClose, ModalDialog } from "@mui/joy";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 
-function AuthModal({ open, handleOpen, redirectRoute="/settings" }) {
-    const [swapForm, setSwapForm] = useState(false)
+function AuthModal({ open, handleOpen, redirectRoute="/settings" ,swapState}) {
+    const [swapForm, setSwapForm] = useState(swapState);
     const handllSwapForm = () => setSwapForm(!swapForm)
-
+    useEffect(() => {
+        setSwapForm(swapState);
+    }, [swapState]);
     return (
         <Modal
             aria-labelledby="modal-title"

@@ -2,25 +2,34 @@ import React, { useEffect, useState } from 'react';
 import FiltterSecion from "../../components/client/workers-page/FiltterSecion";
 import { Pagination } from "@mui/material";
 import WorkerCard from "../../components/client/WorkerCard";
-import { useQuery } from "react-query";
+import {useQuery, useQueryClient} from "react-query";
 import ClientApi from "../../api/ClientApi";
-import { useAuth } from "../../context/UserProvider";
+import {useLoading} from "../../context/LoadingProvider";
 
 function Workers() {
-    // Fetch workers data from the API
-    const { data: workers = [], isLoading } = useQuery("allJobs", ClientApi.getJobs, {
-        select: (data => data.data)
+    const {startLoading, stopLoading} = useLoading()
+    const queryClient = useQueryClient();
+    const cachedWorkers = queryClient.getQueryData('jobs')?.data || [];
+    const [workers, setWorkers] = useState(cachedWorkers || []);
+
+    const { data } = useQuery('jobs', ClientApi.getJobs, {
+        initialData: cachedWorkers.length > 0 ? cachedWorkers : undefined,
+        select: (response) => response.data,  // Adjust to match your API response structure
+        refetchOnWindowFocus: false,
+        retry: false,
+        cacheTime: 5 * 60 * 1000,
+        staleTime: 1000*60,
     });
 
-    const { setIsLoading } = useAuth();
     useEffect(() => {
-        setIsLoading(isLoading);
-    }, [isLoading, setIsLoading]);
+        if (data && data.length > 0) {
+            setWorkers(data);
+        }
+    }, [data]);
 
-    // Initialize filtered jobs state
+
     const [filtredJobS, setFiltredJobS] = useState(workers);
 
-    // Update filtredJobS whenever workers data changes
     useEffect(() => {
         setFiltredJobS(workers);
     }, [workers]);

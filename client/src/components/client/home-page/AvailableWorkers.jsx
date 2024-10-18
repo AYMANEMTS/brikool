@@ -1,18 +1,30 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import Carousel from "react-multi-carousel";
 import WorkerCard from "../WorkerCard";
-import {useQuery} from "react-query";
+import {useQuery, useQueryClient} from "react-query";
 import ClientApi from "../../../api/ClientApi";
-import {useAuth} from "../../../context/UserProvider";
+
 
 function AvailableWorkes() {
-    const {data:workers=[],isLoading} = useQuery("availableJobs",ClientApi.getJobs,{
-        select: (data => data.data)
-    })
-    const {setIsLoading} = useAuth()
+    const queryClient = useQueryClient();
+    const cachedWorkers = queryClient.getQueryData('jobs')?.data || [];
+    const [workers, setWorkers] = useState(cachedWorkers || []);
+
+    const { data } = useQuery('jobs', ClientApi.getJobs, {
+        initialData: cachedWorkers.length > 0 ? cachedWorkers : undefined,
+        select: (response) => response.data,  // Adjust to match your API response structure
+        refetchOnWindowFocus: false,
+        retry: false,
+        cacheTime: 5 * 60 * 1000,
+        staleTime: 1000*60,
+    });
+
     useEffect(() => {
-        setIsLoading(isLoading)
-    }, [isLoading, setIsLoading]);
+        if (data && data.length > 0) {
+            setWorkers(data);
+        }
+    }, [data]);
+
     return (
         <>
             <div className="flex justify-between items-center my-3">
@@ -77,7 +89,7 @@ function AvailableWorkes() {
                 slidesToSlide={2}
                 swipeable
             >
-                {workers.map((job, key) => (
+                {workers?.map((job, key) => (
                     <div key={key} className={"flex flex-wrap gap-4 justify-center h-full m-2 items-stretch"}>
                         <WorkerCard job={job} />
                     </div>

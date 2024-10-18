@@ -4,19 +4,38 @@ import {Button, Typography} from "@mui/material";
 import JobCard from "../../components/client/JobCard";
 import JobModal from "../../components/client/jobs/JobModal";
 import ClientApi from "../../api/ClientApi";
-import {useQuery} from "react-query";
-import {useAuth} from "../../context/UserProvider";
+import {useQuery, useQueryClient} from "react-query";
+import {useLoading} from "../../context/LoadingProvider";
+import {useSearchParams} from "react-router-dom";
 
 function Announces({user}) {
     const [modalOpen, setModalOpen] = useState(false)
+    const {startLoading,stopLoading} = useLoading()
+    const queryClient = useQueryClient();
+    const cachedWorkers = queryClient.getQueryData('jobs')?.data || [];
+    const { data:userJobs, isFetching   } = useQuery('jobs', ClientApi.getJobs, {
+        initialData: cachedWorkers.length > 0 ? cachedWorkers : undefined,
+        select: ((data) => data.data.filter((job) => job.userId._id === user._id)),
+        refetchOnWindowFocus: false,
+        retry: false,
+        cacheTime: 5 * 60 * 1000,
+        staleTime: 1000*60,
+        onSuccess: () => stopLoading(),
+        onError: () => stopLoading(),
+    });
+    const [searchParams] = useSearchParams()
     const handleOpen = () => setModalOpen(!modalOpen)
-    const {data:userJobs=[],isLoading} = useQuery("userJobs",ClientApi.getJobs,{
-        select: ((data) => data.data.filter((job) => job.userId._id === user._id))
-    })
-    const {setIsLoading} = useAuth()
+    const showForm = searchParams.get("showForm")
     useEffect(() => {
-        setIsLoading(isLoading)
-    }, [isLoading, setIsLoading]);
+        if (showForm) {
+            setModalOpen(true)
+        }
+    }, [showForm]);
+    useEffect(() => {
+        if (isFetching){
+            startLoading()
+        }
+    }, [isFetching, startLoading]);
     return (
         <>
             <div className={"pb-5"}>
@@ -62,7 +81,7 @@ function Announces({user}) {
                 </Box>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5  gap-3 ">
                     {/* Worker Card */}
-                    {userJobs.length > 0 ? userJobs.map((job,key) => (
+                    {userJobs?.length > 0 ? userJobs?.map((job,key) => (
                         <JobCard key={key} job={job} user={user} />
                     )) : ""}
                 </div>

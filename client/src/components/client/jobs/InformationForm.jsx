@@ -3,22 +3,11 @@ import {FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextFie
 import ClientApi from "../../../api/ClientApi";
 import {Controller} from "react-hook-form";
 import displayImage from "../../../utils/imageFromServer";
+import {useQueryClient} from "react-query";
 
 function InformationForm({control,user,errors,job}) {
-    const [categories, setCategories] = useState([])
-    useEffect(() => {
-        async function getCategories(){
-            try {
-                const res = await ClientApi.getCategories()
-                const {data} = res?.data
-                setCategories(data)
-            }catch (e) {
-
-                console.log(e)
-            }
-        }
-        getCategories()
-    }, []);
+    const queryClient = useQueryClient()
+    const categories = queryClient.getQueryData('categories')?.data?.category || []
     return (
         <>
             <h2 className={"mb-4 font-bold text-gray-800 pl-2 flex justify-center"}>Information </h2>
@@ -70,7 +59,7 @@ function InformationForm({control,user,errors,job}) {
                                             label="Category *"
                                             {...field}
                                         >
-                                            {categories.map((category,key) => (
+                                            {categories?.map((category,key) => (
                                                 <MenuItem key={key} value={category._id}>
                                                     {category.name}
                                                 </MenuItem>

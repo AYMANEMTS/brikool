@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {useNavigate} from "react-router-dom";
 import displayImage from "../../utils/imageFromServer";
-import Contact from "./worker-details/Contact";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import formatDate from "../../utils/formatDate";

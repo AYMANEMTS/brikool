@@ -2,3 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+    .nav-link {
+        @apply relative inline-block text-black no-underline transition-all duration-300 ease-in-out;
+    }
+
+    .nav-link::after {
+        @apply absolute bottom-0 left-0 w-full h-[3px] bg-black scale-x-0 origin-left transition-transform duration-300;
+        content: '';
+    }
+
+    .nav-link:hover::after {
+        @apply scale-x-100;
+    }
+
+    .from-left::after {
+        @apply origin-left;
+    }
+
+    .from-right::after {
+        @apply origin-right;
+    }
+}

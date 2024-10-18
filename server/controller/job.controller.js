@@ -1,6 +1,7 @@
 const Job = require('../models/Job')
 const mongoose = require('mongoose');
-
+const User = require("../models/User");
+const Notification = require('../models/Notification');
 
 const getJobs = async (req,res) => {
     try {
@@ -80,15 +81,25 @@ const destroyJob = async (req,res) => {
 const addComment = async (req,res) => {
     try {
         const job = await Job.findById(req.params.id);
-            if (!job) {
-                return res.status(404).json({ message: 'Job not found' });
-            }
-            const newComment = {
-                userId: req.body.userId, 
-                comment: req.body.comment
-            };
-            job.comments.push(newComment);
-            await job.save();
+        if (!job) {
+            return res.status(404).json({ message: 'Job not found' });
+        }
+        const newComment = {
+            userId: req.body.userId,
+            comment: req.body.comment
+        };
+        job.comments.push(newComment);
+        await job.save();
+        const user = await User.findById(req.body.userId)
+        const newNotification = new Notification({
+            userId: job.userId,
+            senderId: user._id,
+            type: 'comment',
+            content: `You have a new comment from ${user.name}`,
+            relatedEntityId: job._id,
+            createdAt: Date.now()
+        })
+        await newNotification.save()
             return res.status(200).json({ message: 'Comment added successfully', job });
     } catch (error) {
         return res.status(500).json({error:e})
@@ -110,6 +121,16 @@ const addRating = async (req, res) => {
             job.ratings.push({ userId, rating });
         }
         await job.save();
+        const user = await User.findById(userId)
+        const newNotification = new Notification({
+            userId: job.userId,
+            senderId: user._id,
+            type: 'review',
+            content: `You have a new rating from ${user.name}`,
+            relatedEntityId: job._id,
+            createdAt: Date.now()
+        })
+        await newNotification.save()
         return res.status(200).json({ message: 'Rating added/updated successfully' });
 
     } catch (error) {

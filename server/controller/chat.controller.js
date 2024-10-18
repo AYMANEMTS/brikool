@@ -1,6 +1,6 @@
 const Chat = require('../models/Chat');
 const User = require('../models/User');
-
+const Notification = require('../models/Notification');
 
 // Create or get an existing chat between two users
 const getChat = async (req, res) => {
@@ -23,7 +23,7 @@ const getChat = async (req, res) => {
 // Send a message
 const sendMessage = async (req, res) => {
     const { chatId } = req.params;
-    const { senderId, content } = req.body;
+    const { senderId, content, recipientId  } = req.body;
 
     try {
         const chat = await Chat.findById(chatId);
@@ -33,10 +33,22 @@ const sendMessage = async (req, res) => {
         chat.messages.push(newMessage);
         chat.lastMessage = content;
         chat.updatedAt = Date.now();
-
         await chat.save();
+        const user = await User.findById(senderId);
+        const newNotification = new Notification({
+            userId: recipientId,  // Notification for the recipient
+            senderId: user._id,
+            type: 'message',
+            content: `You have a new message from ${user.name}`,
+            relatedEntityId: chatId,  // Reference to the chat
+            createdAt: Date.now()
+        });
+
+        await newNotification.save();
+
         res.status(200).json(chat);
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: 'Error sending message' });
     }
 };

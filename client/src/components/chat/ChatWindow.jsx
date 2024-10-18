@@ -59,9 +59,11 @@ function ChatWindow({ chat, onBack, user, otherParticipant }) {
 
         try {
             const chatId = chat._id;
+            const recipientId = otherParticipant(chat)._id
             const res = await ClientApi.sendMessage(chatId, {
                 senderId: user._id,
-                content: newMessage
+                content: newMessage,
+                recipientId: recipientId
             });
             const sentMessage = res.data.messages[res.data.messages.length - 1];
             // Emit the new message to the server to broadcast to other users

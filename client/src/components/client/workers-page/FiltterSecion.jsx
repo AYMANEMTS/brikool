@@ -3,16 +3,25 @@ import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { useQueryClient } from 'react-query';
 import { Controller, useForm } from "react-hook-form";
 import citiesInMorocco from "../../../utils/citiesInMorocco";
+import {useSearchParams} from "react-router-dom";
 
 function FiltterSecion({ jobs, setFiltredJobS }) {
+    const [searchParams] = useSearchParams();
     const queryClient = useQueryClient();
     const fake = queryClient.getQueryData('categories');
     const categories = fake?.data?.category || [];
-    const { control, watch } = useForm();
+    const { control, watch,setValue } = useForm();
 
-    // Watch city and category in real-time
+    const cityParams = searchParams.get('city')
+    const category_idParams = searchParams.get('cat_id')
+
     const selectedCity = watch('city', 'all');
     const selectedCategory = watch('category', 'all');
+
+    useEffect(() => {
+        cityParams !== null && setValue('city',cityParams)
+        category_idParams !== null && setValue('category',category_idParams)
+    }, []);
 
     useEffect(() => {
         let filteredJobs = jobs;
