@@ -8,46 +8,46 @@ import ListItemButton from '@mui/joy/ListItemButton';
 import Typography from '@mui/joy/Typography';
 import Button from '@mui/material/Button';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useQuery } from "react-query";
-import ClientApi from "../api/ClientApi";
 import formatDate from "../utils/formatDate";
+import {Avatar} from "@mui/material";
+import displayImage from "../utils/imageFromServer";
+import {useQueryClient} from "react-query";
+import ClientApi from "../api/ClientApi";
+import {useNavigate} from "react-router-dom";
 
-export default function NotificationDrawer({ open, toggleDrawer }) {
-    const user = JSON.parse(localStorage.getItem('user'));
+export default function NotificationDrawer({ open, toggleDrawer, notifications }) {
     const isMobile = useMediaQuery('(max-width:600px)'); // Check if screen width is less than 600px (mobile)
-
-    // Fetch notifications
-    const { data: notifications = [] } = useQuery(['notifications', user._id], () => ClientApi.getUserNotifications(user._id), {
-        select: (data) => data.data
-    });
-
-    // Helper function to group notifications by type and senderId
-    const groupNotifications = (notifications) => {
-        const grouped = notifications.reduce((acc, notification) => {
-            const key = `${notification.type}-${notification.senderId}`;
-            if (!acc[key]) {
-                acc[key] = { ...notification, count: 1 };
+    const queryClient = useQueryClient()
+    const navigate = useNavigate()
+    const handleClearAll = async () => {
+        try {
+            await ClientApi.clearUserNotifications()
+            await queryClient.invalidateQueries("notifications")
+        }catch (e) {
+            console.error(e)
+        }
+    }
+    const notificationAction = async (notification) => {
+        try {
+            const notificationsIds = notification.notificationIds
+            if (Array.isArray(notificationsIds) && notificationsIds.length > 0) {
+                await ClientApi.markAsReadNotification(notificationsIds);
+                await queryClient.invalidateQueries("notifications")
             } else {
-                acc[key].count += 1;
+                console.warn("No valid notification IDs provided.");
             }
-            return acc;
-        }, {});
-
-        return Object.values(grouped);
-    };
-
-    const groupedNotifications = groupNotifications(notifications);
-
-    const handleClearAll = () => {
-        // Clear all notifications logic here
-    };
-
+            toggleDrawer()
+            navigate(`/worker/${notification.relatedEntityId}`)
+        }catch (e) {
+            console.log(e)
+        }
+    }
     return (
         <Box>
             <Drawer
                 anchor={isMobile ? 'bottom' : 'right'} // Drawer comes from the bottom for mobile, right for desktop
                 open={open}
-                onClose={toggleDrawer(false)}
+                onClose={() => toggleDrawer()}
                 sx={{
                     width: isMobile ? '100%' : 300, // Full width on mobile, fixed width on desktop
                     maxHeight: isMobile ? '50%' : '100%', // Adjust height for mobile
@@ -81,15 +81,35 @@ export default function NotificationDrawer({ open, toggleDrawer }) {
                     </Box>
 
                     <List>
-                        {groupedNotifications.length === 0 ? (
+                        {notifications.length === 0 ? (
                             <Typography sx={{ p: 2, textAlign: 'center' }}>No new notifications</Typography>
                         ) : (
-                            groupedNotifications.map((notification, index) => (
-                                <React.Fragment key={index}>
-                                    <ListItem>
-                                        <ListItemButton>
+                            notifications.map((notification, index) => (
+                                <React.Fragment key={index} >
+                                    <ListItem className={"m-2"} onClick={() => notificationAction(notification)} >
+                                        <ListItemButton
+                                            sx={{
+                                                // Different background color for unread notifications
+                                                backgroundColor: notification.read ? 'white' : 'rgba(0, 0, 255, 0.1)', // Light blue for unread
+                                                '&:hover': {
+                                                    backgroundColor: notification.read ? 'rgba(0, 0, 0, 0.04)' : 'rgba(0, 0, 255, 0.15)', // Hover effect
+                                                },
+                                                borderRadius: 5
+                                            }}
+                                        >
+                                            <Avatar
+                                                src={displayImage("",notification.senderId)}
+                                                alt="User Image"
+                                                sx={{ width: 40, height: 40, mr: 2 }}
+                                            />
+
                                             <Box>
-                                                <Typography level="body1">
+                                                <Typography
+                                                    level="body1"
+                                                    sx={{
+                                                        fontWeight: notification.read ? 'normal' : 'bold', // Bold text for unread
+                                                    }}
+                                                >
                                                     New {notification.type}
                                                     {notification.count > 1 && (
                                                         <Typography
@@ -111,8 +131,10 @@ export default function NotificationDrawer({ open, toggleDrawer }) {
                                             </Box>
                                         </ListItemButton>
                                     </ListItem>
-                                    {index !== groupedNotifications.length - 1 && <Divider />}
+                                    {index !== notifications.length - 1 && <Divider />}
                                 </React.Fragment>
+
+
                             ))
                         )}
                     </List>

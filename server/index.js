@@ -36,7 +36,6 @@ app.use("/jobs", jobRoutes);
 app.use('/chats', chatRoutes);
 app.use("/notifications",notficationRoutes)
 
-
 app.use(errorHandler);
 
 // Create the HTTP server

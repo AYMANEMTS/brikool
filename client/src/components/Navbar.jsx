@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
 import {Link, useNavigate} from "react-router-dom";
 import AuthModal from "./auth/AuthModal";
-import { IconButton} from "@mui/material";
 import UserMenu from "./navbarParts/UserMenu";
 import Trudiction from "./navbarParts/Trudiction";
 import Search from "./navbarParts/Search";
 import CampaignIcon from "@mui/icons-material/Campaign";
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import PersonIcon from "@mui/icons-material/Person";
-import NotificationDrawer from "./NotificationDrawer";
-import Badge from '@mui/material/Badge';
+import Notification from "./navbarParts/Notification"
 
 export default function Navbar() {
     const [isAtTop, setIsAtTop] = useState(true);
@@ -17,7 +14,6 @@ export default function Navbar() {
     const handleOpen = () => setOpen(!open)
     const authenticated = localStorage.getItem('authenticated')
     const [swapSate, setSwapSate] = useState(false)
-    const [openNotificationDrawer, setOpenNotificationDrawer] = useState(false);
     useEffect(() => {
         const handleScroll = () => {
             if (window.scrollY === 0) {
@@ -32,12 +28,7 @@ export default function Navbar() {
         };
     }, []);
     const navigate = useNavigate()
-    const toggleDrawer = (isOpen) => (event) => {
-        if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-            return;
-        }
-        setOpenNotificationDrawer(isOpen); // Correct state
-    };
+
     return (
         <>
             <header className={`fixed top-0 left-0 right-0 border-b bg-white font-sans min-h-[60px] px-10 py-3 z-50 `}>
@@ -74,36 +65,7 @@ export default function Navbar() {
                                         <CampaignIcon fontSize="small"/>
                                     </button>
                                     <UserMenu/>
-                                    <IconButton
-                                        onClick={toggleDrawer(true)}
-                                        aria-label="notifications"
-                                        size="small"
-                                        sx={{
-                                            backgroundColor: 'gray', // Initial background color
-                                            color: 'white', // Icon color
-                                            padding: '5px', // Adjust padding for better spacing
-                                            borderRadius: '50%', // Round shape for the button
-                                            transition: 'all 0.3s ease', // Smooth transitions
-                                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
-                                            '&:hover': {
-                                                backgroundColor: 'darkgray', // Change background on hover
-                                                transform: 'scale(1.1)', // Slight zoom effect
-                                                boxShadow: '0 6px 16px rgba(0, 0, 0, 0.2)', // More pronounced shadow on hover
-                                            },
-                                            '& .MuiSvgIcon-root': {
-                                                fontSize: '1.8rem', // Adjust icon size
-                                            },
-                                        }}
-                                    >
-                                        <Badge
-                                            badgeContent={3}  // Pass the notification count here
-                                            color="error"  // Customize the badge color
-                                            max={99}       // Optional: limit the max number to display (e.g., "99+")
-                                            overlap="circular"  // To position the badge on top of a circular element
-                                        >
-                                            <NotificationsIcon fontSize="inherit" />
-                                        </Badge>
-                                    </IconButton>
+                                    <Notification />
                                 </div>
                             </>
                         ) : (
@@ -143,9 +105,6 @@ export default function Navbar() {
                 <Search isAtTop={isAtTop}/>
             </header>
             <AuthModal open={open} handleOpen={handleOpen} swapState={swapSate}/>
-            {authenticated && (
-                <NotificationDrawer open={openNotificationDrawer} toggleDrawer={toggleDrawer} />
-            )}
         </>
 
     );
