@@ -8,6 +8,9 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import ClientApi from "../../../api/ClientApi";
+import {useNavigate} from "react-router-dom";
+import AuthModal from "../../auth/AuthModal";
 
 const style = {
     position: 'absolute',
@@ -61,10 +64,32 @@ function Contact({job}) {
     }
     const [phoneModal, setPhoneModal] = useState(false)
     const handleModal = () => setPhoneModal(!phoneModal)
+    const navigate = useNavigate()
+    const user = JSON.parse(localStorage.getItem('user'))
+    const [loginForm, setLoginForm] = useState(false)
+
+    const chatAction = async () => {
+        try {
+            if (!user){
+                return setLoginForm(true)
+            }
+            if (job.userId._id === user._id){
+                return window.alert("You can't chatting with your self 😅 ")
+            }
+            const userId2 = job.userId._id
+            const res = await ClientApi.getChat(userId2)
+            if (res.status === 200){
+                navigate("/chat",{state:{chat:res.data}})
+            }
+
+        }catch (e) {
+            console.log(e)
+        }
+    }
     return (
         <>
             <div className="flex space-x-2">
-                <button
+                <button onClick={chatAction}
                     className="bg-indigo-600 flex gap-2 items-center  text-gray-800 px-3 py-3 rounded-full hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                     <ChatIcon sx={{color: "#ffffff"}}/>
                 </button>
@@ -93,6 +118,8 @@ function Contact({job}) {
                 )}
             </div>
             <PhoneModal phone={job?.contacts?.appel} open={phoneModal} handleModal={handleModal} />
+            <AuthModal open={loginForm} handleOpen={() => setLoginForm(!loginForm)} redirectRoute={"/worker/" + job._id}
+                       swapState={false}/>
         </>
     );
 }

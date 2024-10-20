@@ -36,10 +36,10 @@ function RatingComponent({ job }) {
     const submitRating = async (newValue) => {
         try {
             const id = job._id;
-            if (user !== null){
+            if (user){
                 const response = await ClientApi.addRating(id, { userId: user._id, rating: newValue });
                 if (response.status === 200) {
-                    queryClient.invalidateQueries(['job',job._id])
+                    await queryClient.invalidateQueries(['job',job._id])
                 }
             }
         } catch (err) {
@@ -49,6 +49,9 @@ function RatingComponent({ job }) {
 
     // Handle rating change
     const handleRatingChange = (newValue) => {
+        if (job.userId._id === user._id){
+            return window.alert("You don't have right to rating on your announcement")
+        }
         setValue(newValue);
         submitRating(newValue); // Call the submit function
     };

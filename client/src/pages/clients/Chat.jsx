@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import ChatList from "../../components/chat/ChatList";
 import ChatWindow from "../../components/chat/ChatWindow";
+import {useLocation} from "react-router-dom";
 
 
 
 function Chat({user}) {
-    const [selectedChat, setSelectedChat] = useState(null);
     const [isChatListVisible, setIsChatListVisible] = useState(true);
-
+    const {state} = useLocation()
+    const chat = state?.chat
+    const [selectedChat, setSelectedChat] = useState(chat || null);
     const handleSelectChat = (chat) => {
         setSelectedChat(chat);
-        // On small screens, hide ChatList when a chat is selected
         if (window.innerWidth < 768) {
             setIsChatListVisible(false);
         }

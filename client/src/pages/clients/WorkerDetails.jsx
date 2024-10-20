@@ -60,7 +60,7 @@ function WorkerDetails() {
                         <Contact job={job} />
                     </div>
                 </div>
-                <Comments jobId={id} commentsData={job?.comments} />
+                <Comments jobId={id} job={job} />
                 <AvailableWorkes/>
             </div>
         </>

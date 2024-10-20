@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {Link, useNavigate} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import AuthModal from "./auth/AuthModal";
 import UserMenu from "./navbarParts/UserMenu";
 import Trudiction from "./navbarParts/Trudiction";
@@ -28,7 +28,7 @@ export default function Navbar() {
         };
     }, []);
     const navigate = useNavigate()
-
+    const {pathname} = useLocation()
     return (
         <>
             <header className={`fixed top-0 left-0 right-0 border-b bg-white font-sans min-h-[60px] px-10 py-3 z-50 `}>
@@ -43,13 +43,13 @@ export default function Navbar() {
 
                         <ul className='lg:flex lg:gap-x-10 lg:absolute lg:left-1/2 lg:-translate-x-1/2 max-lg:space-y-3 max-lg:fixed max-lg:bg-white max-lg:w-2/3 max-lg:min-w-[300px] max-lg:top-0 max-lg:left-0 max-lg:px-10 max-lg:py-4 max-lg:h-full max-lg:shadow-md max-lg:overflow-auto z-50'>
                             <li>
-                                <Link to={"/"} className="nav-link p-1 hover:text-blue-500">Home</Link>
+                                <Link to={"/"} className={`${pathname === "/" && 'active'} nav-link p-1 hover:text-blue-500 hover:font-bold`}>Home</Link>
                             </li>
                             <li>
-                                <Link to={"/workers"} className="nav-link p-1 hover:text-blue-500">Workers</Link>
+                                <Link to={"/workers"} className={`${pathname === '/workers' && 'active'} nav-link p-1 hover:text-blue-500 hover:font-bold`}>Workers</Link>
                             </li>
                             <li>
-                                <Link to={"/about-us"} className="nav-link p-1 hover:text-blue-500">About US</Link>
+                                <Link to={"/about-us"} className={`${pathname === '/about-us' && 'active'} nav-link p-1 hover:text-blue-500 hover:font-bold`}>About US</Link>
                             </li>
                         </ul>
                     </div>

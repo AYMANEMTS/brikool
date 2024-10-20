@@ -3,31 +3,19 @@ import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Divider, Typograp
 import ClientApi from "../../api/ClientApi";
 import displayImage from "../../utils/imageFromServer";
 import formatDate from "../../utils/formatDate";
+import {useQuery} from "react-query";
 
-function ChatList({ onSelectChat, user, otherParticipant }) {
-    const [chats, setChats] = useState([]);
-
-    useEffect(() => {
-        const fetchChats = async () => {
-            try {
-                const userId = user._id; // Replace this with actual user ID from auth
-                const res = await ClientApi.getUserChats(userId);
-                setChats(res.data);
-            } catch (error) {
-                console.error("Error fetching chats:", error);
-            }
-        };
-
-        fetchChats();
-    }, [user._id]);
-
-
+function ChatList({ onSelectChat, otherParticipant }) {
+    const {data:chats=[]} = useQuery('chat',ClientApi.getUserChats,{
+        select: (data => data.data),
+        retry: 0
+    })
 
     return (
         <List>
             {chats.map((chat) => (
                 <React.Fragment key={chat._id}>
-                    <ListItem button onClick={() => onSelectChat(chat)} className="hover:bg-gray-100">
+                    <ListItem  onClick={() => onSelectChat(chat)} className="hover:bg-gray-100">
                         <ListItemAvatar>
                             <Avatar
                                 src={displayImage("", otherParticipant(chat))}

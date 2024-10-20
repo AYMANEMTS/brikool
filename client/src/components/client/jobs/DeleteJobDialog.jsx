@@ -25,7 +25,7 @@ function DeleteJobDialog({handleDialog,open,job}) {
             setLoading(true)
             const id = job._id
             await ClientApi.deleteJob(id).catch(e => console.error(e))
-            await queryClient.invalidateQueries("userJobs")
+            await queryClient.invalidateQueries("jobs")
             handleDialog()
             enqueueSnackbar("You deleted your job successfully",{variant:"success"})
         }catch (e) {

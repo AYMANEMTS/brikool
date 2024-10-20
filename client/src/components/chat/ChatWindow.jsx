@@ -11,14 +11,13 @@ const socket = io('http://localhost:8000'); // Replace with your server's URL
 function ChatWindow({ chat, onBack, user, otherParticipant }) {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
-    const userId1 = chat?.participants[0]?._id;
-    const userId2 = chat?.participants[1]?._id;
     const messagesEndRef = useRef(null); // Create a ref for the messages container
 
     useEffect(() => {
         const fetchMessages = async () => {
             try {
-                const res = await ClientApi.getChat(userId1, userId2); // Fetch messages for this chat
+                const userId2 = otherParticipant(chat)._id
+                const res = await ClientApi.getChat(userId2); // Fetch messages for this chat
                 setMessages(res.data.messages);
             } catch (error) {
                 console.error("Error fetching messages:", error);

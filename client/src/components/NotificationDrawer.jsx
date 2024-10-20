@@ -21,6 +21,7 @@ export default function NotificationDrawer({ open, toggleDrawer, notifications }
     const navigate = useNavigate()
     const handleClearAll = async () => {
         try {
+            toggleDrawer()
             await ClientApi.clearUserNotifications()
             await queryClient.invalidateQueries("notifications")
         }catch (e) {

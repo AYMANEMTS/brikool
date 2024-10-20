@@ -49,17 +49,17 @@ function JobForm({ handleOpen ,user,context}) {
             try {
                 setLoading(true)
                 if(context.isUpdate){
-                    const id = context.job._id + "1"
+                    const id = context.job._id
                     const res = await ClientApi.updateJob(id,formatedData).catch(e => console.error(e))
                     if(res.status === 200){
-                        await queryClient.invalidateQueries('userJobs')
+                        await queryClient.invalidateQueries('jobs')
                         handleOpen()
                         enqueueSnackbar("You Announce is updated successfully", {variant:"success"})
                     }
                 }else {
                     const res = await ClientApi.createJob(formatedData).catch(e => console.error(e))
                     if(res.status === 201){
-                        await queryClient.invalidateQueries('userJobs')
+                        await queryClient.invalidateQueries('jobs')
                         handleOpen()
                         enqueueSnackbar("You Announce is created successfully", {variant:"success"})
                     }

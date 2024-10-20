@@ -8,7 +8,7 @@
     }
 
     .nav-link::after {
-        @apply absolute bottom-0 left-0 w-full h-[3px] bg-black scale-x-0 origin-left transition-transform duration-300;
+        @apply absolute bottom-0 left-0 w-full h-[3px] bg-blue-800 scale-x-0 origin-left transition-transform duration-300;
         content: '';
     }
 
@@ -20,7 +20,11 @@
         @apply origin-left;
     }
 
-    .from-right::after {
-        @apply origin-right;
+    .active {
+        @apply text-blue-500 font-bold;
+    }
+
+    .active::after {
+        @apply scale-x-100;
     }
 }

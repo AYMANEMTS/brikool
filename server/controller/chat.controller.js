@@ -1,17 +1,19 @@
 const Chat = require('../models/Chat');
 const User = require('../models/User');
 const Notification = require('../models/Notification');
+const getUserFromToken = require("../utils/getUserIdFromToken");
 
 // Create or get an existing chat between two users
 const getChat = async (req, res) => {
-    const { userId1, userId2 } = req.params;
-
+    const {userId2 } = req.params;
+    const token = req.cookies.jwt
     try {
-        // Check if a chat between the users exists
-        let chat = await Chat.findOne({ participants: { $all: [userId1, userId2] } });
+        const user = await getUserFromToken(token)
+        let chat = await Chat.findOne({ participants: { $all: [user._id, userId2] } })
+        .populate('participants', 'name image')
         if (!chat) {
             // Create new chat if none exists
-            chat = new Chat({ participants: [userId1, userId2] });
+            chat = new Chat({ participants: [user._id, userId2] });
             await chat.save();
         }
         return res.status(200).json(chat);
@@ -55,9 +57,10 @@ const sendMessage = async (req, res) => {
 
 // Fetch all chats for a user
 const getUserChats = async (req, res) => {
-    const { userId } = req.params;
     try {
-        const chats = await Chat.find({ participants: userId })
+        const token = req.cookies.jwt
+        const user = await getUserFromToken(token)
+        const chats = await Chat.find({ participants: user._id })
             .populate('participants', 'name image')  // Get participant details
             .sort({ updatedAt: -1 });  // Sort by latest messages
         if (!chats.length) {
@@ -65,7 +68,7 @@ const getUserChats = async (req, res) => {
         }
         res.status(200).json(chats)
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching chats' });
+        res.status(500).json({ error: 'Error fetching chats user' });
     }
 };
 
