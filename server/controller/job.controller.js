@@ -7,7 +7,7 @@ const getJobs = async (req,res) => {
     try {
         const jobs = await Job.find({})
             .populate("category").populate("userId").sort({createdAt: -1})
-            // .populate("reviews.userId").populate("comments.userId")
+            .populate("comments.userId")
         return res.status(200).json(jobs)
     }catch (e) {
         return res.status(500).json({error:e})

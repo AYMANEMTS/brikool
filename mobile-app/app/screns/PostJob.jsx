@@ -1,20 +1,21 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Text, View} from "react-native";
 import AuthForm from "../../components/auth/AuthForm";
+import Protected from "../../utils/Protected";
 import {useUserContext} from "../../context/UserContext";
 
-function Account() {
+function PostJob() {
     const {user} = useUserContext();
     if (!user) {
         return <AuthForm />;
     }
     return (
-        <View>
-            <Text>
-                Account
-            </Text>
-        </View>
+            <View>
+                <Text>
+                    Workers
+                </Text>
+            </View>
     );
 }
 
-export default Account;
+export default PostJob;

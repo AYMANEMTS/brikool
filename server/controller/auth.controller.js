@@ -6,8 +6,8 @@ const getUserFromToken = require("../utils/getUserIdFromToken");
 const registerClient = async (req, res) => {
     try {
         const client = await Users.create(req.body)
-        const token = jwt.sign({userId:client._id},process.env.JWT_SECRET_KEY);
-        res.cookie("jwt", token, {httpOnly: true,maxAge: 30 * 24 * 60 * 60 * 1000 });
+        const token = jwt.sign({userId:client._id},process.env.JWT_SECRET_KEY,{ expiresIn: '30d' });
+        res.cookie("jwt", token, {httpOnly: true});
         res.status(200).json({user:client,jwt: token})
     }catch (e) {
         res.status(500).json({error: e})
@@ -19,8 +19,8 @@ const loginClient = async (req, res) => {
         if (!client || (!await bcrypt.compare(req.body.password, client.password))) {
             return res.status(400).json({ message: "Incorrect email or password" })
         }
-        const token = jwt.sign({userId:client._id},process.env.JWT_SECRET_KEY);
-        res.cookie("jwt", token, {httpOnly: true,maxAge: 30 * 24 * 60 * 60 * 1000 });
+        const token = jwt.sign({userId:client._id},process.env.JWT_SECRET_KEY,{ expiresIn: '30d' });
+        res.cookie("jwt", token, {httpOnly: true });
         return res.status(200).json({user:client,jwt: token})
     }catch (e) {
         res.status(500).json({error: e})
@@ -37,7 +37,7 @@ const logout = async (req,res) => {
 }
 
 const authenticateToken = async (req, res) => {
-    const token = req.cookies.jwt; 
+    const token = req.cookies.jwt || req.headers['authorization']?.split(' ')[1];
     if (!token) {
         return res.status(401).json({ message: "Unauthorized" });
     }

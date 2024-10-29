@@ -6,7 +6,6 @@ import { Entypo } from '@expo/vector-icons';
 const HeaderDrawer = (props) => {
     const [searchText, setSearchText] = useState('');
     const [searchResult, setSearchResult] = useState([]);
-
     // Example data for the dropdown list
     const searchSuggestions = [
         { name: "search 1" },
@@ -55,9 +54,15 @@ const HeaderDrawer = (props) => {
                 />
 
                 {/* Right Drawer Button */}
-                <TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
-                    <Entypo name="menu" size={30} color="black" />
-                </TouchableOpacity>
+                {props.route.name === 'WorkerDetails' ? (
+                    <TouchableOpacity onPress={() => props.navigation.goBack()}>
+                        <Entypo name="back" size={30} color="black" />
+                    </TouchableOpacity>
+                ) : (
+                    <TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
+                        <Entypo name="menu" size={30} color="black" />
+                    </TouchableOpacity>
+                )}
             </View>
 
             {/* Dropdown List for Search Suggestions */}
