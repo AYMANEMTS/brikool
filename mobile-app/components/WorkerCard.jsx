@@ -10,7 +10,7 @@ function WorkerCard({item,navigation}) {
             : "0";
     return (
         <TouchableOpacity style={tw`bg-white shadow-lg rounded-lg m-2 p-4 flex-1`}
-        onPress={() => navigation.navigate("WorkerDetails",{worker:item})}>
+        onPress={() => navigation.navigate("WorkerDetails",{jobId:item._id})}>
             {/* Worker Image */}
             <Image
                 source={{ uri: DisplayImage("", item.userId) }}

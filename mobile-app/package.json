@@ -44,7 +44,8 @@
     "react-native-star-rating-widget": "^1.9.1",
     "react-native-web": "~0.19.10",
     "react-query": "^3.39.3",
-    "twrnc": "^4.5.1"
+    "twrnc": "^4.5.1",
+    "expo-clipboard": "~6.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

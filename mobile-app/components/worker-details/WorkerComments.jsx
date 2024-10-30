@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import {Alert, Image, Text, TouchableOpacity, View} from 'react-native';
 import tw from 'twrnc';
 import displayImage from "../../utils/DisplayImage";
 import { TextInput } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 import formatDate from "../../utils/formatDate";
+import ClientApi from "../../api/ClientApi";
+import {useUserContext} from "../../context/UserContext";
 
-function WorkerComments({ comments }) {
+function WorkerComments({ comments, jobId, refetch }) {
+    const {user} = useUserContext()
     const [visibleCount, setVisibleCount] = useState(4);
-
     // Function to show more comments
     const showMoreComments = () => {
         setVisibleCount((prev) => prev + 4);
@@ -16,9 +18,37 @@ function WorkerComments({ comments }) {
 
     // Function to show less comments
     const showLessComments = () => {
-        setVisibleCount(4);
+        setVisibleCount((prev) => prev - 4);
     };
-
+    const [commentInput, setCommentInput] = useState("")
+    const handleComment = async () => {
+        try {
+            if (!user){
+                Alert.alert("Login Required", "Please log in to submit a rating.", [
+                        {
+                            text: "Cancel",
+                            style: "cancel"
+                        },
+                        {
+                            text: "Login",
+                            onPress: () => navigation.navigate('Account'),
+                        }
+                    ]
+                );
+                return;
+            }
+            if (jobId === user._id) {
+                Alert.alert("Unauthorized", "You cannot comment to your job");
+                return;
+            }
+            const data = {comment: commentInput}
+            await ClientApi.addComment(jobId,data).catch(e => console.error(e))
+            refetch()
+            setCommentInput("")
+        }catch (e) {
+            console.error(e)
+        }
+    }
     return (
         <>
             <Text style={tw`font-semibold text-xl mb-2 p-2`}>Comments</Text>
@@ -54,11 +84,11 @@ function WorkerComments({ comments }) {
                 <TextInput
                     label="Add Comment"
                     mode="outlined"
-                    value={""} // Manage input value
-                    onChangeText={() => {}} // Manage input value
+                    value={commentInput} // Manage input value
+                    onChangeText={(value) => setCommentInput(value)} // Manage input value
                     style={tw`flex-1 h-10 mr-2`}
                 />
-                <TouchableOpacity onPress={() => {}}>
+                <TouchableOpacity disabled={commentInput.length < 5} onPress={handleComment}>
                     <Ionicons name="send" size={30} color="blue" />
                 </TouchableOpacity>
             </View>

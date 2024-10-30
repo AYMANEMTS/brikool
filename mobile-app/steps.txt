@@ -1,6 +1,7 @@
-filter jobs
-add comment
-add rating
+filter jobs ✅
+add comment ✅
+add rating ✅
+contacts ✅
 account
 notification
 chat
