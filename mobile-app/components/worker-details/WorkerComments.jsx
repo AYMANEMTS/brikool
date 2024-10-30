@@ -7,16 +7,16 @@ import { Ionicons } from "@expo/vector-icons";
 import formatDate from "../../utils/formatDate";
 
 function WorkerComments({ comments }) {
-    const [visibleCount, setVisibleCount] = useState(4); // Initially show 4 comments
+    const [visibleCount, setVisibleCount] = useState(4);
 
     // Function to show more comments
     const showMoreComments = () => {
-        setVisibleCount((prev) => prev + 4); // Increase count by 4
+        setVisibleCount((prev) => prev + 4);
     };
 
     // Function to show less comments
     const showLessComments = () => {
-        setVisibleCount(4); // Reset count to 4
+        setVisibleCount(4);
     };
 
     return (

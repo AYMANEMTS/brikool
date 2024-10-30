@@ -6,12 +6,15 @@ const StateUserContext = createContext({
     user: null,
     login: () => {},
     register: () => {},
-    logout: () => {}
+    logout: () => {},
+    searchPreview: false,
+    setSearchPreview: () => {}
 })
 
 
 export default function UserContext({children}){
     const [user, setUser] = useState(null);
+    const [searchPreview, setSearchPreview] = useState(false)
 
     useEffect(() => {
         const loadUser = async () => {
@@ -48,7 +51,7 @@ export default function UserContext({children}){
     };
     return (
         <StateUserContext.Provider value={{
-            user, login, logout, register
+            user, login, logout, register, searchPreview, setSearchPreview
         }}>
             {children}
         </StateUserContext.Provider>
