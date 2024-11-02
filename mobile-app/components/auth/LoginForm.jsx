@@ -5,6 +5,8 @@ import tw from 'twrnc';
 import {useForm} from "react-hook-form";
 import {useUserContext} from "../../context/UserContext";
 import {setFormErrors} from "../../utils/setFormErrors";
+import Toast from "react-native-root-toast";
+import {showSuccessToast} from "../../utils/toasts";
 
 
 const LoginForm = ({handleAuthForm}) => {
@@ -28,8 +30,7 @@ const LoginForm = ({handleAuthForm}) => {
     };
 
     const handleGoogleLogin = () => {
-        // Handle Google login logic here
-        console.log('Login with Google');
+        showSuccessToast("test message")
     };
 
     return (

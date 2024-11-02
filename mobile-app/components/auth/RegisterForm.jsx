@@ -19,8 +19,7 @@ const RegisterForm = ({handleAuthForm}) => {
         const data = getValues()
         data.city = selectedCity
         try {
-            const res = await register(data)
-            console.log("try",res)
+            await register(data)
         }catch (error) {
             if (!error.response) {
                 setMessage('Server is currently unavailable. Please try again later.');

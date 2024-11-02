@@ -9,6 +9,12 @@ const ClientApi = {
     checkAuth: async () => await axiosClient.get('/check-auth'),
     addComment: async (id,data) => await axiosClient.post(`/jobs/${id}/add-comment`,data),
     addRating: async (id,data) => await axiosClient.post(`/jobs/${id}/add-rating`,data),
+    updateInformation: async (formData) => await axiosClient.put(`/clients`,formData,{headers:{
+            'Content-Type': 'multipart/form-data'
+        }}),
+    changePassword: async (data) => await axiosClient.post(`/changePassword`,data),
+
+
 
 }
 export default ClientApi
