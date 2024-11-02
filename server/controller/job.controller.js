@@ -2,6 +2,7 @@ const Job = require('../models/Job')
 const mongoose = require('mongoose');
 const User = require("../models/User");
 const Notification = require('../models/Notification');
+const getUserFromToken = require('../utils/getUserIdFromToken');
 
 const getJobs = async (req,res) => {
     try {
@@ -84,15 +85,16 @@ const addComment = async (req,res) => {
         if (!job) {
             return res.status(404).json({ message: 'Job not found' });
         }
+        const jwt = req.cookies['jwt'] || req.headers['authorization']?.split(' ')[1];
+        const user = await getUserFromToken(jwt)
         const newComment = {
-            userId: req.body.userId,
+            userId: user._id,
             comment: req.body.comment
         };
         job.comments.push(newComment);
         await job.save();
-        const user = await User.findById(req.body.userId)
         const newNotification = new Notification({
-            userId: job.userId,
+            userId: user._id,
             senderId: user._id,
             type: 'comment',
             content: `You have a new comment from ${user.name}`,
@@ -108,20 +110,22 @@ const addComment = async (req,res) => {
 
 const addRating = async (req, res) => {
     const { id } = req.params;
-    const { userId, rating } = req.body;
+    const { rating } = req.body;
     try {
+        const jwt = req.cookies['jwt'] || req.headers['authorization']?.split(' ')[1];
+        const user = await getUserFromToken(jwt)
         const job = await Job.findById(id);
         if (!job) {
             return res.status(404).json({ error: 'Job not found' });
         }
-        const existingRating = job.ratings.find((r) => r.userId.toString() === userId);
+        const existingRating = job.ratings.find((r) => r.userId.toString() === user._id.toString());
         if (existingRating) {
             existingRating.rating = rating;
         } else {
+            const userId = user._id
             job.ratings.push({ userId, rating });
         }
         await job.save();
-        const user = await User.findById(userId)
         const newNotification = new Notification({
             userId: job.userId,
             senderId: user._id,

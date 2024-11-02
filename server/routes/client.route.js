@@ -10,7 +10,7 @@ const protectedRoute = require('../middlewares/protectedRoute');
 
 // router.get("/:id",showClient)
 
-router.put("/:id",upload.single('image') ,protectedRoute,updateClient)
+router.put("/",upload.single('image') ,protectedRoute,updateClient)
 
 // router.delete("/:id", destroyClient)
 

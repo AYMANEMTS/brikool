@@ -1,4 +1,5 @@
 const Client = require("../models/User")
+const getUserFromToken = require('../utils/getUserIdFromToken');
 
 const getClients = async (req,res) => {
     try {
@@ -32,17 +33,21 @@ const showClient = async (req,res) => {
 
 const updateClient = async (req,res) => {
     try {
-        const {name,city} = req.body
-        const {id} = req.params
-        const image = req.file ? req.file.path : undefined;
-        const actualClient = await Client.findById(id)
+        const jwt = req.cookies['jwt'] || req.headers['authorization']?.split(' ')[1];
+        const actualClient = await getUserFromToken(jwt)
         if (!actualClient) {
             return res.status(404).json({error: 'Client not found'})
         }
-        const updatedClient = await Client.findByIdAndUpdate(id, { name, city, image }, { new: true });
-        return res.status(200).json(updatedClient);
+        const {name,city} = req.body
+        const image = req.file ? req.file.path : undefined;
+        actualClient.name = name;
+        actualClient.city = city;
+        if (image) actualClient.image = image;
+        await actualClient.save();
+        return res.status(200).json(actualClient);
     } catch (error) {
-        return res.status(500).json({error: e})
+        console.log(error)
+        return res.status(500).json({error: error})
     }
 }
 

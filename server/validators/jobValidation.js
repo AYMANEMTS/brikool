@@ -38,11 +38,9 @@ exports.jobForm = [
 
 exports.addCommentValidation = [
     check('comment').isLength({ min: 1, max: 500 }).withMessage('Comment must be between 1 and 500 characters'),
-    check('userId').isMongoId().withMessage('Invalid user ID'),
 ]
 
 exports.ratingValidation = [
     check('rating').isNumeric().withMessage('Rating should be a number')
         .isInt({ min: 1, max: 5 }).withMessage('Rating must be between 1 and 5'),
-    check('userId').isMongoId().withMessage('Invalid user ID'),
 ]

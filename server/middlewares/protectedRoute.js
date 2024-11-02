@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 
 const protectedRoute = (req, res, next) => {
-    const cookie = req.cookies['jwt'];
+    const cookie = req.cookies['jwt'] || req.headers['authorization']?.split(' ')[1];
     if (!cookie) res.status(401).json({message:"JWT Not Found,You are not authorized to access this route"})
     const claims = jwt.verify(cookie,process.env.JWT_SECRET_KEY)
     if (!claims){
