@@ -1,7 +1,7 @@
 const express = require('express');
 const { getChat, sendMessage, getUserChats } = require('../controller/chat.controller');
 const router = express.Router();
-const upload = require('../multerConfig');
+const upload = require('../config/multerConfig');
 const protectedRoute = require("../middlewares/protectedRoute");
 
 router.get('/chats-user', upload.none(), protectedRoute, getUserChats); // Get all chats for a user

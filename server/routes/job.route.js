@@ -4,7 +4,7 @@ const checkValidation = require("../middlewares/checkValidation");
 const protectedRoute = require("../middlewares/protectedRoute");
 const {destroyJob,updateJob,storeJob,showJob,getJobs,addComment, addRating, changeStatus} = require('../controller/job.controller')
 const {jobForm,addCommentValidation, ratingValidation} = require('../validators/jobValidation')
-const upload = require('../multerConfig');
+const upload = require('../config/multerConfig');
 
 
 router.get('/',getJobs)

@@ -6,6 +6,8 @@ const UserSchema = mongoose.Schema( {
     password: { type: String, required: true },
     image: { type: String, required: false },
     city: { type: String, required: false },
+    googleId: { type: String, required: false },
+    secret: { type: String, required: false },
     role: { type: String, default: "client" },
     status: {
         type: String,

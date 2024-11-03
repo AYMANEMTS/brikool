@@ -1,7 +1,7 @@
 const express = require('express');
 const {storeClient, getClients, showClient, updateClient, destroyClient} = require("../controller/client.controller");
 const router = express.Router();
-const upload = require('../multerConfig');
+const upload = require('../config/multerConfig');
 const protectedRoute = require('../middlewares/protectedRoute');
 
 // router.post('/', storeClient)

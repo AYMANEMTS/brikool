@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const upload = require("../multerConfig");
+const upload = require("../config/multerConfig");
 const {getUserNotifications,markAsRead, clearAll} = require('../controller/notification.controller')
 const protectedRoute = require('../middlewares/protectedRoute')
 

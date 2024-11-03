@@ -4,7 +4,7 @@ const {registerClient,loginClient, logout,authenticateToken,changePassword} = re
 const {createClientValidation,loginValidation} = require("../validators/userValidation");
 const checkValidation = require("../middlewares/checkValidation");
 const protectedRoute = require("../middlewares/protectedRoute");
-const upload = require('../multerConfig');
+const upload = require('../config/multerConfig');
 
 
 router.get("/check-auth",authenticateToken)

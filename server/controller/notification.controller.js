@@ -3,7 +3,7 @@ const getUserFromToken = require('../utils/getUserIdFromToken');
 
 const getUserNotifications = async (req, res) => {
     try {
-        const token = req.cookies.jwt
+        const token = req.cookies['jwt'] || req.headers['authorization']?.split(' ')[1];
         const user = await getUserFromToken(token)
         const notifications = await Notification.find({ userId:user._id }).sort({ createdAt: -1 }).populate("senderId")
         const groupedNotifications = notifications.reduce((acc, notification) => {
