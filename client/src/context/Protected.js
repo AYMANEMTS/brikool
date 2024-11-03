@@ -13,6 +13,7 @@ const Protected = ({ children }) => {
                 startLoading()
                 const res = await ClientApi.checkAuth(); // Ensure this is correct
                 setUser(res.data.user)
+
             } catch (error) {
                 console.error("Authentication check failed:", error);
                 navigate('/');

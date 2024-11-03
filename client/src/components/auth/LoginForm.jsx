@@ -105,7 +105,7 @@ function LoginForm({handllSwapForm,handleOpen,redirectRoute}) {
                 {loading ? <><Loader className={" mx-2 animate-spin text-white"} /> loading</> : "Sign In"}
             </Button>
 
-            <Button
+            <Button onClick={() => window.location.href = 'http://localhost:8000/auth/google'}
                 variant="outlined"
                 color="primary"
                 fullWidth
