@@ -21,8 +21,8 @@ function UserMenu() {
     const handleLogout = async () => {
         try {
             startLoading()
-            await ClientApi.logout();
             localStorage.clear();
+            await ClientApi.logout();
             navigate("/")
             enqueueSnackbar('Good By ',{variant:"info"})
         } catch (error) {
