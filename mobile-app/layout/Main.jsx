@@ -11,12 +11,39 @@ import {Ionicons} from "@expo/vector-icons";
 import {AntDesign} from '@expo/vector-icons';
 import Notification from "../app/screns/Notification";
 import WorkerDetails from "../app/screns/WorkerDetails";
+import {useQuery, useQueryClient} from "react-query";
+import ClientApi from "../api/ClientApi";
+import tw from "twrnc";
+import {View,Text} from "react-native";
+import {useUserContext} from "../context/UserContext";
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator()
 const Stack = createStackNavigator();
 
 function TabScreens(){
+    const {user} = useUserContext()
+    const { data: notifications = [] } = useQuery("notifications", ClientApi.getUserNotifications, {
+        select: (data) => data.data,
+        enabled: !!user,
+        // refetchInterval: 1500,
+        // retry: 0,
+    });
+    const NotificationIconWithBadge = ({ color, size, focused, count }) => (
+        <View>
+            <Ionicons
+                name={focused ? "notifications-sharp" : "notifications-outline"}
+                size={size}
+                color={color}
+            />
+            {count > 0 && (
+                <View style={[tw`absolute -top-1 -right-2 bg-red-500 rounded-full`, { paddingHorizontal: 4 }]}>
+                    <Text style={tw`text-white text-xs font-bold`}>{count}</Text>
+                </View>
+            )}
+        </View>
+    );
+
     return (
         <Tab.Navigator screenOptions={{headerShown: false}}>
             <Tab.Screen  name="Home" component={Home} options={{
@@ -33,7 +60,12 @@ function TabScreens(){
             }}/>
             <Tab.Screen name="Notification" component={Notification} options={{
                 tabBarIcon: ({ color, size, focused }) => (
-                    <Ionicons name={focused ? "notifications-sharp" : "notifications-outline"} size={size} color={color} />
+                    <NotificationIconWithBadge
+                        color={color}
+                        size={size}
+                        focused={focused}
+                        count={notifications.length}
+                    />
                 ),
                 tabBarLabel: "Notification"
             }}/>

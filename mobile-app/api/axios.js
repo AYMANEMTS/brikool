@@ -1,8 +1,7 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 export const axiosClient = axios.create({
-    baseURL: 'http://192.168.1.103:8000',
+    baseURL: process.env.EXPO_PUBLIC_BACKEND_URL,
     headers: {
         'Content-Type': 'application/json',
     }
@@ -15,3 +14,4 @@ axiosClient.interceptors.request.use(async (config) => {
     }
     return config;
 }, (error) => Promise.reject(error));
+

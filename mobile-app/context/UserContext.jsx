@@ -45,7 +45,7 @@ export default function UserContext({children}){
     };
 
     const logout = async () => {
-        // await ClientApi.();
+        await ClientApi.logout();
         await AsyncStorage.removeItem('jwt');
         setUser(null);
     };
