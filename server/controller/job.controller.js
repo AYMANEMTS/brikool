@@ -27,7 +27,7 @@ const showJob = async (req,res) => {
             return res.status(404).json({ error: 'Job not found' });
         }
         const jobObject = job.toObject();
-        jobObject.averageRating = job.averageRating; 
+        jobObject.averageRating = job.averageRating;
         return res.status(200).json({ job: jobObject });
 
         } catch (e) {
@@ -94,7 +94,7 @@ const addComment = async (req,res) => {
         job.comments.push(newComment);
         await job.save();
         const newNotification = new Notification({
-            userId: user._id,
+            userId: job.userId,
             senderId: user._id,
             type: 'comment',
             content: `You have a new comment from ${user.name}`,
@@ -157,7 +157,7 @@ const changeStatus = async (req, res) => {
         job.status = newStatus;
         await job.save();
         return res.status(200).json({ message: 'Status changed successfully' });
-        
+
     }catch (err) {
         return res.status(500).json({ error: 'Error changing status' });
     }
