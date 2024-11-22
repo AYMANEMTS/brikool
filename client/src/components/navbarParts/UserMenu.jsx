@@ -16,13 +16,13 @@ import {useLoading} from "../../context/LoadingProvider";
 
 function UserMenu() {
     const navigate = useNavigate()
-    const {startLoading,stopLoading} = useLoading()
-    const user = JSON.parse(localStorage.getItem('user')) || {}
+    const {startLoading,stopLoading,setIsAuthenticated,user,setUser} = useLoading()
     const handleLogout = async () => {
         try {
             startLoading()
-            localStorage.clear();
             await ClientApi.logout();
+            setIsAuthenticated(false)
+            setUser(null)
             navigate("/")
             enqueueSnackbar('Good By ',{variant:"info"})
         } catch (error) {

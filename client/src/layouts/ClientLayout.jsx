@@ -5,19 +5,26 @@ import Footer from "../components/Footer";
 import ScrollToTop from "../utils/ScrollToTop";
 import ClientSpeedDial from "../components/ClientSpeedDial";
 import ClientApi from "../api/ClientApi";
+import {useLoading} from "../context/LoadingProvider";
 
 
 function ClientLayout() {
     const {pathname} = useLocation()
+    const {setUser, setIsAuthenticated} = useLoading()
     useEffect(() => {
         const checkAuth = async () => {
             try {
                 const res = await ClientApi.checkAuth();
                 if (res.status === 200) {
-                    localStorage.setItem('user',JSON.stringify(res.data.user))
-                    localStorage.setItem('authenticated', 'true')
+                    setIsAuthenticated(true)
+                    setUser(res.data.user)
+                }else {
+                    setIsAuthenticated(false)
+                    setUser(null)
                 }
             } catch (error) {
+                setIsAuthenticated(false)
+                setUser(null)
                 console.error("Authentication check failed:", error);
             }
         };

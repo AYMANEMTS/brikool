@@ -8,7 +8,8 @@ import {useQuery, useQueryClient} from "react-query";
 import {useLoading} from "../../context/LoadingProvider";
 import {useSearchParams} from "react-router-dom";
 
-function Announces({user}) {
+function Announces() {
+    const {user} = useLoading()
     const [modalOpen, setModalOpen] = useState(false)
     const {startLoading,stopLoading} = useLoading()
     const queryClient = useQueryClient();

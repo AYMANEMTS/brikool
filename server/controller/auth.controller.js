@@ -6,8 +6,13 @@ const getUserFromToken = require("../utils/getUserIdFromToken");
 const registerClient = async (req, res) => {
     try {
         const client = await Users.create(req.body)
-        const token = jwt.sign({userId:client._id},process.env.JWT_SECRET_KEY,{ expiresIn: '30d' });
-        res.cookie("jwt", token, {httpOnly: true});
+        const token = jwt.sign({ userId: client._id }, process.env.JWT_SECRET_KEY, {expiresIn: "30d"});
+        res.cookie("jwt", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+        });
         res.status(200).json({user:client,jwt: token})
     }catch (e) {
         res.status(500).json({error: e})
@@ -19,8 +24,13 @@ const loginClient = async (req, res) => {
         if (!client || (!await bcrypt.compare(req.body.password, client.password))) {
             return res.status(400).json({ message: "Incorrect email or password" })
         }
-        const token = jwt.sign({userId:client._id},process.env.JWT_SECRET_KEY,{ expiresIn: '30d' });
-        res.cookie("jwt", token, {httpOnly: true });
+        const token = jwt.sign({ userId: client._id }, process.env.JWT_SECRET_KEY, {expiresIn: "30d"});
+        res.cookie("jwt", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+        });
         return res.status(200).json({user:client,jwt: token})
     }catch (e) {
         res.status(500).json({error: e})
@@ -74,7 +84,7 @@ const changePassword = async (req, res) => {
         user.password = newPassword
         await user.save()
         return res.status(200).json({ message: 'Password changed successfully',user });
-        
+
     } catch (error) {
         res.status(500).json({error: e})
     }

@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const User = require("../models/User");
 const Notification = require('../models/Notification');
 const getUserFromToken = require('../utils/getUserIdFromToken');
-
+const { sendPushNotification } = require("../services/notificationService")
 const getJobs = async (req,res) => {
     try {
         const jobs = await Job.find({})
@@ -102,7 +102,12 @@ const addComment = async (req,res) => {
             createdAt: Date.now()
         })
         await newNotification.save()
-            return res.status(200).json({ message: 'Comment added successfully', job });
+        await sendPushNotification(user._id,{
+            title: `New Comment`,
+            body: `You have a new comment from ${user.name}`,
+            data: { notificationId: newNotification._id },
+        })
+        return res.status(200).json({ message: 'Comment added successfully', job });
     } catch (error) {
         return res.status(500).json({error:e})
     }
@@ -129,12 +134,17 @@ const addRating = async (req, res) => {
         const newNotification = new Notification({
             userId: job.userId,
             senderId: user._id,
-            type: 'review',
+            type: 'rating',
             content: `You have a new rating from ${user.name}`,
             relatedEntityId: job._id,
             createdAt: Date.now()
         })
         await newNotification.save()
+        await sendPushNotification(user._id,{
+            title: `New Rating`,
+            body: `You have a new rating from ${user.name}`,
+            data: { notificationId: newNotification._id },
+        })
         return res.status(200).json({ message: 'Rating added/updated successfully' });
 
     } catch (error) {

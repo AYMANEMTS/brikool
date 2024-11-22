@@ -8,10 +8,12 @@ import Alert from "@mui/material/Alert";
 import {useNavigate} from "react-router-dom";
 import {useSnackbar} from "notistack";
 import {Loader} from "lucide-react";
+import {useLoading} from "../../context/LoadingProvider";
 
 function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
     const { register, handleSubmit, control,setError, formState: { errors,isValid } } = useForm();
     const navigate = useNavigate()
+    const {setUser, setIsAuthenticated} = useLoading()
     const [message, setMessage] = useState(null)
     const { enqueueSnackbar } = useSnackbar();
     const [loading, setLoading] = useState(false)
@@ -20,11 +22,11 @@ function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
         setLoading(true)
         try {
             const res = await ClientApi.register(data);
-            localStorage.setItem('user',JSON.stringify(res?.data?.user))
-            localStorage.setItem('authenticated',true)
+            setIsAuthenticated(true)
+            setUser(res.data.user)
             handleOpen()
             navigate(redirectRoute)
-            enqueueSnackbar("You are registred SuccessFuly",{variant:"success"})
+            enqueueSnackbar("You are registered SuccessFully",{variant:"success"})
         } catch (error) {
             if (!error.response) {
                 // Network or server is down

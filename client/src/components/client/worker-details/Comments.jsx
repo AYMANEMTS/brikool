@@ -6,9 +6,10 @@ import ClientApi from "../../../api/ClientApi";
 import formatDate from "../../../utils/formatDate";
 import {useQueryClient} from "react-query";
 import AuthModal from "../../auth/AuthModal";
+import {useLoading} from "../../../context/LoadingProvider";
 
 function Comments({jobId,job={}}) {
-    const user = JSON.parse(localStorage.getItem('user'))
+    const {user} = useLoading()
     const {register,handleSubmit,reset,formState:{errors}} = useForm({defaultValues:{
             userId: user ? user._id : null,
             comment: ""

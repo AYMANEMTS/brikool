@@ -6,11 +6,13 @@ export const LoadingProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(false);
     const startLoading = () => setIsLoading(true);
     const stopLoading = () => setIsLoading(false);
-
+    const [isAuthenticated, setIsAuthenticated] = useState(false)
+    const [user, setUser] = useState(null)
     const value = {
         isLoading,
-        startLoading,
-        stopLoading,
+        startLoading, stopLoading,
+        isAuthenticated, setIsAuthenticated,
+        user, setUser
     };
     return (
         <LoadingContext.Provider value={value}>

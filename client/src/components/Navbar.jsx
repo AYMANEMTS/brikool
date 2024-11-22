@@ -7,12 +7,13 @@ import Search from "./navbarParts/Search";
 import CampaignIcon from "@mui/icons-material/Campaign";
 import PersonIcon from "@mui/icons-material/Person";
 import Notification from "./navbarParts/Notification"
+import {useLoading} from "../context/LoadingProvider";
 
 export default function Navbar() {
     const [isAtTop, setIsAtTop] = useState(true);
     const [open, setOpen] = useState(false)
     const handleOpen = () => setOpen(!open)
-    const authenticated = localStorage.getItem('authenticated')
+    const {isAuthenticated,user} = useLoading()
     const [swapSate, setSwapSate] = useState(false)
     useEffect(() => {
         const handleScroll = () => {
@@ -55,7 +56,7 @@ export default function Navbar() {
                     </div>
 
                     <div className='flex items-center ml-auto space-x-8'>
-                        {authenticated ? (
+                        {isAuthenticated && user ? (
                             <>
                                 {/* Icons on the right */}
                                 <div className="md:flex space-x-4 hidden">

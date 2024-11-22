@@ -5,8 +5,10 @@ import AccordionDetails from '@mui/joy/AccordionDetails';
 import AccordionSummary from '@mui/joy/AccordionSummary';
 import UpdateInformationForm from "../../components/settings/UpdateInformationForm";
 import PasswordUpdateForm from "../../components/settings/PasswordUpdateForm";
+import {useLoading} from "../../context/LoadingProvider";
 
-function Settings({user}) {
+function Settings() {
+    const {user} = useLoading()
     const [index, setIndex] = React.useState(0);
     return (
         <AccordionGroup sx={{ width: 'full' }}>

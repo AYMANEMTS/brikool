@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import ChatList from "../../components/chat/ChatList";
 import ChatWindow from "../../components/chat/ChatWindow";
 import {useLocation} from "react-router-dom";
+import {useLoading} from "../../context/LoadingProvider";
 
 
 
-function Chat({user}) {
+function Chat() {
     const [isChatListVisible, setIsChatListVisible] = useState(true);
     const {state} = useLocation()
     const chat = state?.chat
@@ -16,13 +17,12 @@ function Chat({user}) {
             setIsChatListVisible(false);
         }
     };
-
+    const {user} = useLoading()
     const handleBackToList = () => {
         setSelectedChat(null)
         setIsChatListVisible(true);
     };
     const otherParticipant = (chat) => chat.participants.find((part) => part._id !== user._id)
-
     return (
         <div className="flex flex-col h-screen md:pt-20 pb-5 mx-0 px-0 pt-40">
             <div className="flex flex-col md:flex-row h-full">

@@ -6,6 +6,7 @@ const getUserNotifications = async (req, res) => {
         const token = req.cookies['jwt'] || req.headers['authorization']?.split(' ')[1];
         const user = await getUserFromToken(token)
         const notifications = await Notification.find({ userId:user._id }).sort({ createdAt: -1 }).populate("senderId")
+
         const groupedNotifications = notifications.reduce((acc, notification) => {
             const key = `${notification.type}-${notification.senderId._id}-${notification.relatedEntityId}-${notification.read}`;
             if (!acc[key]) {
@@ -30,7 +31,37 @@ const getUserNotifications = async (req, res) => {
     }
 };
 
-// Mark notifications as read
+const getUserUnreceivedNotifications = async (req, res) => {
+    try {
+        const token = req.cookies['jwt'] || req.headers['authorization']?.split(' ')[1];
+        const user = await getUserFromToken(token)
+        const unreceivedNotification = await Notification.find({userId:user._id, received: false})
+        res.status(200).json(unreceivedNotification)
+    }catch (e) {
+        console.log(e)
+        res.status(500).json({ message: 'Error getting unreceived notifications' });
+    }
+}
+
+const markAsReceived = async (req, res) => {
+    try {
+        const { notificationsIds } = req.body;
+        if (!Array.isArray(notificationsIds) || notificationsIds.length === 0) {
+            return res.status(400).json({ message: 'notificationIds is empty or invalid' });
+        }
+        await Notification.updateMany(
+            { _id: { $in: notificationsIds } },
+            { received: true }
+        );
+        return res.status(200).json({
+            message: "Notifications updated successfully",
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: 'Error marking notifications as received' });
+    }
+};
+
 const markAsRead = async (req, res) => {
     try {
         const { notificationsIds } = req.body;
@@ -50,7 +81,6 @@ const markAsRead = async (req, res) => {
     }
 };
 
-
 const clearAll = async (req,res) => {
     try {
         const token = req.cookies.jwt
@@ -65,7 +95,9 @@ const clearAll = async (req,res) => {
 
 module.exports = {
     getUserNotifications,
+    getUserUnreceivedNotifications,
+    markAsReceived,
     markAsRead,
-    clearAll
+    clearAll,
 };
 

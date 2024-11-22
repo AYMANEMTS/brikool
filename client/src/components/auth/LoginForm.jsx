@@ -7,6 +7,7 @@ import Alert from '@mui/material/Alert';
 import {useNavigate} from "react-router-dom";
 import {useSnackbar} from "notistack";
 import {Loader} from "lucide-react";
+import {useLoading} from "../../context/LoadingProvider";
 
 
 function LoginForm({handllSwapForm,handleOpen,redirectRoute}) {
@@ -15,6 +16,7 @@ function LoginForm({handllSwapForm,handleOpen,redirectRoute}) {
     isValid}} = useForm()
     const navigate = useNavigate()
     const [message, setMessage] = useState(null)
+    const {setUser, setIsAuthenticated} = useLoading()
     const [loading, setLoading] = useState(false)
     const handlLogin = async (data) => {
         setMessage(null)
@@ -25,8 +27,8 @@ function LoginForm({handllSwapForm,handleOpen,redirectRoute}) {
             formData.append('password',data.password)
             const res = await ClientApi.login(formData);
             if (res.status === 200) {
-                localStorage.setItem('user', JSON.stringify(res.data.user));
-                localStorage.setItem('authenticated', 'true'); // Store as string
+                setIsAuthenticated(true)
+                setUser(res.data.user)
                 handleOpen();
                 navigate(redirectRoute)
                 enqueueSnackbar('Welcome Back :)',{variant: 'success'})

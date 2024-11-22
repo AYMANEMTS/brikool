@@ -5,8 +5,9 @@ const NotificationSchema = mongoose.Schema({
     senderId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     relatedEntityId: { type: mongoose.Schema.Types.ObjectId, required: false },
     type: { type: String, required: true },
-    content: { type: String, required: true }, // Notification message
-    read: { type: Boolean, default: false }, // Read status
+    content: { type: String, required: true },
+    read: { type: Boolean, default: false },
+    received: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now }
 });
 
