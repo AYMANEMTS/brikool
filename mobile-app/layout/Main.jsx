@@ -16,6 +16,8 @@ import ClientApi from "../api/ClientApi";
 import tw from "twrnc";
 import {View,Text} from "react-native";
 import {useUserContext} from "../context/UserContext";
+import {useEffect} from "react";
+import * as Notifications from "expo-notifications";
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator()
@@ -26,9 +28,36 @@ function TabScreens(){
     const { data: notifications = [] } = useQuery("notifications", ClientApi.getUserNotifications, {
         select: (data) => data.data,
         enabled: !!user,
-        // refetchInterval: 1500,
-        // retry: 0,
+        refetchInterval: 1500,
     });
+    const {data:unreceivedNoti = []} = useQuery('unreceivedNotifications',ClientApi.getUnreceivedNotifications,{
+        select: (data) => data.data,
+        enabled: !!user,
+        refetchInterval: 1500,
+    })
+
+    useEffect(() => {
+        if (user && unreceivedNoti.length > 0) {
+            unreceivedNoti.forEach(async (noti) => {
+                try {
+                    await Notifications.scheduleNotificationAsync({
+                        content: {
+                            title: `New ${noti.type}`,
+                            body: noti.content,
+                        },
+                        trigger: { seconds: 2 },
+                    });
+                } catch (error) {
+                    console.error('Error scheduling notification:', error);
+                }
+            });
+            if (unreceivedNoti.length > 0) {
+                const notificationIds = unreceivedNoti.map(notification => notification._id);
+                ClientApi.markAsReceivedNotification(notificationIds).catch(e => console.error('Error marking notifications as received:', e));
+            }
+        }
+    }, [user,unreceivedNoti]);
+
     const NotificationIconWithBadge = ({ color, size, focused, count }) => (
         <View>
             <Ionicons

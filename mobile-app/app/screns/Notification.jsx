@@ -7,6 +7,7 @@ import {View, Text, FlatList, Image, TouchableOpacity} from "react-native";
 import displayImage from "../../utils/DisplayImage";
 import formatDate from "../../utils/formatDate";
 import ClientApi from "../../api/ClientApi";
+import * as Notifications from "expo-notifications";
 
 
 function Notification({navigation}) {
@@ -53,6 +54,7 @@ function Notification({navigation}) {
             console.log(e)
         }
     }
+
     return (
         <View style={tw`flex-1 bg-gray-100 p-4`}>
             <View style={tw`flex-row justify-between mb-2 mx-2`}>

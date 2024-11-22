@@ -16,8 +16,10 @@ const ClientApi = {
     changePassword: async (data) => await axiosClient.post(`/changePassword`,data),
     getUserNotifications: async () => await axiosClient.get('/notifications'),
     clearUserNotifications: async () => await axiosClient.delete(`/notifications/clear-all`),
-    markAsReadNotification: async (notificationsIds) => await axiosClient.post(`/notifications/all-read`, {notificationsIds})
-
+    markAsReadNotification: async (notificationsIds) => await axiosClient.post(`/notifications/all-read`, {notificationsIds}),
+    markAsReceivedNotification: async (notificationsIds) => await axiosClient.post(`/notifications/all-received`, {notificationsIds}),
+    getUnreceivedNotifications: async () => await axiosClient.get('/notifications/unreceived'),
+    registerPushToken: async (token,userId) => axiosClient.post('/register-push-token', {token, userId})
 
 
 

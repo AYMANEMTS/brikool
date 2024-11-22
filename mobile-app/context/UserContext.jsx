@@ -21,7 +21,10 @@ export default function UserContext({children}){
             const token = await AsyncStorage.getItem('jwt');
             if (token) {
                 const response = await ClientApi.checkAuth();
-                if (response && response.data.user) setUser(response.data.user);
+                if (response && response.data.user) {
+                    await AsyncStorage.setItem("user", JSON.stringify(response.data.user));
+                    setUser(response.data.user)
+                };
             }
         };
         loadUser();
