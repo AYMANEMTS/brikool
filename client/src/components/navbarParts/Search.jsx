@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import SearchIcon from "@mui/icons-material/Search";
 import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
-import citiesInMorocco from "../../utils/citiesInMorocco";
-import { MenuItem, Select} from "@mui/material";
 import {useQuery, useQueryClient} from "react-query";
 import ClientApi from "../../api/ClientApi";
 import {useLoading} from "../../context/LoadingProvider";
@@ -11,7 +9,8 @@ function Search({isAtTop}) {
     const {startLoading,stopLoading} = useLoading();
     const {pathname} = useLocation()
     const [searchTerm, setSearchTerm] = useState("");
-    const [searchResults, setSearchResults] = useState([]);
+    const [categoryResults, setCategoryResults] = useState([])
+    const [userResults, setUserResults] = useState([])
     const queryClient = useQueryClient()
     const cashedCategories = queryClient.getQueryData('categories')?.data?.data?.category || []
     const {data:categories=[],isFetching:isFetchingCategory} = useQuery('categories',ClientApi.getCategories,{
@@ -42,69 +41,39 @@ function Search({isAtTop}) {
             return () => clearTimeout(stopLoadingTimeout);
         }
     }, [isFetchingJobs, isFetchingCategory, startLoading, stopLoading]);
-
-
     const navigate = useNavigate()
-    const [selectedCity, setSelectedCity] = useState("all")
+
     useEffect(() => {
         if (searchTerm) {
-            const resultsCategories = categories
+            const filteredCategories = categories
                 .filter(cate => jobs.some(job => job.category._id === cate._id))
-                .filter(item =>
-                item.name.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-            const resultsJobs = jobs.filter(item =>
-                item.userId.name.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-            const mergeResult = pathname === '/workers' ? resultsJobs : [...resultsCategories,...resultsJobs]
-            setSearchResults(mergeResult);
+                .filter(item => item.name.toLowerCase().includes(searchTerm?.toLowerCase()));
+
+            const filteredUsers = [
+                ...new Map(jobs
+                    .filter(worker => worker.userId.name.toLowerCase().includes(searchTerm.toLowerCase()))
+                    .map(worker => [worker.userId._id, worker])
+                ).values()
+            ];
+            setCategoryResults(filteredCategories);
+            setUserResults(filteredUsers);
         } else {
-            setSearchResults([]);
+            setCategoryResults([]);
+            setUserResults([]);
         }
     }, [searchTerm]);
 
-    const searchAction = (result) => {
-        setSearchTerm({})
-        result.name ? navigate(`/workers?city=${selectedCity}&cat_id=${result._id}`) : navigate(`/worker/${result._id}`)
-        setSearchResults([])
+    const searchAction = (type,query) => {
         setSearchTerm("")
-    }
+        setUserResults([])
+        setCategoryResults([])
+        navigate(`/workers?${type}=${query}`)
+    };
 
     return (
         <>
             {isAtTop && pathname !== '/chat' && (
                 <div className="relative hidden md:flex bg-gray-100 border border-transparent focus-within:border-blue-500 focus-within:bg-transparent px-6 rounded-full h-10 lg:w-2/4 mt-3 mx-auto max-lg:mt-6">
-
-                    {pathname !== '/workers' && (
-                        <Select onChange={(e) => setSelectedCity(e.target.value)}
-                                labelId="city-label"
-                                defaultValue={"all"}
-                                label="City *"
-                                sx={{
-                                    bgcolor: 'transparent', // background color
-                                    border: 'none', // remove border
-                                    color: 'text.primary', // text color
-                                    '& .MuiOutlinedInput-notchedOutline': {
-                                        border: 'none', // remove the outlined border
-                                    },
-                                    '&:hover .MuiOutlinedInput-notchedOutline': {
-                                        border: 'none', // remove the border on hover
-                                    },
-                                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                        border: 'none', // remove the focused border
-                                    },
-                                }}
-                        >
-                            <MenuItem value={"all"}>All</MenuItem>
-                            {citiesInMorocco
-                                ?.filter(city => jobs.some(job => job.userId.city === city))
-                                ?.map((city, key) => (
-                                    <MenuItem key={key} value={city}>
-                                        {city}
-                                    </MenuItem>
-                                ))}
-                        </Select>
-                    )}
 
                     {/* Search Input */}
                     <SearchIcon sx={{ m: 1 }} />
@@ -113,20 +82,45 @@ function Search({isAtTop}) {
                         placeholder="Search category"
                         className="w-full outline-none bg-transparent text-gray-600 font-semibold text-[15px]"
                         value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)} // Update search term
+                        onChange={(e) => setSearchTerm(e.target.value)}
                     />
 
-                    {/* Search Preview */}
-                    {searchResults.length > 0 && (
-                        <div className="absolute left-0 right-0 bg-white border border-gray-300 rounded-md mt-10 rounded-2xl shadow-lg max-h-48 overflow-auto z-50">
-                            {searchResults.map((result,key) => (
-                                <span key={key} className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
-                                onClick={() => searchAction(result)}  >
-                                    {result.name ? result.name : result.userId.name }
-                                </span>
-                            ))}
+                    {(userResults.length > 0 || categoryResults.length > 0) && (
+                        <div className="absolute left-0 right-0 bg-white border border-gray-300 rounded-md mt-10 shadow-lg max-h-48 overflow-auto z-50">
+                            {/* Section for Workers */}
+                            {userResults.length > 0 && (
+                                <>
+                                    <h3 className="px-4 py-2 text-lg font-bold text-gray-800">Workers</h3>
+                                    {userResults.map((result, key) => (
+                                        <span
+                                            key={`user-${key}`}
+                                            className="block px-4 py-2 text-gray-800 hover:bg-gray-100 cursor-pointer"
+                                            onClick={() => searchAction("user_id", result.userId._id)}
+                                        >
+                                            {result.userId.name}
+                                        </span>
+                                    ))}
+                                </>
+                            )}
+
+                            {/* Section for Categories */}
+                            {categoryResults.length > 0 && (
+                                <>
+                                    <h3 className="px-4 py-2 text-lg font-bold text-gray-800 mt-2">Categories</h3>
+                                    {categoryResults.map((result, key) => (
+                                        <span
+                                            key={`category-${key}`}
+                                            className="block px-4 py-2 text-gray-800 hover:bg-gray-100 cursor-pointer"
+                                            onClick={() => searchAction("cat_id", result._id)}
+                                        >
+                                        {result.name}
+                                    </span>
+                                    ))}
+                                </>
+                            )}
                         </div>
                     )}
+
                 </div>
             )}
         </>

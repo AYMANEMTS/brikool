@@ -1,5 +1,5 @@
 const Notification = require('../models/Notification')
-const getUserFromToken = require('../utils/getUserIdFromToken');
+const getUserFromToken = require('../utils/getUserFromToken');
 
 const getUserNotifications = async (req, res) => {
     try {

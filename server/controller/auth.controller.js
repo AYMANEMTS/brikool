@@ -1,11 +1,12 @@
 const  Users = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const getUserFromToken = require("../utils/getUserIdFromToken");
+const getUserFromToken = require("../utils/getUserFromToken");
 
 const registerClient = async (req, res) => {
     try {
-        const client = await Users.create(req.body)
+        const {name,email,password,city} = req.body;
+        const client = await Users.create({name,email,password,city})
         const token = jwt.sign({ userId: client._id }, process.env.JWT_SECRET_KEY, {expiresIn: "30d"});
         res.cookie("jwt", token, {
             httpOnly: true,
@@ -72,7 +73,7 @@ const authenticateToken = async (req, res) => {
 const changePassword = async (req, res) => {
     try {
         const {currentPassword, newPassword} = req.body
-        const token = req.cookies.jwt
+        const token = req.cookies.jwt || req.headers['authorization']?.split(' ')[1];
         const user = await getUserFromToken(token)
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
@@ -90,4 +91,50 @@ const changePassword = async (req, res) => {
     }
 }
 
-module.exports = {registerClient,loginClient,logout,authenticateToken,changePassword};
+const loginAdmin = async (req,res) => {
+    try {
+        const user = await Users.findOne({ email: req.body.email });
+        if (!user || (!await bcrypt.compare(req.body.password, user.password))) {
+            return res.status(400).json({ message: "Incorrect email or password" })
+        }
+        if (user.role !== 'admin' && user.role !== 'moderator'){
+            return res.status(403).send('You do not have the required role to sign in.');
+        }
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {expiresIn: "30d"});
+        res.cookie("jwt", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+        });
+        return res.status(200).json({user:user,jwt: token})
+    }catch (e) {
+        return res.status(500).json({error: e})
+    }
+}
+
+const checkAuthAdmin = async (req, res) => {
+    const token = req.cookies.jwt || req.headers['authorization']?.split(' ')[1];
+    if (!token) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+    jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, decoded) => {
+        if (err) {
+            return res.status(403).json({ message: "Token expired or invalid" });
+        }
+        try {
+            const user = await Users.findById(decoded.userId).select('-password');
+            if (!user) {
+                return res.status(404).json({ message: "User not found" });
+            }
+            if (!['admin', 'moderator'].includes(user.role)) {
+                return res.status(403).json({ error: 'Insufficient role permissions' });
+            }
+            return res.status(200).send({ message: "Token has been checked successfully", user });
+        } catch (error) {
+            return res.status(500).json({ message: "Error fetching user", error });
+        }
+    });
+};
+
+module.exports = {registerClient,loginClient,logout,authenticateToken,changePassword,loginAdmin,checkAuthAdmin};

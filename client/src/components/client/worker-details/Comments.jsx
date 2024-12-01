@@ -31,6 +31,19 @@ function Comments({jobId,job={}}) {
         }
     }
     const [loginForm, setLoginForm] = useState(false)
+    const [commentsCount, setCommentsCount] = useState(4);
+    const incrementCommentsCount = (commentsLength) => {
+        if (commentsCount < commentsLength) {
+            setCommentsCount((prev) => Math.min(prev + 4, commentsLength));
+        }
+    };
+    const decrementCommentsCount = () => {
+        if (commentsCount > 4) {
+            setCommentsCount((prev) => Math.max(prev - 4, 4));
+        }
+    };
+
+
     return (
         <>
             <section className=" py-8">
@@ -38,7 +51,7 @@ function Comments({jobId,job={}}) {
                     <h2 className="text-2xl font-bold mb-4">Customer Comments</h2>
 
                     <div className="space-y-4">
-                        {job?.comments?.map((item,key) => (
+                        {job?.comments?.slice(0,commentsCount)?.map((item,key) => (
                             <div className="bg-white p-4 rounded-lg shadow" key={key}>
                                 <div className="flex items-center mb-2">
                                     <img src="https://via.placeholder.com/40" alt="User Avatar"
@@ -56,13 +69,35 @@ function Comments({jobId,job={}}) {
                                 </div>
                             </div>
                         ))}
+                        {/* Buttons for Showing More or Less */}
+                        <div className="flex justify-center mt-4 space-x-4">
+                            {/* Show More Button */}
+                            {commentsCount < (job?.comments?.length || 0) && (
+                                <button
+                                    onClick={() => incrementCommentsCount(job?.comments?.length)}
+                                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                                >
+                                    Show More
+                                </button>
+                            )}
+
+                            {/* Show Less Button */}
+                            {commentsCount > 4 && (
+                                <button
+                                    onClick={decrementCommentsCount}
+                                    className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                                >
+                                    Show Less
+                                </button>
+                            )}
+                        </div>
                     </div>
 
                     {/*// <!-- Add Comment Form -->*/}
                     <form className="mt-8 bg-white p-4 rounded-lg shadow">
-                            <h3 className="text-lg font-semibold mb-2">Add a Comment</h3>
-                            <div className="mb-4">
-                                <TextField {...register('comment', {
+                        <h3 className="text-lg font-semibold mb-2">Add a Comment</h3>
+                        <div className="mb-4">
+                        <TextField {...register('comment', {
                                     required: {value: true, message: "This Field Is Required"},
                                     maxLength: {value: 500, message: "Comment must be between 1 and 500 characters"},
                                     minLength: {value: 1, message: "Comment must be between 1 and 500 characters"}

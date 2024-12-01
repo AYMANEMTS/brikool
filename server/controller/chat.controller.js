@@ -1,7 +1,7 @@
 const Chat = require('../models/Chat');
 const User = require('../models/User');
 const Notification = require('../models/Notification');
-const getUserFromToken = require("../utils/getUserIdFromToken");
+const getUserFromToken = require("../utils/getUserFromToken");
 
 // Create or get an existing chat between two users
 const getChat = async (req, res) => {

@@ -24,7 +24,7 @@ function WorkerComments({ comments, jobId, refetch }) {
     const handleComment = async () => {
         try {
             if (!user){
-                Alert.alert("Login Required", "Please log in to submit a rating.", [
+                Alert.alert("AdminLogin Required", "Please log in to submit a rating.", [
                         {
                             text: "Cancel",
                             style: "cancel"

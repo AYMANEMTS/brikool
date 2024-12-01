@@ -10,11 +10,7 @@ function AuthModal({ open, handleOpen, redirectRoute="/settings" ,swapState}) {
         setSwapForm(swapState);
     }, [swapState]);
     return (
-        <Modal
-            aria-labelledby="modal-title"
-            aria-describedby="modal-desc"
-            open={open}
-            onClose={() => handleOpen()}
+        <Modal open={open} onClose={() => handleOpen()}
             sx={{
                 display: 'flex',
                 justifyContent: 'center',
@@ -24,11 +20,11 @@ function AuthModal({ open, handleOpen, redirectRoute="/settings" ,swapState}) {
             <ModalDialog
                 sx={{
                     width: '100%',
-                    maxWidth: 500,  // Max width for larger screens
+                    maxWidth: 500,  
                     padding: 2,
                     '@media (max-width: 600px)': {
-                        width: '90%',  // Take up 90% of the viewport width on small screens
-                        maxWidth: 'none',  // No max width for mobile
+                        width: '90%',  
+                        maxWidth: 'none',  
                     },
                 }}
             >

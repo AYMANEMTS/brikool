@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {Outlet, useLocation} from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -6,11 +6,13 @@ import ScrollToTop from "../utils/ScrollToTop";
 import ClientSpeedDial from "../components/ClientSpeedDial";
 import ClientApi from "../api/ClientApi";
 import {useLoading} from "../context/LoadingProvider";
+import RequiredCity from "../components/auth/RequiredCity";
 
 
 function ClientLayout() {
     const {pathname} = useLocation()
-    const {setUser, setIsAuthenticated} = useLoading()
+    const [requiredCity, setRequiredCity] = useState(false)
+    const {setUser, setIsAuthenticated,user} = useLoading()
     useEffect(() => {
         const checkAuth = async () => {
             try {
@@ -30,6 +32,13 @@ function ClientLayout() {
         };
         checkAuth().catch(e => console.log(e))
     }, []);
+    useEffect(() => {
+        if (user && user.googleId && !user.city ){
+            setRequiredCity(true)
+        }else{
+            setRequiredCity(false)
+        }
+    }, [user,pathname,requiredCity]);
     return (
         <>
             <div className={`flex flex-col min-h-screen mt-20 ${pathname !== '/chat' && 'md:mt-36'} `}>
@@ -43,7 +52,8 @@ function ClientLayout() {
                     </div>
                 </main>
                 {/* Footer */}
-                {pathname === '/chat' ? '' : <Footer/>}
+                { pathname === '/chat' ? '' : <Footer/> }
+                { requiredCity && <RequiredCity handleOpen={() => setRequiredCity(!requiredCity)} open={requiredCity} /> }
             </div>
             <ClientSpeedDial />
         </>

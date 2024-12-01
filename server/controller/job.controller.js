@@ -2,7 +2,7 @@ const Job = require('../models/Job')
 const mongoose = require('mongoose');
 const User = require("../models/User");
 const Notification = require('../models/Notification');
-const getUserFromToken = require('../utils/getUserIdFromToken');
+const getUserFromToken = require('../utils/getUserFromToken');
 const { sendPushNotification } = require("../services/notificationService")
 const getJobs = async (req,res) => {
     try {
@@ -163,8 +163,7 @@ const changeStatus = async (req, res) => {
         if (job.status === "suspended") {
             return res.status(402).json({ message: 'you dont have right to make this action' });
         }
-        const newStatus = job.status === 'active' ? "inactive" : job.status === 'inactive' ? "active" : job.status;
-        job.status = newStatus;
+        job.status = job.status === 'active' ? "inactive" : job.status === 'inactive' ? "active" : job.status;
         await job.save();
         return res.status(200).json({ message: 'Status changed successfully' });
 

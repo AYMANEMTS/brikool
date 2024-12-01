@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { Box, Button, TextField, Typography, Link } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
 import ClientApi from "../../api/ClientApi";
@@ -16,7 +16,7 @@ function LoginForm({handllSwapForm,handleOpen,redirectRoute}) {
     isValid}} = useForm()
     const navigate = useNavigate()
     const [message, setMessage] = useState(null)
-    const {setUser, setIsAuthenticated} = useLoading()
+    const {setUser, setIsAuthenticated,user,authenticated} = useLoading()
     const [loading, setLoading] = useState(false)
     const handlLogin = async (data) => {
         setMessage(null)
@@ -50,11 +50,13 @@ function LoginForm({handllSwapForm,handleOpen,redirectRoute}) {
                     });
                 }
             }
-            console.error('Login failed:', error);
+            console.error('AdminLogin failed:', error);
         } finally {
             setLoading(false)
         }
     }
+
+
     return (
         <Box
             component="form"

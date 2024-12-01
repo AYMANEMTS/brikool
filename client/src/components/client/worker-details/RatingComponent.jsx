@@ -5,6 +5,7 @@ import StarIcon from '@mui/icons-material/Star';
 import ClientApi from "../../../api/ClientApi";
 import {useQueryClient} from "react-query";
 import AuthModal from "../../auth/AuthModal";
+import {useLoading} from "../../../context/LoadingProvider";
 
 const labels = {
     1: 'Useless',
@@ -21,7 +22,7 @@ function getLabelText(value) {
 function RatingComponent({ job }) {
     const [value, setValue] = useState(null);  // Initially null to avoid empty stars
     const [hover, setHover] = useState(-1);
-    const user = JSON.parse(localStorage.getItem("user"))
+    const {user} = useLoading()
 
     useEffect(() => {
         if (job && typeof job.averageRating === 'number') {

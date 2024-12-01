@@ -8,7 +8,6 @@ import PasswordUpdateForm from "../../components/settings/PasswordUpdateForm";
 import {useLoading} from "../../context/LoadingProvider";
 
 function Settings() {
-    const {user} = useLoading()
     const [index, setIndex] = React.useState(0);
     return (
         <AccordionGroup sx={{ width: 'full' }}>
@@ -21,7 +20,7 @@ function Settings() {
                 <AccordionSummary>Update Your Information</AccordionSummary>
                 <AccordionDetails>
                     <div className={"w-full mx-2"}>
-                        <UpdateInformationForm user={user}/>
+                        <UpdateInformationForm/>
                     </div>
 
                 </AccordionDetails>

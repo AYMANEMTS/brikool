@@ -1,4 +1,3 @@
-// router.js
 import { createBrowserRouter } from "react-router-dom";
 import ClientLayout from "../layouts/ClientLayout";
 import Home from "../pages/clients/Home";
@@ -8,7 +7,12 @@ import WorkerDetails from "../pages/clients/WorkerDetails";
 import Settings from "../pages/clients/Settings";
 import Chat from "../pages/clients/Chat";
 import Announces from "../pages/clients/Announces";
-import Protected from "../context/Protected";
+import AdminLayout from "../layouts/AdminLayout";
+import HomePage from "../pages/admin/HomePage";
+import AdminLogin from "../pages/admin/AdminLogin";
+import Users from "../pages/admin/Users";
+import Jobs from "../pages/admin/Jobs";
+import Category from "../pages/admin/Category";
 
 export const router = createBrowserRouter([
     {
@@ -23,5 +27,15 @@ export const router = createBrowserRouter([
             { path: "/announces", element: <Announces /> },
         ]
     },
+    {
+        element: <AdminLayout />,
+        children: [
+            { path: '/admin', element: <HomePage /> },
+            { path: '/admin/users', element: <Users /> },
+            { path: '/admin/jobs', element: <Jobs /> },
+            { path: '/admin/category', element: <Category /> },
+        ]
+    },
+    { path: 'admin/login', element: <AdminLogin /> }
 
 ]);

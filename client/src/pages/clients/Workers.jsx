@@ -4,17 +4,16 @@ import { Pagination } from "@mui/material";
 import WorkerCard from "../../components/client/WorkerCard";
 import {useQuery, useQueryClient} from "react-query";
 import ClientApi from "../../api/ClientApi";
-import {useLoading} from "../../context/LoadingProvider";
 
 function Workers() {
-    const {startLoading, stopLoading} = useLoading()
+    // const {startLoading, stopLoading} = useLoading()
     const queryClient = useQueryClient();
     const cachedWorkers = queryClient.getQueryData('jobs')?.data || [];
     const [workers, setWorkers] = useState(cachedWorkers || []);
 
     const { data } = useQuery('jobs', ClientApi.getJobs, {
         initialData: cachedWorkers.length > 0 ? cachedWorkers : undefined,
-        select: (response) => response.data,  // Adjust to match your API response structure
+        select: (response) => response.data,
         refetchOnWindowFocus: false,
         retry: false,
         cacheTime: 5 * 60 * 1000,
@@ -33,7 +32,6 @@ function Workers() {
     useEffect(() => {
         setFiltredJobS(workers);
     }, [workers]);
-
     return (
         <>
             {/* Filter section */}

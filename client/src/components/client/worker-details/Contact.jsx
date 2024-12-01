@@ -11,6 +11,7 @@ import Modal from '@mui/material/Modal';
 import ClientApi from "../../../api/ClientApi";
 import {useNavigate} from "react-router-dom";
 import AuthModal from "../../auth/AuthModal";
+import {useLoading} from "../../../context/LoadingProvider";
 
 const style = {
     position: 'absolute',
@@ -65,7 +66,7 @@ function Contact({job}) {
     const [phoneModal, setPhoneModal] = useState(false)
     const handleModal = () => setPhoneModal(!phoneModal)
     const navigate = useNavigate()
-    const user = JSON.parse(localStorage.getItem('user'))
+    const {user} = useLoading()
     const [loginForm, setLoginForm] = useState(false)
 
     const chatAction = async () => {

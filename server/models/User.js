@@ -11,8 +11,8 @@ const UserSchema = mongoose.Schema( {
     role: { type: String, default: "client" },
     status: {
         type: String,
-        enum: ['verified', 'inverified', 'suspended'], // Define the allowed values for the enum
-        default: 'inverified' // Set the default value
+        enum: ['verified', 'inverified', 'suspended'],
+        default: 'inverified' 
     },
     permissions: { type: [String], default: [], required: false },
 }, {

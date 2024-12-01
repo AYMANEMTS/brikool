@@ -8,7 +8,6 @@ const DisplayImage =  (preview,user) => {
                 : `${process.env.EXPO_PUBLIC_BACKEND_URL}/${user?.image}`
             : defaultImageUrl;
 
-    // Fix backslashes in the URL path
     imageUrl = imageUrl.replace(/\\/g, '/');
     return imageUrl
 }

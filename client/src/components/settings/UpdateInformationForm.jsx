@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, FormControl, InputLabel, MenuItem, Select, TextField} from '@mui/material';
 import {Controller, useForm} from "react-hook-form";
 import citiesInMorocco from "../../utils/citiesInMorocco";
@@ -6,19 +6,15 @@ import ClientApi from "../../api/ClientApi";
 import displayImage from "../../utils/imageFromServer";
 import {useSnackbar} from "notistack";
 import {Loader} from "lucide-react";
+import {useLoading} from "../../context/LoadingProvider";
+import {useQueryClient} from "react-query";
 
-const UpdateInformationForm = ({user={}}) => {
+const UpdateInformationForm = () => {
+    const {setUser,user} = useLoading()
     const [loading, setLoading] = useState(false)
     const [selectedCity, setSelectedCity] = useState(user?.city || '');
-    const { register,control, handleSubmit,setValue,
-    formState:{errors,isValid,isDirty}} = useForm({mode:"onChange",
-        defaultValues: {
-            name: user.name || "",
-            email: user.email || "",
-            city: user.city || "",
-            image: user.image || ""
-        }
-    });
+    const { register,watch,reset,control, handleSubmit,setValue,
+    formState:{errors}} = useForm();
     const [preview, setPreview] = useState('');
     const { enqueueSnackbar } = useSnackbar();
     const handleImageChange = (e) => {
@@ -32,20 +28,20 @@ const UpdateInformationForm = ({user={}}) => {
             reader.readAsDataURL(file);
         }
     };
-
     const handleCityChange = (event) => {
-        setSelectedCity(event.target.value); // Update selected city state
+        setSelectedCity(event.target.value);
         setValue('city',event.target.value)
     };
+    const queryClient = useQueryClient()
     const handleUpdateInformation = async (data) => {
         try {
             setLoading(true)
-            const id = user._id
-            const res = await ClientApi.updateClient(id,data)
+            const res = await ClientApi.updateClient(data)
             if(res.status === 200){
-                const updatedUser = res?.data
-                localStorage.setItem('user',JSON.stringify(updatedUser))
+                setUser(res?.data)
+                reset()
                 enqueueSnackbar("You updated successfully",{variant:"success"})
+                await queryClient.invalidateQueries('jobs')
             }
         }catch (e) {
             console.error(e)
@@ -54,6 +50,21 @@ const UpdateInformationForm = ({user={}}) => {
             setLoading(false)
         }
     }
+    useEffect(() => {
+        if (user) {
+            setValue('name',user.name)
+            setValue('email',user.email)
+            setValue('city',user.city)
+        }
+    }, [user, setValue]);
+
+    const isValid = () => {
+        const [name, city, image] = watch(['name', 'city', 'image']);
+        const isImageChanged =
+            (image && image !== user?.image) ||
+            (image?.name && image.name !== user?.image?.name);
+        return name !== user?.name || city !== user?.city || isImageChanged;
+    };
 
     return (
         <>
@@ -97,6 +108,7 @@ const UpdateInformationForm = ({user={}}) => {
                             type="email"
                             fullWidth
                             variant="outlined"
+                            helperText={errors.name && errors.name.message}
                             required
                             {...register('email')}
                         />
@@ -135,7 +147,7 @@ const UpdateInformationForm = ({user={}}) => {
                         </FormControl>
                     </div>
                     <div>
-                        <Button onClick={handleSubmit(handleUpdateInformation)} disabled={!isValid || !isDirty || loading}
+                        <Button onClick={handleSubmit(handleUpdateInformation)} disabled={!isValid()}
                             type="submit"
                             variant="contained"
                             color="primary"

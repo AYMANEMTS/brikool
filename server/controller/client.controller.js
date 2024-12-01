@@ -1,18 +1,11 @@
 const Client = require("../models/User")
-const getUserFromToken = require('../utils/getUserIdFromToken');
-
-const getClients = async (req,res) => {
-    try {
-        const client = await Client.find({})
-        res.status(200).json(client)
-    }catch (e) {
-        res.status(500).json({error: e})
-    }
-}
+const getUserFromToken = require('../utils/getUserFromToken');
 
 const storeClient = async (req, res) => {
     try {
-        const client = await Client.create(req.body)
+        const {name,email,password,city,role,permissions} = req.body
+        const image = req.file ? req.file.path : undefined;
+        const client = await Client.create({name,email,password,city,role,permissions,image})
         res.status(200).json(client)
     }catch (e) {
         res.status(500).json({error: e})
@@ -60,4 +53,4 @@ const destroyClient = async (req,res) => {
     }
 }
 
-module.exports = {getClients, updateClient, destroyClient, showClient,storeClient}
+module.exports = { updateClient, destroyClient, showClient,storeClient}

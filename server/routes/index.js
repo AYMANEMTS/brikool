@@ -6,6 +6,8 @@ const categoryRoutes = require('./category.route');
 const jobRoutes = require('./job.route');
 const chatRoutes = require('./chat.route');
 const notificationRoutes = require('./notification.route');
+const permissionsRoutes = require('./permissions.route');
+const adminRoutes = require('./admine.route');
 const NotificationToken = require('../models/NotificationToken')
 
 const router = express.Router();
@@ -17,6 +19,9 @@ router.use("/categories", categoryRoutes);
 router.use("/jobs", jobRoutes);
 router.use("/chats", chatRoutes);
 router.use("/notifications", notificationRoutes);
+router.use("/permissions", permissionsRoutes);
+router.use("/admin", adminRoutes);
+
 
 router.post('/register-push-token', async (req, res) => {
     try {

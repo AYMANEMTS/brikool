@@ -83,7 +83,7 @@ const RegisterForm = ({handleAuthForm}) => {
                     Register with Google
                 </Button>
 
-                {/* Link for Login */}
+                {/* Link for AdminLogin */}
                 <TouchableOpacity onPress={handleAuthForm} style={tw`mt-4`}>
                     <Text style={tw`text-blue-500 text-center`}>Already have an account? Login</Text>
                 </TouchableOpacity>
