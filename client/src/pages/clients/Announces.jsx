@@ -7,6 +7,7 @@ import ClientApi from "../../api/ClientApi";
 import {useQuery, useQueryClient} from "react-query";
 import {useLoading} from "../../context/LoadingProvider";
 import {useSearchParams} from "react-router-dom";
+import {useTranslation} from "react-i18next";
 
 function Announces() {
     const {user} = useLoading()
@@ -37,6 +38,7 @@ function Announces() {
             startLoading()
         }
     }, [isFetching, startLoading]);
+    const {t} = useTranslation('announces')
     return (
         <>
             <div className={"pb-5"}>
@@ -61,7 +63,7 @@ function Announces() {
                             mb: { xs: 1, sm: 0 }, // Add margin for spacing on smaller screens
                         }}
                     >
-                        Your Announcement
+                        {t('yourAnnouncement')}
                     </Typography>
 
                     <Button
@@ -77,7 +79,7 @@ function Announces() {
                             },
                         }}
                     >
-                        Create new Announces
+                        {t('createNewAnnounces')}
                     </Button>
                 </Box>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5  gap-3 ">
@@ -87,7 +89,7 @@ function Announces() {
                     )) : ""}
                 </div>
             </div>
-            <JobModal handleOpen={handleOpen} open={modalOpen} user={user} isUpdate={false} />
+            <JobModal  handleOpen={handleOpen} open={modalOpen} user={user} isUpdate={false} />
         </>
     );
 }

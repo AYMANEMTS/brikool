@@ -1,0 +1,7 @@
+{
+  "requiredField": "This field is required",
+  "maxLength": "{{field}} must be between {{min}} and {{max}} characters",
+  "minLength": "{{field}} must be between {{min}} and {{max}} characters",
+  "notEmpty": "Description cannot be empty or just spaces"
+
+}

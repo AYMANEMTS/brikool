@@ -1,0 +1,22 @@
+{
+  "yourAnnouncement": "Votre annonce",
+  "createNewAnnounces": "Créer un nouvelle annonce",
+  "information": "Informations",
+  "name": "Nom et prénom",
+  "city": "Ville",
+  "category": "Catégorie",
+  "cancel": "Annuler",
+  "next": "Suivant",
+  "save": "Sauvegarder",
+  "back": "Arrière",
+  "description": "Description",
+  "contactsTitle": "Coordonnées",
+  "phone": "Téléphone",
+  "email": "E-mail",
+  "phoneValidation": "Le téléphone doit commencer par 0 et comporter exactement 10 chiffres",
+  "contactsError": "Au moins un contact est requis",
+  "success_created_msg": "Votre annonce a été créée avec succès",
+  "success_updated_msg": "Votre annonce a été mise à jour avec succès",
+  "failed_msg": "Échec de l'exécution de cette tâche"
+
+}

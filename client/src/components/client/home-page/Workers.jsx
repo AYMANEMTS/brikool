@@ -5,7 +5,7 @@ import {useQuery, useQueryClient} from "react-query";
 import ClientApi from "../../../api/ClientApi";
 
 
-export default function Workers() {
+export default function Workers({t}) {
     const queryClient = useQueryClient();
     const cachedWorkers = queryClient.getQueryData('jobs')?.data || [];
     const [workers, setWorkers] = useState(cachedWorkers || []);
@@ -30,10 +30,10 @@ export default function Workers() {
         <div className={"my-4 h-full"}>
             <div className="flex justify-between items-center my-3">
                 <div>
-                    <h1 className="text-2xl font-semibold mb-6 text-center">Populaire workers</h1>
+                    <h1 className="text-2xl font-semibold mb-6 text-center">{t('popularWorkers')}</h1>
                 </div>
                 <div>
-                    <a href="#" className="text-blue-600 font-semibold hover:underline">Show more</a>
+                    <a href="#" className="text-blue-600 font-semibold hover:underline">{t('showMore')}</a>
                 </div>
             </div>
 

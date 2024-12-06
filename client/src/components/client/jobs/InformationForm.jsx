@@ -5,12 +5,12 @@ import {Controller} from "react-hook-form";
 import displayImage from "../../../utils/imageFromServer";
 import {useQueryClient} from "react-query";
 
-function InformationForm({control,user,errors,job}) {
+function InformationForm({control,user,errors,job,t}) {
     const queryClient = useQueryClient()
     const categories = queryClient.getQueryData('categories')?.data?.category || []
     return (
         <>
-            <h2 className={"mb-4 font-bold text-gray-800 pl-2 flex justify-center"}>Information </h2>
+            <h2 className={"mb-4 font-bold text-gray-800 pl-2 flex justify-center"}>{t('information')} </h2>
             <Grid container spacing={2} className="p-4 ">
                 {/* Image Preview */}
                 <Grid item xs={12} md={6} container justifyContent="center" alignItems="center">
@@ -26,7 +26,7 @@ function InformationForm({control,user,errors,job}) {
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <TextField
-                                label="Full Name"
+                                label={t('name')}
                                 type="text"
                                 fullWidth
                                 variant="outlined"
@@ -37,7 +37,7 @@ function InformationForm({control,user,errors,job}) {
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                label="City"
+                                label={t('city')}
                                 type="text"
                                 fullWidth
                                 variant="outlined"
@@ -47,7 +47,7 @@ function InformationForm({control,user,errors,job}) {
                         </Grid>
                         <Grid item xs={12}>
                             <FormControl fullWidth error={!!errors.category}>
-                                <InputLabel id="category-label">Category *</InputLabel>
+                                <InputLabel id="category-label">{t('category')}</InputLabel>
                                 <Controller
                                     name="category"
                                     control={control}

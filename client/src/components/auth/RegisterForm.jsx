@@ -9,6 +9,7 @@ import {useNavigate} from "react-router-dom";
 import {useSnackbar} from "notistack";
 import {Loader} from "lucide-react";
 import {useLoading} from "../../context/LoadingProvider";
+import {useTranslation} from "react-i18next";
 
 function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
     const { register, handleSubmit, control,setError, formState: { errors,isValid } } = useForm();
@@ -17,6 +18,7 @@ function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
     const [message, setMessage] = useState(null)
     const { enqueueSnackbar } = useSnackbar();
     const [loading, setLoading] = useState(false)
+    const {t} = useTranslation('register');
     const handleRegister = async (data) => {
         setMessage(null)
         setLoading(true)
@@ -26,7 +28,7 @@ function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
             setUser(res.data.user)
             handleOpen()
             navigate(redirectRoute)
-            enqueueSnackbar("You are registered SuccessFully",{variant:"success"})
+            enqueueSnackbar(t('successMessage'),{variant:"success"})
         } catch (error) {
             if (!error.response) {
                 // Network or server is down
@@ -36,10 +38,10 @@ function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
                 if (message) setMessage(message);
                 if (serverErrors && Array.isArray(serverErrors)) {
                     serverErrors.forEach((errorItem) => {
-                        const { path, msg } = errorItem;
-                        setError(path, {
+                        const { field, message } = errorItem;
+                        setError(field, {
                             type: 'manual',
-                            message: msg,
+                            message: message,
                         });
                     });
                 }
@@ -49,7 +51,6 @@ function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
             setLoading(false)
         }
     };
-
     return (
         <Box
             component="form"
@@ -69,7 +70,7 @@ function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
             }}
         >
             <Typography variant="h5" sx={{ textAlign: 'center', mb: 2 }}>
-                Create an Account
+                {t('createAccount')}
             </Typography>
             {message !== null && (
                 <Alert variant="filled" severity="error">
@@ -77,7 +78,7 @@ function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
                 </Alert>
             )}
             <TextField
-                label="Full Name"
+                label={t('fullName')}
                 type="text"
                 fullWidth
                 variant="outlined"
@@ -88,7 +89,7 @@ function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
                 helperText={errors.name ? errors.name.message : null}
             />
             <TextField
-                label="Email"
+                label={t('email')}
                 type="email"
                 fullWidth
                 variant="outlined"
@@ -99,7 +100,7 @@ function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
                 helperText={errors.email ? errors.email.message : null}
             />
             <TextField
-                label="Password"
+                label={t('password')}
                 type="password"
                 fullWidth
                 variant="outlined"
@@ -112,7 +113,7 @@ function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
 
             {/* City Dropdown with Controller */}
             <FormControl fullWidth error={!!errors.city}>
-                <InputLabel id="city-label">City *</InputLabel>
+                <InputLabel id="city-label">{t('city')}</InputLabel>
                 <Controller
                     name="city"
                     control={control}
@@ -142,7 +143,7 @@ function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
                 fullWidth
                 sx={{ mt: 2, mb: 1 }}
             >
-                {loading ? <><Loader className={" mx-2 animate-spin text-white"} /> loading</> : "Register"}
+                {loading ? <><Loader className={" mx-2 animate-spin text-white"} /></> : t('register')}
             </Button>
 
             <Button
@@ -152,12 +153,12 @@ function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
                 startIcon={<GoogleIcon />}
                 sx={{ mb: 2 }}
             >
-                Register with Google
+                {t('registerWithGoogle')}
             </Button>
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }} onClick={handllSwapForm} className={"cursor-pointer"}>
                 <Link variant="body2" sx={{ textDecoration: 'none' }}>
-                    Already have an account? <span className={"pl-1"}>Sign in</span>
+                    {t('alreadyHaveAccount')}
                 </Link>
             </Box>
         </Box>

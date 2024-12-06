@@ -5,14 +5,14 @@ import {useQuery, useQueryClient} from "react-query";
 import ClientApi from "../../../api/ClientApi";
 
 
-function AvailableWorkes() {
+function AvailableWorkes({t}) {
     const queryClient = useQueryClient();
     const cachedWorkers = queryClient.getQueryData('jobs')?.data || [];
     const [workers, setWorkers] = useState(cachedWorkers || []);
 
     const { data } = useQuery('jobs', ClientApi.getJobs, {
         initialData: cachedWorkers.length > 0 ? cachedWorkers : undefined,
-        select: (response) => response.data,  // Adjust to match your API response structure
+        select: (response) => response.data,
         refetchOnWindowFocus: false,
         retry: false,
         cacheTime: 5 * 60 * 1000,
@@ -29,10 +29,10 @@ function AvailableWorkes() {
         <>
             <div className="flex justify-between items-center my-3">
                 <div>
-                    <h1 className="text-2xl font-semibold mb-6 text-center">Availables workers</h1>
+                    <h1 className="text-2xl font-semibold mb-6 text-center">{t('availableWorkers')}</h1>
                 </div>
                 <div>
-                    <a href="#" className="text-blue-600 font-semibold hover:underline">Show more</a>
+                    <a href="#" className="text-blue-600 font-semibold hover:underline">{t('showMore')}</a>
                 </div>
             </div>
 

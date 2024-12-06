@@ -19,11 +19,14 @@ const registerClient = async (req, res) => {
         res.status(500).json({error: e})
     }
 }
+
+
 const loginClient = async (req, res) => {
+    const {t} = req;
     try {
         const client = await Users.findOne({ email: req.body.email });
         if (!client || (!await bcrypt.compare(req.body.password, client.password))) {
-            return res.status(400).json({ message: "Incorrect email or password" })
+            return res.status(400).json({ message: t('incorrectEmailOrPassword') })
         }
         const token = jwt.sign({ userId: client._id }, process.env.JWT_SECRET_KEY, {expiresIn: "30d"});
         res.cookie("jwt", token, {
@@ -91,27 +94,6 @@ const changePassword = async (req, res) => {
     }
 }
 
-const loginAdmin = async (req,res) => {
-    try {
-        const user = await Users.findOne({ email: req.body.email });
-        if (!user || (!await bcrypt.compare(req.body.password, user.password))) {
-            return res.status(400).json({ message: "Incorrect email or password" })
-        }
-        if (user.role !== 'admin' && user.role !== 'moderator'){
-            return res.status(403).send('You do not have the required role to sign in.');
-        }
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {expiresIn: "30d"});
-        res.cookie("jwt", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
-            maxAge: 30 * 24 * 60 * 60 * 1000,
-        });
-        return res.status(200).json({user:user,jwt: token})
-    }catch (e) {
-        return res.status(500).json({error: e})
-    }
-}
 
 const checkAuthAdmin = async (req, res) => {
     const token = req.cookies.jwt || req.headers['authorization']?.split(' ')[1];
@@ -137,4 +119,4 @@ const checkAuthAdmin = async (req, res) => {
     });
 };
 
-module.exports = {registerClient,loginClient,logout,authenticateToken,changePassword,loginAdmin,checkAuthAdmin};
+module.exports = {registerClient,loginClient,logout,authenticateToken,changePassword,checkAuthAdmin};

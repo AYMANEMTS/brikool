@@ -4,11 +4,13 @@ const {getAllCategory,storeCategory,destroyCategory,updateCategory,showCategory}
 const checkValidation = require("../middlewares/checkValidation");
 const protectedRoute = require("../middlewares/protectedRoute");
 const { createCategoryValidation } = require('../validators/catrgoryValidation')
+const upload = require('../config/multerConfig');
+const checkAuthorization = require("../middlewares/checkAuthorization");
 
 router.get('/',getAllCategory)
 router.get('/:id',showCategory)
-router.post('/',protectedRoute,createCategoryValidation,checkValidation,storeCategory)
-router.put('/:id',protectedRoute,createCategoryValidation,checkValidation,updateCategory)
-router.delete('/:id',protectedRoute,destroyCategory)
+router.post('/',protectedRoute,checkAuthorization('create_category'),upload.single('image'),createCategoryValidation,checkValidation,storeCategory)
+router.put('/:id',protectedRoute,checkAuthorization('edit_category'),upload.single('image'),createCategoryValidation,checkValidation,updateCategory)
+router.delete('/:id',checkAuthorization('delete_category'),protectedRoute,destroyCategory)
 
 module.exports = router

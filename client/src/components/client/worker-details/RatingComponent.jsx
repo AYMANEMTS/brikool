@@ -6,6 +6,7 @@ import ClientApi from "../../../api/ClientApi";
 import {useQueryClient} from "react-query";
 import AuthModal from "../../auth/AuthModal";
 import {useLoading} from "../../../context/LoadingProvider";
+import {useTranslation} from "react-i18next";
 
 const labels = {
     1: 'Useless',
@@ -48,10 +49,12 @@ function RatingComponent({ job }) {
         }
     };
 
+    const {t} = useTranslation('jobDetails')
+
     // Handle rating change
     const handleRatingChange = (newValue) => {
         if (job.userId._id === user._id){
-            return window.alert("You don't have right to rating on your announcement")
+            return window.alert(t('noRatingRight'))
         }
         setValue(newValue);
         submitRating(newValue); // Call the submit function

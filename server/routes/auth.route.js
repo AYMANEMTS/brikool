@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {registerClient,loginClient, logout,authenticateToken,changePassword, loginAdmin, checkAuthAdmin} = require('../controller/auth.controller');
+const {registerClient,loginClient, logout,authenticateToken,changePassword, checkAuthAdmin} = require('../controller/auth.controller');
 const {createClientValidation,loginValidation} = require("../validators/userValidation");
 const checkValidation = require("../middlewares/checkValidation");
 const protectedRoute = require("../middlewares/protectedRoute");
@@ -13,6 +13,5 @@ router.post('/register',upload.none(), createClientValidation,checkValidation,re
 router.post('/login', upload.none(),loginValidation,checkValidation,loginClient);
 router.post('/logout',protectedRoute,logout)
 router.post('/changePassword',upload.none(),protectedRoute,changePassword)
-router.post('/admin/login',upload.none(),loginValidation,checkValidation,loginAdmin)
 
 module.exports = router;

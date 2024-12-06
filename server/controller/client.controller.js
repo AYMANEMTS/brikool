@@ -1,5 +1,6 @@
 const Client = require("../models/User")
 const getUserFromToken = require('../utils/getUserFromToken');
+const Job = require("../models/Job");
 
 const storeClient = async (req, res) => {
     try {
@@ -44,13 +45,18 @@ const updateClient = async (req,res) => {
     }
 }
 
-const destroyClient = async (req,res) => {
+const destroyClient = async (req, res) => {
     try {
-        await Client.findByIdAndDelete(req.params.id)
-        res.status(200).json({message: 'Client deleted successfully'})
-    }catch (e) {
-        res.status(500).json({error: e})
+        const { id } = req.params;
+        const user = await Client.findByIdAndDelete(id);
+        if (!user) {
+            return res.status(404).json({ message: 'Client not found' });
+        }
+        await Job.deleteMany({ userId: id });
+        res.status(200).json({ message: 'Client and associated jobs deleted successfully' });
+    } catch (e) {
+        res.status(500).json({ error: e.message || e });
     }
-}
+};
 
 module.exports = { updateClient, destroyClient, showClient,storeClient}

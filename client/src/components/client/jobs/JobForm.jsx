@@ -8,6 +8,7 @@ import ClientApi from "../../../api/ClientApi";
 import {useQueryClient} from "react-query";
 import {useSnackbar} from "notistack";
 import {Loader} from "lucide-react";
+import {useTranslation} from "react-i18next";
 
 function JobForm({ handleOpen ,user,context}) {
     const [formSteper, setFormSteper] = useState(1);
@@ -25,6 +26,7 @@ function JobForm({ handleOpen ,user,context}) {
         },
         mode: "onChange"
     })
+    const {t} = useTranslation('announces')
     const { enqueueSnackbar } = useSnackbar();
     const [loading, setLoading] = useState(false)
     const handleCancel = () => {
@@ -54,20 +56,20 @@ function JobForm({ handleOpen ,user,context}) {
                     if(res.status === 200){
                         await queryClient.invalidateQueries('jobs')
                         handleOpen()
-                        enqueueSnackbar("You Announce is updated successfully", {variant:"success"})
+                        enqueueSnackbar(t('success_updated_msg'), {variant:"success"})
                     }
                 }else {
                     const res = await ClientApi.createJob(formatedData).catch(e => console.error(e))
                     if(res.status === 201){
                         await queryClient.invalidateQueries('jobs')
                         handleOpen()
-                        enqueueSnackbar("You Announce is created successfully", {variant:"success"})
+                        enqueueSnackbar(t('success_created_msg'), {variant:"success"})
                     }
                 }
 
             }catch (e) {
                 console.error(e)
-                enqueueSnackbar("Failed to "+ context.isUpdate ? 'update' : 'create' + +" our announcement", {variant:"error"})
+                enqueueSnackbar(t('failed_msg'), {variant:"error"})
             }finally {
                 setLoading(false)
             }
@@ -78,25 +80,25 @@ function JobForm({ handleOpen ,user,context}) {
     return (
         <form onSubmit={handleSubmit(handleNext)}>
             {formSteper === 1 ? (
-                <InformationForm control={control} errors={errors} user={user} job={context.job}/>
+                <InformationForm t={t} control={control} errors={errors} user={user} job={context.job}/>
             ) : formSteper === 2 ? (
-                <DescriptionForm control={control} errors={errors} />
+                <DescriptionForm t={t} control={control} errors={errors} />
             ) : (
-                <ContactForm control={control} errors={errors} watch={watch} user={user} />
+                <ContactForm t={t} control={control} errors={errors} watch={watch} user={user} />
             )}
 
             {/* Buttons Section */}
             <Grid container justifyContent="space-between" className="mt-4">
                 <Grid item>
                     <Button variant="outlined" color="secondary" onClick={handleCancel}>
-                        Cancel
+                        {t('cancel')}
                     </Button>
                 </Grid>
                 <Grid item>
                     <div className="flex space-x-2">
                         {formSteper !== 1 && (
                             <Button variant="contained" color="primary" onClick={handleBack}>
-                                Back
+                                {t('back')}
                             </Button>
                         )}
                         <Button
@@ -105,7 +107,7 @@ function JobForm({ handleOpen ,user,context}) {
                             color="primary"
                             disabled={!isValid || loading}
                         >
-                            {formSteper !== 3 ? "Next" : loading ? <><Loader className={" mx-2 animate-spin text-white"} /> loading</> : "Save"}
+                            {formSteper !== 3 ? t('next') : "" ? <><Loader className={" mx-2 animate-spin text-white"} /> </> : t('save')}
                         </Button>
                     </div>
                 </Grid>

@@ -1,0 +1,14 @@
+{
+  "home": "Accueil",
+  "workers": "Travailleurs",
+  "about": "À propos",
+  "createNewJob": "Créer un nouvel emploi",
+  "signIn": "Se connecter",
+  "search": "Rechercher...",
+  "dashboard": "Tableau de bord",
+  "announces": "Annonces" ,
+  "chat": "Discussion",
+  "settings": "Paramètres",
+  "support": "Support" ,
+  "logout": "Déconnexion"
+}

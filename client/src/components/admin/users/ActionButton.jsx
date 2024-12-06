@@ -1,18 +1,19 @@
 import * as React from 'react';
-import IconButton from '@mui/joy/IconButton';
 import Menu from '@mui/joy/Menu';
 import MenuItem from '@mui/joy/MenuItem';
 import ListItemDecorator from '@mui/joy/ListItemDecorator';
 import ListDivider from '@mui/joy/ListDivider';
-import MoreVert from '@mui/icons-material/MoreVert';
 import Edit from '@mui/icons-material/Edit';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import SecurityIcon from '@mui/icons-material/Security';
 import DeleteForever from '@mui/icons-material/DeleteForever';
 import MenuButton from '@mui/joy/MenuButton';
 import Dropdown from '@mui/joy/Dropdown';
+import {useAdminContext} from "../../../context/AdminProvider";
+import {useLoading} from "../../../context/LoadingProvider";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-export default function ActionButton({user,togglePermissionsModal,toggleDetailsModal,setSelectedUser,toggleDeletesModal}) {
+export default function ActionButton({user,togglePermissionsModal,toggleDetailsModal,setSelectedUser,toggleDeletesModal,toggleRoleModal}) {
     const onPermissionsClick = () => {
         setSelectedUser(user)
         togglePermissionsModal()
@@ -25,25 +26,27 @@ export default function ActionButton({user,togglePermissionsModal,toggleDetailsM
         setSelectedUser(user)
         toggleDeletesModal()
     }
+    const onEditRoleClick = () => {
+        setSelectedUser(user)
+        toggleRoleModal()
+    }
+    const {isAuthorized} = useAdminContext()
+    const {user: connectedUser} = useLoading()
     return (
         <Dropdown>
-            <MenuButton
-                slots={{ root: IconButton }}
-                slotProps={{
-                root: {
-                    sx: { backgroundColor: 'blue', '&:hover': { backgroundColor: 'darkblue' } },},
-                }} >
-                <MoreVert sx={{ color: 'white' }} />
+            <MenuButton style={{width: "2rem"}} disabled={!isAuthorized(connectedUser, 'edit_users')}>
+                <MoreVertIcon />
             </MenuButton>
+
             <Menu placement="bottom-end" >
-                <MenuItem>
+                <MenuItem onClick={onEditRoleClick} >
                     <ListItemDecorator>
                         <Edit />
                     </ListItemDecorator>
-                    Edit
+                    Role
                 </MenuItem>
 
-                <MenuItem disabled={user.role !== 'moderator'} onClick={onPermissionsClick}>
+                <MenuItem onClick={onPermissionsClick}>
                     <ListItemDecorator>
                         <SecurityIcon />
                     </ListItemDecorator>

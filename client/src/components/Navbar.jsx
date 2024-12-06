@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import AuthModal from "./auth/AuthModal";
 import UserMenu from "./navbarParts/UserMenu";
@@ -8,6 +8,8 @@ import CampaignIcon from "@mui/icons-material/Campaign";
 import PersonIcon from "@mui/icons-material/Person";
 import Notification from "./navbarParts/Notification"
 import {useLoading} from "../context/LoadingProvider";
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import {useTranslation} from "react-i18next";
 
 export default function Navbar() {
     const [isAtTop, setIsAtTop] = useState(true);
@@ -30,6 +32,7 @@ export default function Navbar() {
     }, []);
     const navigate = useNavigate()
     const {pathname} = useLocation()
+    const {t} = useTranslation('navbar')
     return (
         <>
             <header className={`fixed top-0 left-0 right-0 border-b bg-white font-sans min-h-[60px] px-10 py-3 z-50 `}>
@@ -44,13 +47,19 @@ export default function Navbar() {
 
                         <ul className='lg:flex lg:gap-x-10 lg:absolute lg:left-1/2 lg:-translate-x-1/2 max-lg:space-y-3 max-lg:fixed max-lg:bg-white max-lg:w-2/3 max-lg:min-w-[300px] max-lg:top-0 max-lg:left-0 max-lg:px-10 max-lg:py-4 max-lg:h-full max-lg:shadow-md max-lg:overflow-auto z-50'>
                             <li>
-                                <Link to={"/"} className={`${pathname === "/" && 'active'} nav-link p-1 hover:text-blue-500 hover:font-bold`}>Home</Link>
+                                <Link to={"/"} className={`${pathname === "/" && 'active'} nav-link p-1 hover:text-blue-500 hover:font-bold`}>
+                                    {t('home')}
+                                </Link>
                             </li>
                             <li>
-                                <Link to={"/workers"} className={`${pathname === '/workers' && 'active'} nav-link p-1 hover:text-blue-500 hover:font-bold`}>Workers</Link>
+                                <Link to={"/workers"} className={`${pathname === '/workers' && 'active'} nav-link p-1 hover:text-blue-500 hover:font-bold`}>
+                                    {t('workers')}
+                                </Link>
                             </li>
                             <li>
-                                <Link to={"/about-us"} className={`${pathname === '/about-us' && 'active'} nav-link p-1 hover:text-blue-500 hover:font-bold`}>About US</Link>
+                                <Link to={"/about-us"} className={`${pathname === '/about-us' && 'active'} nav-link p-1 hover:text-blue-500 hover:font-bold`}>
+                                    {t('about')}
+                                </Link>
                             </li>
                         </ul>
                     </div>
@@ -60,13 +69,21 @@ export default function Navbar() {
                             <>
                                 {/* Icons on the right */}
                                 <div className="md:flex space-x-4 hidden">
-                                    <button onClick={() => navigate("/announces?showForm=true")}
-                                            className="flex items-center space-x-2 p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
-                                        <span>Create New Job</span>
-                                        <CampaignIcon fontSize="small"/>
-                                    </button>
+                                    {user.role === 'client' ? (
+                                        <button onClick={() => navigate("/announces?showForm=true")}
+                                                className="flex items-center space-x-2 p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+                                            <span>{t('createNewJob')}</span>
+                                            <CampaignIcon fontSize="small"/>
+                                        </button>
+                                    ): (
+                                        <button onClick={() => navigate("/admin")}
+                                                className="flex items-center space-x-2 p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+                                            <span>{t('dashboard')}</span>
+                                            <DashboardIcon fontSize="small"/>
+                                        </button>
+                                    )}
                                     <UserMenu/>
-                                    <Notification />
+                                    <Notification/>
                                 </div>
                             </>
                         ) : (
@@ -78,7 +95,7 @@ export default function Navbar() {
                                         handleOpen()
                                     }}
                                             className="flex items-center space-x-2 p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
-                                        <span>Create New Job</span>
+                                        <span>{t('createNewJob')}</span>
                                         <CampaignIcon fontSize="small"/>
                                     </button>
                                     <button onClick={() => {
@@ -86,7 +103,7 @@ export default function Navbar() {
                                         handleOpen()
                                     }}
                                             className="flex items-center space-x-2 p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
-                                        <span>Sign in</span>
+                                        <span>{t('signIn')}</span>
                                         <PersonIcon fontSize="small"/>
                                     </button>
                                 </div>

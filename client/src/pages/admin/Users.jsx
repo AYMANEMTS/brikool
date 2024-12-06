@@ -3,27 +3,29 @@ import UsersTable from "../../components/admin/users/UsersTable";
 import UserModal from "../../components/admin/users/UserModal";
 import {useAdminContext} from "../../context/AdminProvider";
 import {Input, Option, Select} from "@mui/joy";
-import displayImage from "../../utils/imageFromServer";
 import citiesInMorocco from "../../utils/citiesInMorocco";
 import {Button} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import {useLoading} from "../../context/LoadingProvider";
+import {useNavigate} from "react-router-dom";
 
 function Users() {
-    const {users} = useAdminContext()
+    const {users,isAuthorized} = useAdminContext()
+    const {user} = useLoading()
     const [selectedCity, setSelectedCity] = useState("All Cities")
     const [selectedRole, setSelectedRole] = useState("All Roles")
     const [search, setSearch] = useState("")
     const [filteredUsers, setFilteredUsers] = useState([])
     const [userForm,setUserForm] = useState(false)
     const {jobs} = useAdminContext()
-
+    const navigate = useNavigate()
     const applyFilters = () => {
         let filtered = users;
         if (selectedCity !== "All Cities") {
-            filtered = filtered.filter((user) => user.city === selectedCity);
+            filtered = filtered.filter((user) => user?.city === selectedCity);
         }
         if (selectedRole !== "All Roles") {
-            filtered = filtered.filter((user) => user.role === selectedRole);
+            filtered = filtered.filter((user) => user?.role === selectedRole);
         }
         setFilteredUsers(filtered);
     };
@@ -41,6 +43,11 @@ function Users() {
             setFilteredUsers(users);
         }
     }, [search, users, setFilteredUsers]);
+    useEffect(() => {
+        if (!isAuthorized(user,'view_users')){
+            navigate("/admin")
+        }
+    }, [user]);
 
     return (
         <div className="p-4">
@@ -64,9 +71,9 @@ function Users() {
                             onChange={(event, value) => setSelectedCity(value)}>
                         <Option value="All Cities">All Cities</Option>
                         {citiesInMorocco
-                            ?.filter(city => jobs.some(job => job.userId.city === city))
+                            ?.filter(city => jobs.some(job => job.userId?.city === city))
                             ?.map((city, key) => (
-                                <Option key={key} value={city}>{city} ({jobs.filter(job => job.userId.city === city)?.length})</Option>
+                                <Option key={key} value={city}>{city} ({jobs.filter(job => job.userId?.city === city)?.length})</Option>
                             ))}
                     </Select>
 
@@ -74,13 +81,14 @@ function Users() {
                     <Select defaultValue={selectedRole}
                             onChange={(event, value) => setSelectedRole(value)}>
                         <Option value="All Roles">All Roles</Option>
-                        <Option disabled={!jobs.some(job => job.userId.role === 'admin')} value="admin">Admin</Option>
-                        <Option disabled={!jobs.some(job => job.userId.role === 'moderator')} value="moderator">Moderator</Option>
-                        <Option disabled={!jobs.some(job => job.userId.role === 'client')} value="client">Client</Option>
+                        <Option disabled={!jobs.some(job => job.userId?.role === 'admin')} value="admin">Admin</Option>
+                        <Option disabled={!jobs.some(job => job.userId?.role === 'moderator')} value="moderator">Moderator</Option>
+                        <Option disabled={!jobs.some(job => job.userId?.role === 'client')} value="client">Client</Option>
                     </Select>
 
                     {/* create button */}
-                    <Button onClick={() => setUserForm(true)} variant={"outlined"} color={"primary"}>
+                    <Button disabled={!isAuthorized(user,"create_users")}
+                        onClick={() => setUserForm(true)} variant={"outlined"} color={"primary"}>
                         Create New User
                     </Button>
                 </div>

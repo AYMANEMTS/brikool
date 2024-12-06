@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import {useForm} from "react-hook-form";
 import {TextField} from "@mui/material";
 import ClientApi from "../../../api/ClientApi";
@@ -7,6 +6,8 @@ import formatDate from "../../../utils/formatDate";
 import {useQueryClient} from "react-query";
 import AuthModal from "../../auth/AuthModal";
 import {useLoading} from "../../../context/LoadingProvider";
+import {useTranslation} from "react-i18next";
+import displayImage from "../../../utils/imageFromServer";
 
 function Comments({jobId,job={}}) {
     const {user} = useLoading()
@@ -15,13 +16,14 @@ function Comments({jobId,job={}}) {
             comment: ""
         }})
     const queryClient = useQueryClient()
+    const {t} = useTranslation("jobDetails");
     const handleComment = async (data) => {
         try {
             if (!user){
                 return setLoginForm(true)
             }
             if (job.userId._id === user._id){
-                return window.alert("You don't have right to comment on your announcement")
+                return window.alert(t('noCommentRight'))
             }
             await ClientApi.addComment(jobId,data).catch(e => console.error(e))
             await queryClient.invalidateQueries(['job', jobId])
@@ -42,31 +44,29 @@ function Comments({jobId,job={}}) {
             setCommentsCount((prev) => Math.max(prev - 4, 4));
         }
     };
-
+    const {t:tValidation} = useTranslation("validation");
 
     return (
         <>
-            <section className=" py-8">
-                <div className="container ">
-                    <h2 className="text-2xl font-bold mb-4">Customer Comments</h2>
-
+            <div className="container mt-2 ">
+                {job?.comments?.length > 0 && <span className={"text-xl font-semibold p-4 mb-2"}>{t('comments')}</span>}
                     <div className="space-y-4">
                         {job?.comments?.slice(0,commentsCount)?.map((item,key) => (
-                            <div className="bg-white p-4 rounded-lg shadow" key={key}>
+                            <div className="bg-white p-4 mt-3 rounded-lg shadow" key={key}>
                                 <div className="flex items-center mb-2">
-                                    <img src="https://via.placeholder.com/40" alt="User Avatar"
+                                    <img src={displayImage("",item?.userId)} alt="User Avatar"
                                          className="w-10 h-10 rounded-full mr-3"/>
                                     <div>
                                         <h3 className="font-semibold">{item?.userId?.name}</h3>
                                         <p className="text-sm text-gray-500">{formatDate(item?.createdAt)}</p>
                                     </div>
                                 </div>
-                                <p className="text-gray-700">{item?.comment}</p>
-                                <div className="flex items-center mt-2">
-                                    <button className="text-red-500 hover:text-red-700 mr-2">
-                                        <FavoriteBorderIcon/>
-                                    </button>
-                                </div>
+                                <p className="text-gray-700 line-clamp-3">{item?.comment}</p>
+                                {/*<div className="flex items-center mt-2">*/}
+                                {/*    <button className="text-red-500 hover:text-red-700 mr-2">*/}
+                                {/*        <FavoriteBorderIcon/>*/}
+                                {/*    </button>*/}
+                                {/*</div>*/}
                             </div>
                         ))}
                         {/* Buttons for Showing More or Less */}
@@ -77,7 +77,7 @@ function Comments({jobId,job={}}) {
                                     onClick={() => incrementCommentsCount(job?.comments?.length)}
                                     className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
                                 >
-                                    Show More
+                                    {t('showMore')}
                                 </button>
                             )}
 
@@ -87,22 +87,22 @@ function Comments({jobId,job={}}) {
                                     onClick={decrementCommentsCount}
                                     className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
                                 >
-                                    Show Less
+                                    {t('showLess')}
                                 </button>
                             )}
                         </div>
                     </div>
 
                     {/*// <!-- Add Comment Form -->*/}
-                    <form className="mt-8 bg-white p-4 rounded-lg shadow">
-                        <h3 className="text-lg font-semibold mb-2">Add a Comment</h3>
+                    <form className="mt-2 bg-white p-4 rounded-lg shadow">
+                        <h3 className="text-lg font-semibold mb-2">{t('addComment')}</h3>
                         <div className="mb-4">
                         <TextField {...register('comment', {
-                                    required: {value: true, message: "This Field Is Required"},
-                                    maxLength: {value: 500, message: "Comment must be between 1 and 500 characters"},
-                                    minLength: {value: 1, message: "Comment must be between 1 and 500 characters"}
+                                    required: {value: true, message: tValidation('requiredField')},
+                                    maxLength: {value: 500, message: tValidation('maxLength',{field:t('comment'),min:1,max:500})},
+                                    minLength: {value: 1, message: tValidation('maxLength',{field:t('comment'),min:1,max:500})}
                                 })}
-                                           label="Comment"
+                                           label={t('comment')}
                                            fullWidth
                                            multiline
                                            rows={5}
@@ -113,11 +113,10 @@ function Comments({jobId,job={}}) {
                             </div>
                             <button type="submit" onClick={handleSubmit(handleComment)}
                                     className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                                Post Comment
+                                {t('postComment')}
                             </button>
                         </form>
                 </div>
-            </section>
             <AuthModal open={loginForm} handleOpen={() => setLoginForm(!loginForm)} redirectRoute={"/worker/" + jobId}
                        swapState={false}/>
         </>

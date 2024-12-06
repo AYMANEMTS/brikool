@@ -7,18 +7,24 @@ import PermissionsModal from "./permissions/PermissionsModal";
 import DetailsModal from "./details/DetailsModal";
 import DeleteModal from "./DeleteModal";
 import {useNavigate} from "react-router-dom";
+import {useLoading} from "../../../context/LoadingProvider";
+import RoleModal from "./RoleModal";
 
 function UsersTable({ users }) {
     const [permissionModal, setPermissionModal] = useState(false);
     const [detailsModal, setDetailsModal] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
+    const [roleModal, setRoleModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState({});
 
     const togglePermissionsModal = () => setPermissionModal(!permissionModal);
     const toggleDetailsModal = () => setDetailsModal(!detailsModal);
     const toggleDeletesModal = () => setDeleteModal(!deleteModal);
+    const toggleRoleModal = () => setRoleModal(!roleModal);
 
     const navigate = useNavigate();
+    const {user: connectedUser} = useLoading()
+
     return (
         <>
             <div className="overflow-x-auto bg-white shadow rounded-lg">
@@ -59,7 +65,9 @@ function UsersTable({ users }) {
                     </tr>
                     </thead>
                     <tbody>
-                    {users?.map((user, key) => (
+                    {users
+                        ?.filter(user => user?._id !== connectedUser?._id)
+                        ?.map((user, key) => (
                         <tr key={key}>
                             {/* User Info */}
                             <td style={{ width: '15%' }} className="px-6 py-4">
@@ -116,6 +124,7 @@ function UsersTable({ users }) {
                                     user={user}
                                     setSelectedUser={setSelectedUser}
                                     toggleDeletesModal={toggleDeletesModal}
+                                    toggleRoleModal={toggleRoleModal}
                                 />
                             </td>
                         </tr>
@@ -138,6 +147,11 @@ function UsersTable({ users }) {
             <DeleteModal
                 open={deleteModal}
                 handleOpen={toggleDeletesModal}
+                user={selectedUser}
+            />
+            <RoleModal
+                open={roleModal}
+                handleOpen={toggleRoleModal}
                 user={selectedUser}
             />
         </>

@@ -1,25 +1,28 @@
 import { TextField, Grid } from "@mui/material";
 import { Controller } from "react-hook-form";
+import {useTranslation} from "react-i18next";
 
-function DescriptionForm({ control, errors }) {
+function DescriptionForm({ control, errors,t }) {
+    const {t:tValidation} = useTranslation("validation");
     return (
         <Grid container spacing={2} className="p-4">
             <Grid item xs={12}>
-                <h3 className={"mb-4 font-bold text-gray-800 pl-2"}>Write Description For Your Job</h3>
+                <h3 className={"mb-4 font-bold text-gray-800 pl-2"}>{t('descriptionTitle')}</h3>
                 <Controller
                     name="description"
                     control={control}
                     rules={{
-                        required: "Description is required",
+                        required: tValidation('requiredField'),
                         validate: {
-                            notEmpty: value => value.trim() !== '' || "Description cannot be empty or just spaces",
-                            minLength: value => value.trim().length >= 10 || "Description must be at least 10 characters long",
+                            notEmpty: value => value.trim() !== '' || tValidation('notEmpty'),
+                            minLength: value => value.trim().length >= 10 || tValidation('minLength',{field:t('description'),min:10,max:500}),
+                            maxLength: value => value.trim().length <= 500 || tValidation('maxLength',{field:t('description'),min:10,max:500}),
                         }
                     }}
                     render={({ field }) => (
                         <TextField
                             {...field}
-                            label="Description"
+                            label={t('description')}
                             fullWidth
                             multiline // Add this to enable multiline text
                             rows={7}  // Now this will work

@@ -5,7 +5,7 @@ import {useQuery, useQueryClient} from "react-query";
 import ClientApi from "../../../api/ClientApi";
 import {useLoading} from "../../../context/LoadingProvider";
 
-function CategoriesSlider() {
+function CategoriesSlider({t}) {
     const {startLoading, stopLoading} = useLoading();
     const queryClient = useQueryClient()
     const cashedCategories = queryClient.getQueryData('categories')?.data?.data?.category || []
@@ -32,10 +32,10 @@ function CategoriesSlider() {
         <>
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-semibold mb-6 text-center">Que cherchez-vous?</h1>
+                    <h1 className="text-2xl font-semibold mb-6 text-center">{t('whatAreYouLookingFor')}</h1>
                 </div>
                 <div>
-                    <a href="#" className="text-blue-600 font-semibold hover:underline">Voir plus</a>
+                    <a href="#" className="text-blue-600 font-semibold hover:underline">{t('seeMore')}</a>
                 </div>
             </div>
 
@@ -63,7 +63,7 @@ function CategoriesSlider() {
                             max: 3000,
                             min: 1024
                         },
-                        items: 8,
+                        items: 6,
                         partialVisibilityGutter: 40
                     },
                     mobile: {
@@ -93,17 +93,15 @@ function CategoriesSlider() {
                 swipeable
 
             >
-                {categories.map((item, key) => (
+                {categories
+                    ?.filter(item => item.image)
+                    ?.map((item, key) => (
                     <div key={key}
-                         className="bg-green-100 p-5 m-2  rounded-lg text-center shadow-md hover:shadow-lg transition">
+                         className="bg-blue-300 p-5 m-2  rounded-lg text-center shadow-md hover:shadow-lg transition">
                         <div className="text-green-500 mb-2 sm:mb-4">
-                            <svg className="w-8 h-8 sm:w-10 sm:h-10 mx-auto" xmlns="http://www.w3.org/2000/svg"
-                                 fill="none"
-                                 viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/>
-                            </svg>
+                            <img src={`http://localhost:8000/${item.image}`} alt={item.name}/>
                         </div>
-                        <p className="text-green-700 font-semibold text-xs sm:text-sm">MAISON ET JARDIN</p>
+                        <p className="text-black font-semibold text-xs capitalize sm:text-sm">{item.name}</p>
                     </div>
                 ))}
             </Carousel>

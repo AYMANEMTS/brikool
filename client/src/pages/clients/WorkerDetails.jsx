@@ -11,6 +11,8 @@ import RatingComponent from "../../components/client/worker-details/RatingCompon
 import {useQuery} from "react-query";
 import displayImage from "../../utils/imageFromServer";
 import {useLoading} from "../../context/LoadingProvider";
+import CategoryIcon from '@mui/icons-material/Category';
+import {useTranslation} from "react-i18next";
 
 function WorkerDetails() {
     const {id} = useParams()
@@ -31,38 +33,63 @@ function WorkerDetails() {
             startLoading()
         }
     }, [isFetching,startLoading]);
+    const {t} = useTranslation('home')
     return (
         <>
-            <div className=" py-8">
-                <div className="flex flex-wrap -mx-4">
-                    <div className="w-full md:w-1/2 px-4 mb-8">
+            <div className=" px-4 py-6">
+                <div
+                    className="flex flex-col md:flex-row items-center justify-between bg-white p-6 rounded-lg shadow-lg">
+                    <div className="w-full md:w-1/3 mb-6 md:mb-0">
                         <img
-                            src={displayImage("",job?.userId)}
-                            alt="Product"
-                            className="w-full h-auto rounded-lg shadow-md mb-4" id="mainImage"/>
+                            src={displayImage("", job?.userId)}
+                            alt="Worker Image"
+                            className="w-80 h-80 object-cover rounded-lg"
+                        />
                     </div>
 
-                    <div className="w-full md:w-1/2 px-6">
-                        <div className={"flex justify-between"}>
-                            <h2 className="text-3xl font-bold mb-2">{job?.userId?.name}</h2>
-                            <p className="text-gray-600 mb-4">{job?.category?.name}</p>
-                        </div>
-                        <div>
-                            <span className={"pr-5"}><LocationOnIcon  fontSize={"small"}/> {job?.userId?.city}</span>
-                            <span><AccessTimeFilledIcon fontSize={"small"} /> {formatDate(job?.createdAt)}</span>
-                        </div>
-                        <p className="text-gray-700 mb-6">{job?.description}</p>
+                    <div className="w-full md:w-2/3 md:pl-6">
+                        <h2 className="text-2xl font-semibold text-gray-800">{job?.userId?.name}</h2>
 
-                        <div className="flex items-center mb-4">
-                            <RatingComponent job={job}  />
+                        <p className="text-lg text-gray-500">
+                            <LocationOnIcon/>
+                            <span className="text-gray-700 pl-1">
+                                {job?.userId?.city}
+                            </span>
+                        </p>
+
+                        <p className="text-lg text-gray-500">
+                            <CategoryIcon/>
+                            <span className="text-gray-700 pl-1">
+                                {job?.category?.name}
+                            </span>
+                        </p>
+
+                        <p className="text-lg text-gray-500">
+                            <AccessTimeFilledIcon />
+                            <span className="text-gray-700 pl-1">
+                                {formatDate(job?.createdAt)}
+                            </span>
+                        </p>
+
+                        <p className="mt-4 text-gray-600">
+                            {job?.description}
+                        </p>
+
+                        <div className="flex items-center mt-4">
+                            <RatingComponent job={job}/>
                         </div>
 
-                        <Contact job={job} />
+                        <div className="flex space-x-4 mt-6">
+                            <Contact job={job}/>
+                        </div>
                     </div>
                 </div>
-                <Comments jobId={id} job={job} />
-                <AvailableWorkes/>
+
+                <div className="mt-10 bg-white rounded-lg shadow-lg p-3">
+                    <Comments job={job} jobId={id} />
+                </div>
             </div>
+            <AvailableWorkes t={t} />
         </>
     );
 }

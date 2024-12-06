@@ -9,7 +9,6 @@ import Chat from "../pages/clients/Chat";
 import Announces from "../pages/clients/Announces";
 import AdminLayout from "../layouts/AdminLayout";
 import HomePage from "../pages/admin/HomePage";
-import AdminLogin from "../pages/admin/AdminLogin";
 import Users from "../pages/admin/Users";
 import Jobs from "../pages/admin/Jobs";
 import Category from "../pages/admin/Category";
@@ -35,7 +34,5 @@ export const router = createBrowserRouter([
             { path: '/admin/jobs', element: <Jobs /> },
             { path: '/admin/category', element: <Category /> },
         ]
-    },
-    { path: 'admin/login', element: <AdminLogin /> }
-
+    }
 ]);

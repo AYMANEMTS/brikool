@@ -18,7 +18,7 @@ export default function ClientSpeedDial() {
         <Box sx={{ position: 'fixed', bottom: 16, right: 16, zIndex: 1000 }}> {/* Ensure fixed positioning */}
             <SpeedDial
                 ariaLabel="SpeedDial fixed example"
-                icon={<SpeedDialIcon />}
+                icon={<SpeedDialIcon  />}
             >
                 {actions.map((action) => (
                     <SpeedDialAction

@@ -13,6 +13,7 @@ import {useNavigate} from "react-router-dom";
 import ClientApi from "../../api/ClientApi";
 import {enqueueSnackbar} from "notistack";
 import {useLoading} from "../../context/LoadingProvider";
+import {useTranslation} from "react-i18next";
 
 function UserMenu() {
     const navigate = useNavigate()
@@ -30,6 +31,7 @@ function UserMenu() {
             stopLoading()
         }
     };
+    const {t} = useTranslation('navbar')
     return (
         <>
             <Dropdown>
@@ -59,19 +61,19 @@ function UserMenu() {
 
                 <Menu>
                     <MenuItem onClick={() => navigate("/announces")}>
-                        <CampaignIcon fontSize={"medium"} />Announces
+                        <CampaignIcon fontSize={"medium"} />{t('announces')}
                     </MenuItem>
                     <MenuItem onClick={() => navigate("/chat")}>
-                        <ChatIcon fontSize={"medium"} />Chat
+                        <ChatIcon fontSize={"medium"} />{t('chat')}
                     </MenuItem>
                     <MenuItem onClick={() => navigate("/settings")} >
-                        <TuneIcon fontSize={"medium"} />Settings
+                        <TuneIcon fontSize={"medium"} />{t('settings')}
                     </MenuItem>
                     <MenuItem>
-                        <SupportAgentIcon fontSize={"medium"} />Support
+                        <SupportAgentIcon fontSize={"medium"} />{t('support')}
                     </MenuItem>
                     <MenuItem onClick={handleLogout}>
-                        <LogoutIcon fontSize={"medium"} />Logout
+                        <LogoutIcon fontSize={"medium"} />{t('logout')}
                     </MenuItem>
                 </Menu>
             </Dropdown>

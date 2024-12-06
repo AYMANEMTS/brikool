@@ -15,6 +15,7 @@ function Filters({setFilteredJobs}) {
     const [search, setSearch] = useState("");
     const [searchParams,setSearchParams] = useSearchParams();
     const userId = searchParams.get("userId");
+    const categoryId = searchParams.get("categoryId");
     const {users,jobs,categories} = useAdminContext();
 
     {/* for search preview */}
@@ -34,10 +35,10 @@ function Filters({setFilteredJobs}) {
             filtered = filtered.filter((job) => job.userId.city === selectedCity);
         }
         if (selectedCategories !== "All Categories") {
-            filtered = filtered.filter((job) => job.category._id === selectedCategories);
+            filtered = filtered.filter((job) => job.category?._id === selectedCategories);
         }
         if (selectedUser !== "All Users") {
-            filtered = filtered.filter((job) => job.userId._id === selectedUser);
+            filtered = filtered.filter((job) => job.userId?._id === selectedUser);
         }
         if (selectedStatus !== "Status") {
             filtered = filtered.filter((job) => job.status === selectedStatus);
@@ -53,7 +54,10 @@ function Filters({setFilteredJobs}) {
         if (userId){
             setSelectedUser(userId);
         }
-    }, [userId,users]);
+        if (categoryId){
+            setSelectedCategories(categoryId)
+        }
+    }, [userId,categoryId,users]);
 
     const handleResetFilters = () => {
         setSelectedCity("All Cities");
@@ -100,7 +104,7 @@ function Filters({setFilteredJobs}) {
                                         <div key={index}
                                              className="flex items-center space-x-2 text-sm font-semibold p-1 rounded hover:bg-gray-200 cursor-pointer"
                                              onClick={() => {
-                                                 setSelectedUser(user._id)
+                                                 setSelectedUser(user?._id)
                                                  setSearch("")
                                              }}>
                                             <img
@@ -124,7 +128,7 @@ function Filters({setFilteredJobs}) {
                                         <div key={index}
                                              className="text-sm font-semibold p-1 rounded hover:bg-gray-200 cursor-pointer"
                                              onClick={() => {
-                                                 setSelectedCategories(category._id)
+                                                 setSelectedCategories(category?._id)
                                                  setSearch("")
                                              }}>
                                             {category.name}
@@ -163,13 +167,13 @@ function Filters({setFilteredJobs}) {
                 {/* Filters */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
                     {/* Category Filter */}
-                    <Select defaultValue={selectedCategories}
+                    <Select value={selectedCategories}
                             onChange={(event, value) => setSelectedCategories(value)}>
                         <Option value="All Categories">All Categories</Option>
                         {categories
-                            ?.filter(cate => jobs.some(job => job.category._id === cate._id))
+                            ?.filter(cate => jobs.some(job => job.category?._id === cate?._id))
                             ?.map((category, key) => (
-                                <Option key={key} value={category._id}>{category.name}</Option>
+                                <Option key={key} value={category?._id}>{category?.name}</Option>
                             ))}
                     </Select>
 
@@ -179,9 +183,9 @@ function Filters({setFilteredJobs}) {
                         <Option value="All Users">All Users</Option>
                         {users
                             ?.filter((user) => user.role === 'client')
-                            ?.filter((user) => jobs.some(job => job.userId._id === user._id))
+                            ?.filter((user) => jobs.some(job => job.userId?._id === user?._id))
                             ?.map((user, key) => (
-                            <Option key={key} value={user._id}>
+                            <Option key={key} value={user?._id}>
                                 <div className={"flex items-center space-x-2"}>
                                     <img src={displayImage('', user)} alt={user?.name}
                                          className="w-8 h-8 object-cover rounded-full"/>
@@ -196,7 +200,7 @@ function Filters({setFilteredJobs}) {
                             onChange={(event, value) => setSelectedCity(value)}>
                         <Option value="All Cities">All Cities</Option>
                         {citiesInMorocco
-                            ?.filter(city => jobs.some(job => job.userId.city === city))
+                            ?.filter(city => jobs.some(job => job?.userId?.city === city))
                             ?.map((city, key) => (
                                 <Option key={key} value={city}>{city}</Option>
                             ))}

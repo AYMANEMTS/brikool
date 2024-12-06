@@ -1,0 +1,10 @@
+{
+  "loginTitle": "Login to Your Account",
+  "email": "Email",
+  "password": "Password",
+  "signIn": "Sign In",
+  "signInWithGoogle": "Sign In with Google",
+  "register": "Register",
+  "forgotPassword": "Forgot Password?",
+  "successMessage": "Welcome Back"
+}

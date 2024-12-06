@@ -6,6 +6,8 @@ import MoreVert from "@mui/icons-material/MoreVert";
 import formatDate from "../../../utils/formatDate";
 import ChangeStatusModal from "./ChangeStatusModal";
 import DeleteJobModal from "./DeleteJobModal";
+import {useLoading} from "../../../context/LoadingProvider";
+import {useAdminContext} from "../../../context/AdminProvider";
 
 function JobCard({job,calculateAverageRating}) {
     const [changeStatusModal, setChangeStatusModal] = useState(false)
@@ -15,7 +17,8 @@ function JobCard({job,calculateAverageRating}) {
         setNewStatus(status)
         setChangeStatusModal(true)
     }
-
+    const {user} = useLoading()
+    const {isAuthorized} = useAdminContext()
     return (
         <>
             <div className="relative p-4 border border-gray-200 rounded-lg shadow-lg bg-white">
@@ -26,7 +29,7 @@ function JobCard({job,calculateAverageRating}) {
                             alt={job?.userId?.name}
                             className="w-10 h-10 object-cover rounded-full"
                         />
-                        <Tooltip title={job.userId.name} placement="top">
+                        <Tooltip title={job.userId?.name} placement="top">
                                             <span className="font-medium text-gray-700 truncate max-w-[120px] block">
                                                 {job?.userId?.name}
                                             </span>
@@ -41,10 +44,13 @@ function JobCard({job,calculateAverageRating}) {
                         </MenuButton>
                         <Menu>
                             {job?.status === 'suspended' && (
-                                <MenuItem onClick={() => changeStatus("active")}>Active</MenuItem>
+                                <MenuItem disabled={!isAuthorized(user,'edit_jobs')} onClick={() => changeStatus("active")}>Active</MenuItem>
                             )}
-                            <MenuItem onClick={() => changeStatus("suspended")}>Suspend</MenuItem>
-                            <MenuItem onClick={() => setDeleteJobModal(true)}>Delete</MenuItem>
+                            <MenuItem disabled={!isAuthorized(user,'edit_jobs')} onClick={() => changeStatus("suspended")}>Suspend</MenuItem>
+                            <MenuItem disabled={!isAuthorized(user,'delete_jobs')} onClick={() => setDeleteJobModal(true)}>Delete</MenuItem>
+                            <MenuItem onClick={() => window.open(`http://localhost:3000/worker/${job._id}`, '_blank')}>
+                                View
+                            </MenuItem>
                         </Menu>
                     </Dropdown>
                 </div>
@@ -78,8 +84,8 @@ function JobCard({job,calculateAverageRating}) {
                     <div className="text-sm text-gray-700">{formatDate(job?.createdAt)}</div>
                 </div>
             </div>
-            <ChangeStatusModal open={changeStatusModal} toggleModal={() => setChangeStatusModal(!changeStatusModal)} jobId={job._id} newStatus={newStatus} />
-            <DeleteJobModal toggleModal={() => setDeleteJobModal(!deleteJobModal)} jobId={job._id} open={deleteJobModal} />
+            <ChangeStatusModal open={changeStatusModal} toggleModal={() => setChangeStatusModal(!changeStatusModal)} jobId={job?._id} newStatus={newStatus} />
+            <DeleteJobModal toggleModal={() => setDeleteJobModal(!deleteJobModal)} jobId={job?._id} open={deleteJobModal} />
         </>
     );
 }

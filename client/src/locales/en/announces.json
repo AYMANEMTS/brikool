@@ -1,0 +1,22 @@
+{
+  "yourAnnouncement": "Your Announcement",
+  "createNewAnnounces": "Create New Announces",
+  "information": "Informations",
+  "name": "Full Name",
+  "city": "City",
+  "category": "Category",
+  "cancel": "Cancel",
+  "next": "Next",
+  "save": "Save",
+  "back": "Back",
+  "description": "Description",
+  "contactsTitle": "Contact Informations",
+  "phone": "Phone",
+  "email": "Email",
+  "phoneValidation": "Phone must start with 0 and be exactly 10 digits long",
+  "contactsError": "At least one contact is required",
+  "success_created_msg": "You Announce is created successfully",
+  "success_updated_msg": "You Announce is updated successfully",
+  "failed_msg": "Failed to do this task"
+
+}

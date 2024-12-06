@@ -5,11 +5,13 @@ import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import EmailIcon from '@mui/icons-material/Email';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import { Controller } from "react-hook-form";
+import {useTranslation} from "react-i18next";
 
-function ContactForm({ control, errors, user }) {
+function ContactForm({ control, errors, user,t }) {
+    const {t:tValidation} = useTranslation('validation');
     return (
         <div className={"p-4"}>
-            <h3 className="mb-4 font-bold text-gray-800 pl-2">Contact Information</h3>
+            <h3 className="mb-4 font-bold text-gray-800 pl-2">{t('contactsTitle')}</h3>
 
             <Grid container spacing={2}>
                 {/* Appel Field */}
@@ -19,16 +21,16 @@ function ContactForm({ control, errors, user }) {
                         control={control}
                         defaultValue=""
                         rules={{
-                            required: "Appel is required",
+                            required: tValidation('requiredField'),
                             pattern: {
-                                value: /^0\d{9}$/, // Ensures number starts with 0 and is followed by exactly 9 digits
-                                message: "Appel must start with 0 and be exactly 10 digits long"
+                                value: /^0\d{9}$/,
+                                message: t('phoneValidation')
                             },
                         }}
                         render={({field}) => (
                             <TextField
                                 {...field}
-                                label="Appel *"
+                                label={t('phone')}
                                 fullWidth
                                 type={"number"}
                                 variant="outlined"
@@ -83,7 +85,7 @@ function ContactForm({ control, errors, user }) {
                         render={({field}) => (
                             <TextField
                                 {...field}
-                                label="Email "
+                                label={t('email')}
                                 fullWidth
                                 type={"email"}
                                 variant="outlined"
@@ -132,7 +134,7 @@ function ContactForm({ control, errors, user }) {
                 {/* Display Error for the Whole Contact Section */}
                 {errors.contact && (
                     <Grid item xs={12}>
-                        <p className="error-message">At least one contact is required</p>
+                        <p className="error-message">{t('contactsError')}</p>
                     </Grid>
                 )}
             </Grid>

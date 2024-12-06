@@ -8,7 +8,7 @@ import ClientApi from "../api/ClientApi";
 import {useAdminContext} from "../context/AdminProvider";
 
 function AdminLayout() {
-    const {setUser, setIsAuthenticated} = useLoading()
+    const {setUser, setIsAuthenticated,isAuthenticated} = useLoading()
     const {setJobs, setUsers, setCategories} = useAdminContext()
     const navigate = useNavigate()
     const { data: jobs= [] } = useQuery('jobs', ClientApi.getJobs,{
@@ -25,18 +25,11 @@ function AdminLayout() {
             try {
                 const res = await AdminApi.checkAuth();
                 if (res.status === 200) {
-                    localStorage.setItem('isLogin','true')
                     setIsAuthenticated(true)
                     setUser(res.data.user)
-                }else {
-                    localStorage.clear()
-                    navigate("/admin/login")
-                    setIsAuthenticated(false)
-                    setUser(null)
                 }
             } catch (error) {
-                localStorage.clear()
-                navigate("/admin/login")
+                navigate("/")
                 setIsAuthenticated(false)
                 setUser(null)
                 console.error("Authentication check failed:", error);

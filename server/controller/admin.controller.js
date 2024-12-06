@@ -78,4 +78,22 @@ const deleteJob = async (req, res) => {
     }
 }
 
-module.exports = {getUsers, updateUserPermissions,changeJobStatus,deleteJob}
+const changeUserRole = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { role } = req.body;
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        user.role = role;
+        await user.save();
+        res.status(200).json({ message: 'User role updated successfully', user });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'Error changing user role' });
+    }
+};
+
+
+module.exports = {getUsers, updateUserPermissions,changeJobStatus,deleteJob,changeUserRole}

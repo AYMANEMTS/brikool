@@ -1,0 +1,12 @@
+{
+  "createAccount": "Créer un compte",
+  "fullName": "Nom complet",
+  "email": "Email",
+  "password": "Mot de passe",
+  "city": "Ville",
+  "register": "S'inscrire",
+  "registerWithGoogle": "S'inscrire avec Google",
+  "alreadyHaveAccount": "Vous avez déjà un compte ? Connectez-vous",
+  "successMessage": "Vous êtes inscrit avec succès"
+
+}

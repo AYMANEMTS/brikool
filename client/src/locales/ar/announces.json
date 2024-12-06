@@ -1,0 +1,22 @@
+{
+  "yourAnnouncement": "إعلاناتك",
+  "createNewAnnounces": "إنشاء إعلان جديد",
+  "information": "معلومات",
+  "name": "الاسم الكامل",
+  "city": "المدينة",
+  "category": "تصنيف",
+  "cancel": "إلغاء",
+  "next": "التالي",
+  "save": "حفظ",
+  "back": "رجوع",
+  "descriptionTitle": "اكتب وصفا لوظيفتك",
+  "description": "وصف",
+  "contactsTitle": "معلومات الاتصال",
+  "phone": "هاتف",
+  "email": "بريد إلكتروني",
+  "phoneValidation": "يجب أن يبدأ الهاتف بالرقم 0 وأن يتكون من 10 أرقام بالضبط",
+  "contactsError": "مطلوب جهة اتصال واحدة على الأقل",
+  "success_created_msg": "تم إنشاء إعلانك بنجاح",
+  "success_updated_msg": "تم تحديث إعلانك بنجاح",
+  "failed_msg": "فشل في القيام بهذه المهمة"
+}

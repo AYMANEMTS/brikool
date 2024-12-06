@@ -3,6 +3,7 @@ import {Outlet, useNavigate, Link, useLocation} from "react-router-dom";
 import ClientApi from "../../api/ClientApi";
 import {useLoading} from "../../context/LoadingProvider";
 import CategoryIcon from '@mui/icons-material/Category';
+import {useAdminContext} from "../../context/AdminProvider";
 
 function AdminUi() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -10,14 +11,15 @@ function AdminUi() {
     const logout = async () => {
         try {
             await ClientApi.logout()
-            localStorage.clear()
-            navigate("/admin/login")
+            navigate("/")
         }catch (e) {
             console.log(e)
         }
     }
     const { pathname} = useLocation()
     const {user} = useLoading()
+    const {isAuthorized} = useAdminContext()
+
     return (
         <div className="flex h-screen overflow-hidden bg-gray-100">
             {/* Sidebar */}
@@ -36,12 +38,13 @@ function AdminUi() {
                         <span className="text-sm font-medium">Dashboard</span>
                     </Link>
 
-                    <Link to="/admin/users" className={`${pathname === '/admin/users' && 'bg-blue-700 text-white'} flex items-center p-2 space-x-2 rounded hover:bg-blue-700 hover:text-white transition`}>
+                    <button onClick={() => navigate("/admin/users")} disabled={!isAuthorized(user,'view_users')}
+                        className={`${pathname === '/admin/users' && 'bg-blue-700 text-white'} flex items-center p-2 space-x-2 rounded hover:bg-blue-700 hover:text-white transition w-full ${!isAuthorized(user,'view_users') && 'cursor-not-allowed'}`}>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-5 h-5  group-hover:text-white transition">
                             <path fill="#ffffff" d="M0 96C0 60.7 28.7 32 64 32l384 0c35.3 0 64 28.7 64 64l0 320c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64L0 96zm64 64l0 256 160 0 0-256L64 160zm384 0l-160 0 0 256 160 0 0-256z"/>
                         </svg>
                         <span className="text-sm font-medium">Users</span>
-                    </Link>
+                    </button>
 
                     <Link to="/admin/jobs" className={`${pathname === '/admin/jobs' && 'bg-blue-700 text-white'} flex items-center p-2 space-x-2 rounded hover:bg-blue-700 hover:text-white transition`}>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-5 h-5  group-hover:text-white transition">

@@ -4,6 +4,7 @@ import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
 import {useQuery, useQueryClient} from "react-query";
 import ClientApi from "../../api/ClientApi";
 import {useLoading} from "../../context/LoadingProvider";
+import {useTranslation} from "react-i18next";
 
 function Search({isAtTop}) {
     const {startLoading,stopLoading} = useLoading();
@@ -69,7 +70,7 @@ function Search({isAtTop}) {
         setCategoryResults([])
         navigate(`/workers?${type}=${query}`)
     };
-
+    const {t} = useTranslation('navbar')
     return (
         <>
             {isAtTop && pathname !== '/chat' && (
@@ -79,7 +80,7 @@ function Search({isAtTop}) {
                     <SearchIcon sx={{ m: 1 }} />
                     <input
                         type="text"
-                        placeholder="Search category"
+                        placeholder={t('search')}
                         className="w-full outline-none bg-transparent text-gray-600 font-semibold text-[15px]"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}

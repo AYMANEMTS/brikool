@@ -1,0 +1,11 @@
+{
+  "createAccount": "إنشاء حساب",
+  "fullName": "الاسم الكامل",
+  "email": "البريد الإلكتروني",
+  "password": "كلمة المرور",
+  "city": "المدينة",
+  "register": "تسجيل",
+  "registerWithGoogle": "التسجيل باستخدام جوجل",
+  "alreadyHaveAccount": "لديك حساب بالفعل؟ قم بتسجيل الدخول",
+  "successMessage": "تم تسجيلك بنجاح"
+}

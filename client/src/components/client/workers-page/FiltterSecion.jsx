@@ -32,7 +32,7 @@ function FiltterSecion({ jobs, setFiltredJobS }) {
             filteredJobs = filteredJobs.filter(job => job.userId.city === selectedCity);
         }
         if (selectedCategory !== 'all') {
-            filteredJobs = filteredJobs.filter(job => job.category._id === selectedCategory);
+            filteredJobs = filteredJobs.filter(job => job.category?._id === selectedCategory);
         }
         if (selectedUser !== 'all'){
             filteredJobs = filteredJobs.filter(job => job.userId._id === selectedUser)
@@ -89,9 +89,9 @@ function FiltterSecion({ jobs, setFiltredJobS }) {
                                      >
                                          <MenuItem value="all">All Categories</MenuItem>
                                          {categories
-                                             .filter(cate => jobs.some(job => job.category._id === cate._id))
+                                             .filter(cate => jobs.some(job => job.category?._id === cate._id))
                                              .map((category) => (
-                                                 <MenuItem key={category._id} value={category._id}>
+                                                 <MenuItem key={category?._id} value={category?._id}>
                                                      {category.name}
                                                  </MenuItem>
                                              ))}

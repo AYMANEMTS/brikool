@@ -18,6 +18,7 @@ export default function DeleteModal({open, handleOpen,user}) {
         try {
             await AdminApi.deleteUser(user._id)
             await queryClient.invalidateQueries('users')
+            await queryClient.invalidateQueries('jobs')
             handleOpen()
             enqueueSnackbar("User Deleted",{variant:"success"})
         }catch (e) {
