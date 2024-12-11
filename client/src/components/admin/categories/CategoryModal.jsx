@@ -1,39 +1,38 @@
 import React from 'react';
-import {Modal, ModalClose, ModalDialog} from "@mui/joy";
-import {Typography} from "@mui/material";
-import CategoryForm from "./CategoryForm";
+import { Dialog, DialogHeader, DialogBody, Button } from '@material-tailwind/react';
+import CategoryForm from './CategoryForm';
+import { useTranslation } from 'react-i18next';
 
-function CategoryModal({open, handleOpen,selectedCategory}) {
+function CategoryModal({ open, handleOpen, selectedCategory, isUpdate }) {
+    const { i18n } = useTranslation();
+    const { language: lng } = i18n;
+
     return (
-        <React.Fragment>
-            <Modal open={open} onClose={handleOpen}
-                   aria-labelledby="modal-title"
-                   aria-describedby="modal-desc"
-                   sx={{
-                       display: 'flex',
-                       justifyContent: 'center',
-                       alignItems: 'center',
-                   }}
-            >
-                <ModalDialog
-                    sx={{
-                        width: '100%',
-                        maxWidth: 700,
-                        padding: 2,
-                        '@media (max-width: 600px)': {
-                            width: '90%',
-                            maxWidth: 'none',
-                        },
-                    }}
+        <Dialog open={open} handler={handleOpen} size="lg">
+            <DialogHeader className="flex justify-between items-center">
+                <span>
+                  {selectedCategory?.name?.[lng]
+                      ? `Edit (${selectedCategory?.name?.[lng]})`
+                      : 'Create New Category'}
+                </span>
+                <Button
+                    color="gray"
+                    size="sm"
+                    variant="text"
+                    onClick={handleOpen}
+                    className="absolute top-2 right-2"
                 >
-                    <ModalClose variant="plain" sx={{margin: -1}} />
-                    <Typography align={"center"} variant={"h6"} id="modal-desc">
-                        {selectedCategory.name ? `Edit (${selectedCategory.name})` : 'Create New Category'}
-                    </Typography>
-                    <CategoryForm handleOpen={handleOpen} selectedCategory={selectedCategory} />
-                </ModalDialog>
-            </Modal>
-        </React.Fragment>
+                    ✕
+                </Button>
+            </DialogHeader>
+            <DialogBody divider>
+                <CategoryForm
+                    handleOpen={handleOpen}
+                    selectedCategory={selectedCategory}
+                    isUpdate={isUpdate}
+                />
+            </DialogBody>
+        </Dialog>
     );
 }
 

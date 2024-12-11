@@ -1,4 +1,3 @@
-import { Button, Grid } from "@mui/material";
 import React, { useState } from "react";
 import InformationForm from "./InformationForm";
 import ContactForm from "./ContactForm";
@@ -9,13 +8,16 @@ import {useQueryClient} from "react-query";
 import {useSnackbar} from "notistack";
 import {Loader} from "lucide-react";
 import {useTranslation} from "react-i18next";
+import {Button} from "@material-tailwind/react"
 
 function JobForm({ handleOpen ,user,context}) {
     const [formSteper, setFormSteper] = useState(1);
+    const {t,i18n} = useTranslation('announces')
+    const {language:lng} = i18n
     const { handleSubmit, control, watch, formState: { errors, isValid } } = useForm({
         defaultValues: {
             name: user.name || "",
-            city: user.city || "",
+            city: user.city?.[lng] || "",
             category: context?.job?.category?._id || "",
             description: context?.job?.description || "",
             email: user?.email || "",
@@ -26,7 +28,6 @@ function JobForm({ handleOpen ,user,context}) {
         },
         mode: "onChange"
     })
-    const {t} = useTranslation('announces')
     const { enqueueSnackbar } = useSnackbar();
     const [loading, setLoading] = useState(false)
     const handleCancel = () => {
@@ -54,14 +55,14 @@ function JobForm({ handleOpen ,user,context}) {
                     const id = context.job._id
                     const res = await ClientApi.updateJob(id,formatedData).catch(e => console.error(e))
                     if(res.status === 200){
-                        await queryClient.invalidateQueries('jobs')
+                        await queryClient.invalidateQueries('userJobs')
                         handleOpen()
                         enqueueSnackbar(t('success_updated_msg'), {variant:"success"})
                     }
                 }else {
                     const res = await ClientApi.createJob(formatedData).catch(e => console.error(e))
                     if(res.status === 201){
-                        await queryClient.invalidateQueries('jobs')
+                        await queryClient.invalidateQueries('userJobs')
                         handleOpen()
                         enqueueSnackbar(t('success_created_msg'), {variant:"success"})
                     }
@@ -80,7 +81,7 @@ function JobForm({ handleOpen ,user,context}) {
     return (
         <form onSubmit={handleSubmit(handleNext)}>
             {formSteper === 1 ? (
-                <InformationForm t={t} control={control} errors={errors} user={user} job={context.job}/>
+                <InformationForm t={t} lng={lng} control={control} errors={errors} user={user} job={context.job}/>
             ) : formSteper === 2 ? (
                 <DescriptionForm t={t} control={control} errors={errors} />
             ) : (
@@ -88,30 +89,39 @@ function JobForm({ handleOpen ,user,context}) {
             )}
 
             {/* Buttons Section */}
-            <Grid container justifyContent="space-between" className="mt-4">
-                <Grid item>
-                    <Button variant="outlined" color="secondary" onClick={handleCancel}>
+            <div className="mt-4 flex justify-between">
+                <div>
+                    <Button variant={"outlined"} color={"black"}
+                        onClick={handleCancel}
+                    >
                         {t('cancel')}
                     </Button>
-                </Grid>
-                <Grid item>
-                    <div className="flex space-x-2">
-                        {formSteper !== 1 && (
-                            <Button variant="contained" color="primary" onClick={handleBack}>
-                                {t('back')}
-                            </Button>
-                        )}
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            disabled={!isValid || loading}
+                </div>
+                <div className="flex space-x-2">
+                    {formSteper !== 1 && (
+                        <Button variant={"outlined"} color={"blue"}
+                            onClick={handleBack}
                         >
-                            {formSteper !== 3 ? t('next') : "" ? <><Loader className={" mx-2 animate-spin text-white"} /> </> : t('save')}
+                            {t('back')}
                         </Button>
-                    </div>
-                </Grid>
-            </Grid>
+                    )}
+                    <Button variant={"outlined"}
+                        type="submit"
+                        className={`px-4 py-2  rounded-md focus:outline-none focus:ring-2 ${
+                            !isValid || loading
+                                ? 'bg-gray-400 cursor-not-allowed'
+                                : 'bg-blue-500 hover:bg-blue-600 focus:ring-blue-500'
+                        }`}
+                        disabled={!isValid || loading}
+                    >
+                        {formSteper !== 3 ? t('next') : (
+                            loading ? (
+                                <><Loader className="mx-2 animate-spin " /></>
+                            ) : t('save')
+                        )}
+                    </Button>
+                </div>
+            </div>
         </form>
     );
 }

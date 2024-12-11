@@ -1,0 +1,14 @@
+{
+  "settings_title_1": "Mettez à jour vos informations",
+  "settings_title_2": "Changer le mot de passe",
+  "success_update_info": "Vous avez mis à jour vos informations avec succès",
+  "failed_updated_info": "Échec de la mise à jour de vos informations",
+  "success_change_pass": "Votre mot de passe a été changé avec succès",
+  "failed_change_pass": "Échec du changement de mot de passe",
+  "current_password": "Mot de passe actuel",
+  "new_password": "Nouveau mot de passe",
+  "confirm_password": "Confirmer le mot de passe",
+  "password_not_match": "Les mots de passe ne correspondent pas",
+  "update_password_button": "Mettre à jour le mot de passe"
+
+}

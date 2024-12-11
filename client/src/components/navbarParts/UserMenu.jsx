@@ -1,84 +1,84 @@
-import React from 'react';
-import MenuButton from "@mui/joy/MenuButton";
-import PersonIcon from "@mui/icons-material/Person";
-import Menu from "@mui/joy/Menu";
-import MenuItem from "@mui/joy/MenuItem";
-import CampaignIcon from "@mui/icons-material/Campaign";
-import ChatIcon from "@mui/icons-material/Chat";
-import TuneIcon from "@mui/icons-material/Tune";
-import SupportAgentIcon from "@mui/icons-material/SupportAgent";
-import LogoutIcon from "@mui/icons-material/Logout";
-import Dropdown from "@mui/joy/Dropdown";
-import {useNavigate} from "react-router-dom";
+import {Menu, MenuHandler, MenuList, MenuItem, Button,} from "@material-tailwind/react";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import ClientApi from "../../api/ClientApi";
-import {enqueueSnackbar} from "notistack";
-import {useLoading} from "../../context/LoadingProvider";
-import {useTranslation} from "react-i18next";
+import { enqueueSnackbar } from "notistack";
+import { useLoading } from "../../context/LoadingProvider";
+import {LogOut,SlidersHorizontal,Megaphone,MessageCircleMore,Headset,User } from "lucide-react";
 
-function UserMenu() {
-    const navigate = useNavigate()
-    const {startLoading,stopLoading,setIsAuthenticated,user,setUser} = useLoading()
+export default function DemoUserMenu() {
+    const { t } = useTranslation("navbar");
+    const { startLoading, stopLoading, setIsAuthenticated, setUser, user } = useLoading();
+    const navigate = useNavigate();
+
     const handleLogout = async () => {
         try {
-            startLoading()
+            startLoading();
             await ClientApi.logout();
-            setIsAuthenticated(false)
-            setUser(null)
-            navigate("/")
-            enqueueSnackbar('Good By ',{variant:"info"})
+            setIsAuthenticated(false);
+            setUser(null);
+            navigate("/");
+            enqueueSnackbar("Good Bye", { variant: "info" });
         } catch (error) {
             console.error("Logout failed:", error);
-            stopLoading()
+        } finally {
+            stopLoading();
         }
     };
-    const {t} = useTranslation('navbar')
+
     return (
-        <>
-            <Dropdown>
-                <MenuButton size={"sm"}
-                    startDecorator={<PersonIcon />}
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        padding: '0.6rem 1rem', // Better padding for a clickable feel
-                        backgroundColor: 'gray',
-                        color: 'white',
-                        borderRadius: '12px', // More subtle rounded corners
-                        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
-                        transition: 'all 0.3s ease-in-out', // Smooth transitions
-                        '&:hover': {
-                            backgroundColor: 'darkgray',
-                            transform: 'scale(1.05)', // Slight zoom-in on hover
-                        },
-                        '& .MuiSvgIcon-root': {
-                            marginRight: '0.5rem', // Space between icon and text
-                        },
-                    }}
+        <Menu>
+            <MenuHandler>
+                <Button
+                    size="sm"
+                    variant="outlined"
+                    className="flex items-center p-0 px-1 lg:py-2 bg-white text-black dark:bg-gray-800 dark:text-white rounded-md shadow-sm hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
-                    {user?.name}
-                </MenuButton>
+                    <User className={"w-6 h-6"} />
+                    <span className={"hidden lg:!flex lg:px-2"}>{user?.name}</span>
+                </Button>
+            </MenuHandler>
+            <MenuList className="bg-white dark:bg-gray-800 dark:text-white rounded-md shadow-lg">
+                <MenuItem
+                    onClick={() => navigate("/announces")}
+                    className="hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 p-2"
+                >
+                    <Megaphone className={"h-6 w-6"} />
+                    {t("announces")}
+                </MenuItem>
 
+                <MenuItem
+                    onClick={() => navigate("/chat")}
+                    className="hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 p-2"
+                >
+                    <MessageCircleMore className={"h-6 w-6"} />
+                    {t("chat")}
+                </MenuItem>
 
-                <Menu>
-                    <MenuItem onClick={() => navigate("/announces")}>
-                        <CampaignIcon fontSize={"medium"} />{t('announces')}
-                    </MenuItem>
-                    <MenuItem onClick={() => navigate("/chat")}>
-                        <ChatIcon fontSize={"medium"} />{t('chat')}
-                    </MenuItem>
-                    <MenuItem onClick={() => navigate("/settings")} >
-                        <TuneIcon fontSize={"medium"} />{t('settings')}
-                    </MenuItem>
-                    <MenuItem>
-                        <SupportAgentIcon fontSize={"medium"} />{t('support')}
-                    </MenuItem>
-                    <MenuItem onClick={handleLogout}>
-                        <LogoutIcon fontSize={"medium"} />{t('logout')}
-                    </MenuItem>
-                </Menu>
-            </Dropdown>
-        </>
+                <MenuItem
+                    onClick={() => navigate("/settings")}
+                    className="hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 p-2"
+                >
+                    <SlidersHorizontal className={"h-6 w-6"} />
+                    {t("settings")}
+                </MenuItem>
+
+                <MenuItem
+                    className="hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 p-2"
+                >
+                    <Headset className={"w-6 h-6"} />
+                    {t("support")}
+                </MenuItem>
+
+                <MenuItem
+                    onClick={handleLogout}
+                    className="hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 p-2"
+                >
+                    <LogOut className={"w-6 h-6"} />
+                    {t("logout")}
+                </MenuItem>
+            </MenuList>
+        </Menu>
     );
 }
-
-export default UserMenu;

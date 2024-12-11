@@ -1,32 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import FiltterSecion from "../../components/client/workers-page/FiltterSecion";
-import { Pagination } from "@mui/material";
 import WorkerCard from "../../components/client/WorkerCard";
-import {useQuery, useQueryClient} from "react-query";
-import ClientApi from "../../api/ClientApi";
+import {useClientContext} from "../../context/ClientProvider";
 
 function Workers() {
-    // const {startLoading, stopLoading} = useLoading()
-    const queryClient = useQueryClient();
-    const cachedWorkers = queryClient.getQueryData('jobs')?.data || [];
-    const [workers, setWorkers] = useState(cachedWorkers || []);
-
-    const { data } = useQuery('jobs', ClientApi.getJobs, {
-        initialData: cachedWorkers.length > 0 ? cachedWorkers : undefined,
-        select: (response) => response.data,
-        refetchOnWindowFocus: false,
-        retry: false,
-        cacheTime: 5 * 60 * 1000,
-        staleTime: 1000*60,
-    });
-
-    useEffect(() => {
-        if (data && data.length > 0) {
-            setWorkers(data);
-        }
-    }, [data]);
-
-
+    const {workers} = useClientContext()
     const [filtredJobS, setFiltredJobS] = useState(workers);
 
     useEffect(() => {
@@ -51,9 +29,7 @@ function Workers() {
                 ))}
             </div>
 
-            <div className={"flex justify-center my-6"}>
-                <Pagination count={10} />
-            </div>
+
         </>
     );
 }

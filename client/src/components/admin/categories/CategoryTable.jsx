@@ -1,69 +1,85 @@
 import React from 'react';
-import Table from "@mui/joy/Table";
 import displayImage from "../../../utils/imageFromServer";
 import {useAdminContext} from "../../../context/AdminProvider";
-import Button from "@mui/joy/Button";
 import {Link} from "react-router-dom";
 import {useLoading} from "../../../context/LoadingProvider";
+import {useTranslation} from "react-i18next";
+import {Avatar, Card, Typography,Button} from "@material-tailwind/react";
+
+const TABLE_HEADERS = ["Image","Name","Jobs","Action"]
 
 function CategoryTable({categories,openModal,setDeleteModal,setSelectedCategory}) {
     const {jobs,isAuthorized} = useAdminContext()
     const {user} = useLoading()
+    const {i18n} = useTranslation()
+    const {language:lng} = i18n
     return (
         <>
-            <div className="overflow-x-auto bg-white shadow rounded-lg">
-                <Table size="lg" hoverRow>
+            <Card className="h-full w-full overflow-scroll px-6">
+                <table className="w-full min-w-max table-auto text-left">
                     <thead>
                     <tr>
-                        <th>Image</th>
-                        <th>Name</th>
-                        <th>Jobs</th>
-                        <th>Action</th>
+                        {TABLE_HEADERS.map((head) => (
+                            <th key={head} className="border-b border-gray-300 pb-4 pt-10">
+                                <Typography
+                                    variant="small"
+                                    color="blue-gray"
+                                    className="font-bold leading-none"
+                                >
+                                    {head}
+                                </Typography>
+                            </th>
+                        ))}
                     </tr>
                     </thead>
                     <tbody>
-                    {categories?.map((category, key) => (
-                        <tr key={key}>
-                            <td className="px-6 py-4">
-                                <img
-                                    src={displayImage('', category)}
-                                    alt={category.name}
-                                    className="w-10 h-10 object-cover rounded-full"
-                                />
-                            </td>
+                    {categories
+                        ?.map((category, index) => {
+                            const isLast = index === category.length - 1;
+                            const classes = isLast ? "py-4" : "py-4 border-b border-gray-300";
 
-                            <td className="px-6 py-4 font-semibold">
-                                {category.name}
-                            </td>
-
-                            <td className="px-6 py-4 font-semibold">
-                                {jobs.filter(job => job.category?._id === category?._id).length > 0 && (
-                                    <Link to={`/admin/jobs?categoryId=${category?._id}`} className={"underline cursor-pointer text-blue-500 hover:text-blue-800"}>
-                                        {jobs.filter(job => job.category?._id === category?._id).length}
-                                    </Link>
-                                )}
-                            </td>
-
-                            <td className="px-6 py-4 ">
-                                <div className={"flex space-x-1"}>
-                                    <Button disabled={!isAuthorized(user,'edit_category')}
-                                        size={"sm"} variant={"solid"} color={"primary"} onClick={() => openModal(category)}>
-                                        Edit
-                                    </Button>
-                                    <Button disabled={!isAuthorized(user,'delete_category')}
-                                        size={"sm"} variant={"solid"} color={"danger"} onClick={() => {
-                                        setSelectedCategory(category)
-                                        setDeleteModal(true)
-                                    }}>
-                                        Delete
-                                    </Button>
-                                </div>
-                            </td>
-                        </tr>
-                    ))}
+                            return (
+                                <tr key={category?._id} className="hover:bg-gray-50">
+                                    <td className={classes}>
+                                        <Avatar src={displayImage("", category)}/>
+                                    </td>
+                                    <td className={classes}>
+                                        <Typography
+                                            variant="small"
+                                            className="font-normal text-gray-600"
+                                        >
+                                            {category?.name?.[lng]}
+                                        </Typography>
+                                    </td>
+                                    <td className={classes}>
+                                        {jobs.filter(job => job.category?._id === category?._id).length > 0 && (
+                                            <Link to={`/admin/jobs?categoryId=${category?._id}`} className={"underline cursor-pointer text-blue-500 hover:text-blue-800"}>
+                                                {jobs.filter(job => job.category?._id === category?._id).length}
+                                            </Link>
+                                        )}
+                                    </td>
+                                    <td className={classes}>
+                                        <div className={"flex space-x-1"}>
+                                            <Button disabled={!isAuthorized(user, 'edit_category')}
+                                                    size={"sm"} variant={"solid"} color={"blue"}
+                                                    onClick={() => openModal(category)}>
+                                                Edit
+                                            </Button>
+                                            <Button disabled={!isAuthorized(user, 'delete_category')}
+                                                    size={"sm"} variant={"solid"} color={"red"} onClick={() => {
+                                                setSelectedCategory(category)
+                                                setDeleteModal(true)
+                                            }}>
+                                                Delete
+                                            </Button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
-                </Table>
-            </div>
+                </table>
+            </Card>
         </>
     );
 }

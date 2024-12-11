@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { AppBar, Toolbar, IconButton, Typography, Avatar, TextField, Button } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ClientApi from "../../api/ClientApi";
 import displayImage from "../../utils/imageFromServer";
 import io from 'socket.io-client';
 import formatDate from "../../utils/formatDate"; // Your utility for formatting dates
-
+import {Input,Avatar,Button} from "@material-tailwind/react"
+import {CornerUpLeft} from 'lucide-react'
 const socket = io('http://localhost:8000'); // Replace with your server's URL
+
 
 function ChatWindow({ chat, onBack, user, otherParticipant }) {
     const [messages, setMessages] = useState([]);
@@ -77,27 +77,26 @@ function ChatWindow({ chat, onBack, user, otherParticipant }) {
     return (
         <div className="flex flex-col h-full">
             {/* Header */}
-            <AppBar position="static" color="default" elevation={1}>
-                <Toolbar>
+            <div className="bg-white shadow-md">
+                <div className="flex items-center p-4">
                     {/* Back Button for small screens */}
-                    <IconButton
-                        edge="start"
-                        color="inherit"
-                        aria-label="back"
+                    <button
                         onClick={onBack}
-                        className="md:hidden"
+                        className="md:hidden text-gray-500"
                     >
-                        <ArrowBackIcon />
-                    </IconButton>
-                    <Avatar src={displayImage("", otherParticipant(chat))} alt={otherParticipant(chat)?.name} className="mr-2" />
-                    <Typography variant="h6" noWrap>
-                        {otherParticipant(chat)?.name}
-                    </Typography>
-                </Toolbar>
-            </AppBar>
+                        <CornerUpLeft />
+                    </button>
+                    <Avatar
+                        src={displayImage("", otherParticipant(chat))}
+                        alt={otherParticipant(chat)?.name}
+                        className="mr-2"
+                    />
+                    <p className="text-lg font-semibold">{otherParticipant(chat)?.name}</p>
+                </div>
+            </div>
 
             {/* Messages Area */}
-            <div className="flex-1 p-4 bg-gray-50 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 64px - 56px)' }}>
+            <div className="flex-1 p-4 bg-gray-50 overflow-y-auto" style={{maxHeight: 'calc(100vh - 64px - 56px)'}}>
                 {messages.map((message, index) => (
                     <div
                         key={index}
@@ -106,34 +105,33 @@ function ChatWindow({ chat, onBack, user, otherParticipant }) {
                         <div
                             className={`max-w-xs p-2 m-1 rounded-lg shadow ${message.sender === user?._id ? 'bg-blue-500 text-white' : 'bg-white'}`}
                         >
-                            <Typography variant="body1">{message.content}</Typography>
+                            <p className="text-sm">{message.content}</p>
                         </div>
                         {/* Timestamp */}
-                        <Typography variant="caption" color="textSecondary" className="px-2">
+                        <p className="text-xs text-gray-500 px-2">
                             {formatDate(message?.timestamp)}
-                        </Typography>
+                        </p>
                     </div>
                 ))}
-                <div ref={messagesEndRef} />
-                {/* This div will help us scroll to the bottom */}
+                <div ref={messagesEndRef}/>
             </div>
 
             {/* Input Area */}
             <div className="p-4 bg-white border-t border-gray-300">
                 <form className="flex" onSubmit={handleSendMessage}>
-                    <TextField
+                    <Input
                         variant="outlined"
                         placeholder="Type a message..."
                         fullWidth
-                        size="small"
+                        size="lg"
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
+                        className="mr-2"
                     />
                     <Button
                         type="submit"
-                        variant="contained"
-                        color="primary"
-                        className="ml-2"
+                        color="lightBlue"
+                        size="lg"
                     >
                         Send
                     </Button>

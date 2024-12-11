@@ -10,5 +10,7 @@
   "chat": "Chat",
   "settings": "Settings",
   "support": "Support" ,
-  "logout": "Logout"
+  "logout": "Logout",
+  "nav_mobile_title": "Welcome to Besma",
+  "nav_mobile_text": "1er website for independent workers"
 }

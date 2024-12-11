@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import {Outlet, useNavigate, Link, useLocation} from "react-router-dom";
 import ClientApi from "../../api/ClientApi";
 import {useLoading} from "../../context/LoadingProvider";
-import CategoryIcon from '@mui/icons-material/Category';
 import {useAdminContext} from "../../context/AdminProvider";
+import Trudiction from "../navbarParts/Trudiction";
+import {ChartBarStacked } from 'lucide-react';
 
 function AdminUi() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -54,7 +55,7 @@ function AdminUi() {
                     </Link>
 
                     <Link to="/admin/category" className={`${pathname === '/admin/category' && 'bg-blue-700 text-white'} flex items-center p-2 space-x-2 rounded hover:bg-blue-700 hover:text-white transition`}>
-                        <CategoryIcon />
+                        <ChartBarStacked />
                         <span className="text-sm font-medium">Category</span>
                     </Link>
 
@@ -88,9 +89,7 @@ function AdminUi() {
                     </h1>
 
                     <div className="flex items-center space-x-4">
-                        <button className="p-2 rounded bg-blue-600 text-white hover:bg-blue-500">
-                            Notifications
-                        </button>
+                        <Trudiction />
                         <button onClick={logout} className="p-2 rounded bg-gray-200 hover:bg-gray-300">
                             Logout
                         </button>

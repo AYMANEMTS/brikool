@@ -7,6 +7,10 @@ import ClientSpeedDial from "../components/ClientSpeedDial";
 import ClientApi from "../api/ClientApi";
 import {useLoading} from "../context/LoadingProvider";
 import RequiredCity from "../components/auth/RequiredCity";
+import {useQuery} from "react-query";
+import {useClientContext} from "../context/ClientProvider";
+import Spinner from "../utils/Spinner";
+import ServerNotRespond from "../utils/ServerNotRespond";
 
 
 function ClientLayout() {
@@ -39,24 +43,74 @@ function ClientLayout() {
             setRequiredCity(false)
         }
     }, [user,pathname,requiredCity]);
+    const {setWorkers,setCategories,setUserJobs} = useClientContext()
+
+    const { data: categories = [], isFetching: isFetchingCategory, isError: isErrorCategory } = useQuery('categories', ClientApi.getCategories, {
+        onSuccess: (data) => {
+            setCategories(data.data.category);
+        },
+        onError: err => console.error(err),
+        retry: false
+
+    });
+
+    const { data: workers = [], isFetching: isFetchingWorkers, isError: isErrorWorkers } = useQuery("jobs", ClientApi.getJobs, {
+        onSuccess: (data) => {
+            setWorkers(data.data);
+        },
+        onError: err => console.error(err),
+        retry: false
+
+    });
+
+    const { data: userJobs = [], isFetching: isFetchingUserJobs, isError: isErrorUserJobs } = useQuery("userJobs", ClientApi.getUserJobs, {
+        onSuccess: (data) => {
+            setUserJobs(data.data);
+        },
+        onError: err => console.error(err),
+        retry: false,
+        enabled: !!user
+
+    });
+
+    const isLoading = isFetchingCategory || isFetchingWorkers || isFetchingUserJobs;
+    const isError = isErrorCategory || isErrorWorkers || isErrorUserJobs;
+    if (isError){
+        return <ServerNotRespond />
+    }
+    if (isLoading){
+        return <Spinner open={isLoading} />
+    }
     return (
         <>
-            <div className={`flex flex-col min-h-screen mt-20 ${pathname !== '/chat' && 'md:mt-36'} `}>
-                <ScrollToTop/>
+            <div className={`flex flex-col min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300 `}>
+                <ScrollToTop />
+
                 {/* Navbar */}
-                <Navbar/>
+                <Navbar />
+
                 {/* Main Content Area */}
-                <main className="flex-grow w-full h-full">
-                    <div className="container mx-auto px-2 sm:px-4 md:px-6 lg:px-8 max-w-screen-xl h-full">
-                        <Outlet/>
+                <main className={`flex-grow w-full h-full py-0 ${pathname !== '/chat' && 'md:mt-32'}`}>
+                    <div className="container mx-auto px-2 sm:px-4 md:px-6 lg:px-8 max-w-6xl h-full">
+                        <Outlet />
                     </div>
                 </main>
+
                 {/* Footer */}
-                { pathname === '/chat' ? '' : <Footer/> }
-                { requiredCity && <RequiredCity handleOpen={() => setRequiredCity(!requiredCity)} open={requiredCity} /> }
+                {pathname === "/chat" ? null : (
+                    <Footer  />
+                )}
+
+                {requiredCity && (
+                    <RequiredCity
+                        handleOpen={() => setRequiredCity(!requiredCity)}
+                        open={requiredCity}
+                    />
+                )}
             </div>
             <ClientSpeedDial />
         </>
+
     );
 }
 

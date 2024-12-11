@@ -8,6 +8,7 @@ const ClientApi = {
     getCategories: async () => await axiosClient.get("/categories"),
     createJob: async (data) => await axiosClient.post('/jobs',data),
     getJobs: async () => await axiosClient.get('/jobs'),
+    getUserJobs: async () => await axiosClient.get(`/clients/jobs/`),
     getJob: async (id) => await axiosClient.get(`/jobs/${id}`),
     addComment: async (id,data) => await axiosClient.post(`/jobs/${id}/add-comment`,data),
     addRating: async (id,data) => await axiosClient.post(`/jobs/${id}/add-rating`,data),

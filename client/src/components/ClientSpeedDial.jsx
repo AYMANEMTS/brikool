@@ -1,33 +1,45 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import SpeedDial from '@mui/material/SpeedDial';
-import SpeedDialIcon from '@mui/material/SpeedDialIcon';
-import SpeedDialAction from '@mui/material/SpeedDialAction';
+import React from "react";
+import {
+    IconButton,
+    SpeedDial,
+    SpeedDialHandler,
+    SpeedDialContent,
+    SpeedDialAction,
+} from "@material-tailwind/react";
+
 import Trudiction from "./navbarParts/Trudiction";
 import DarkMode from "./navbarParts/DarkMode";
-import SupportAgentIcon from "@mui/icons-material/SupportAgent";
-
-const actions = [
-    { icon: <Trudiction  />, name: 'Translate' },
-    { icon: <DarkMode />, name: 'Theme' },
-    { icon: <SupportAgentIcon />, name: 'Support' },
-];
+import { Headset,Plus } from 'lucide-react';
 
 export default function ClientSpeedDial() {
     return (
-        <Box sx={{ position: 'fixed', bottom: 16, right: 16, zIndex: 1000 }}> {/* Ensure fixed positioning */}
-            <SpeedDial
-                ariaLabel="SpeedDial fixed example"
-                icon={<SpeedDialIcon  />}
-            >
-                {actions.map((action) => (
-                    <SpeedDialAction
-                        key={action.name}
-                        icon={action.icon}
-                        tooltipTitle={action.name}
-                    />
-                ))}
+        <div className="fixed bottom-4 right-4 z-50">
+            {/* SpeedDial Component */}
+            <SpeedDial>
+                {/* Trigger Button */}
+                <SpeedDialHandler>
+                    <IconButton
+                        variant="filled"
+                        color="blue"
+                        size="lg"
+                        className="rounded-full shadow-lg"
+                    >
+                        <Plus />
+                    </IconButton>
+                </SpeedDialHandler>
+                {/* SpeedDial Actions */}
+                <SpeedDialContent>
+                    <SpeedDialAction className="bg-white shadow">
+                        <Trudiction />
+                    </SpeedDialAction>
+                    <SpeedDialAction className="bg-white shadow">
+                        <DarkMode />
+                    </SpeedDialAction>
+                    <SpeedDialAction className="bg-white shadow">
+                        <Headset />
+                    </SpeedDialAction>
+                </SpeedDialContent>
             </SpeedDial>
-        </Box>
+        </div>
     );
 }

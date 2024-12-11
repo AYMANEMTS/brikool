@@ -1,37 +1,35 @@
 import React from 'react';
-import { Modal, ModalClose, ModalDialog } from "@mui/joy";
-import JobForm from "./JobForm";
+import { Dialog, DialogBody, DialogHeader } from '@material-tailwind/react';
+import JobForm from './JobForm';
 
-
-function JobModal({ open, handleOpen, user, job={},isUpdate }) {
+function JobModal({ open, handleOpen, user, job = {}, isUpdate }) {
     return (
-        <Modal
-            aria-labelledby="modal-title"
-            aria-describedby="modal-desc"
-            open={open}
-            onClose={() => handleOpen()}
-            sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}
-        >
-            <ModalDialog
-                sx={{
-                    width: '100%',
-                    maxWidth: 700,  // Max width for larger screens
-                    padding: 2,
-                    '@media (max-width: 600px)': {
-                        width: '90%',  // Take up 90% of the viewport width on small screens
-                        maxWidth: 'none',  // No max width for mobile
-                    },
-                }}
-            >
-                <ModalClose variant="plain"  />
-                <JobForm handleOpen={handleOpen} user={user} context={{isUpdate: isUpdate,job:job}}/>
-
-            </ModalDialog>
-        </Modal>
+        <Dialog open={open} handler={handleOpen}>
+            <DialogBody className="bg-white dark:bg-gray-800 p-4">
+                <DialogHeader>
+                    <button
+                        className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+                        onClick={() => handleOpen()}
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            className="w-6 h-6"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M6 18L18 6M6 6l12 12"
+                            />
+                        </svg>
+                    </button>
+                </DialogHeader>
+                <JobForm handleOpen={handleOpen} user={user} context={{ isUpdate, job }} />
+            </DialogBody>
+        </Dialog>
     );
 }
 

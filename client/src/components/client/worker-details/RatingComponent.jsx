@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import Rating from '@mui/material/Rating';
-import Box from '@mui/material/Box';
-import StarIcon from '@mui/icons-material/Star';
 import ClientApi from "../../../api/ClientApi";
-import {useQueryClient} from "react-query";
+import { useQueryClient } from "react-query";
 import AuthModal from "../../auth/AuthModal";
-import {useLoading} from "../../../context/LoadingProvider";
-import {useTranslation} from "react-i18next";
+import { useLoading } from "../../../context/LoadingProvider";
+import { useTranslation } from "react-i18next";
 
 const labels = {
     1: 'Useless',
@@ -21,9 +18,9 @@ function getLabelText(value) {
 }
 
 function RatingComponent({ job }) {
-    const [value, setValue] = useState(null);  // Initially null to avoid empty stars
+    const [value, setValue] = useState(null); // Initially null to avoid empty stars
     const [hover, setHover] = useState(-1);
-    const {user} = useLoading()
+    const { user } = useLoading();
 
     useEffect(() => {
         if (job && typeof job.averageRating === 'number') {
@@ -33,15 +30,15 @@ function RatingComponent({ job }) {
         }
     }, [job]);
 
-    const queryClient = useQueryClient()
+    const queryClient = useQueryClient();
     // Function to submit the rating to the backend
     const submitRating = async (newValue) => {
         try {
             const id = job._id;
-            if (user){
+            if (user) {
                 const response = await ClientApi.addRating(id, { userId: user._id, rating: newValue });
                 if (response.status === 200) {
-                    await queryClient.invalidateQueries(['job',job._id])
+                    await queryClient.invalidateQueries(['job', job._id]);
                 }
             }
         } catch (err) {
@@ -49,38 +46,65 @@ function RatingComponent({ job }) {
         }
     };
 
-    const {t} = useTranslation('jobDetails')
+    const { t } = useTranslation('jobDetails');
 
     // Handle rating change
     const handleRatingChange = (newValue) => {
-        if (job.userId._id === user._id){
-            return window.alert(t('noRatingRight'))
+        if (job.userId._id === user._id) {
+            return window.alert(t('noRatingRight'));
         }
         setValue(newValue);
         submitRating(newValue); // Call the submit function
     };
-    const [loginForm, setLoginForm] = useState(false)
+
+    const [loginForm, setLoginForm] = useState(false);
+
     return (
         <>
-            <Box sx={{ width: 'full', display: 'flex', alignItems: 'center' }}>
-                <Rating
-                    name="hover-feedback"
-                    value={value || 0}  // Default to 0 to avoid empty stars
-                    precision={1}  // Allows half-stars
-                    getLabelText={getLabelText}
-                    onChange={(event, newValue) => {
-                        return user ? handleRatingChange(newValue) : setLoginForm(true)
-                    }}
-                    onChangeActive={(event, newHover) => {
-                        setHover(newHover);
-                    }}
-                    emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
-                />
+            <div className="flex items-center space-x-2">
+                {/* Star rating component using Tailwind */}
+                <div className="flex space-x-1">
+                    {[...Array(5)].map((_, index) => {
+                        const ratingValue = index + 1;
+                        const isFilled = ratingValue <= value;
+                        const isHovered = ratingValue <= hover;
+
+                        return (
+                            <svg
+                                key={ratingValue}
+                                xmlns="http://www.w3.org/2000/svg"
+                                className={`w-6 h-6 cursor-pointer ${isFilled || isHovered ? 'text-yellow-500' : 'text-gray-300'}`}
+                                fill={isFilled ? "currentColor" : "none"}
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                onMouseEnter={() => setHover(ratingValue)}
+                                onMouseLeave={() => setHover(-1)}
+                                onClick={() => (user ? handleRatingChange(ratingValue) : setLoginForm(true))}
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M12 5l3 7h7l-6 4 2 7-6-4-6 4 2-7-6-4h7l3-7z"
+                                />
+                            </svg>
+                        );
+                    })}
+                </div>
+                {/* Rating text */}
                 {value !== null && (
-                    <Box sx={{ml: 2}}>{value}  ({job?.ratings?.length} reviews)</Box>
+                    <div className="ml-2 text-sm text-gray-700">
+                        {value} ({job?.ratings?.length} reviews)
+                    </div>
                 )}
-            </Box>
-            <AuthModal open={loginForm} handleOpen={() => setLoginForm(!loginForm)} redirectRoute={"/worker/"+job._id} />
+            </div>
+
+            {/* AuthModal to prompt user login if not logged in */}
+            <AuthModal
+                open={loginForm}
+                handleOpen={() => setLoginForm(!loginForm)}
+                redirectRoute={`/worker/${job._id}`}
+            />
         </>
     );
 }

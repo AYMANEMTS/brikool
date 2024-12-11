@@ -1,14 +1,13 @@
 import React, {useState} from 'react';
 import displayImage from "../../../utils/imageFromServer";
-import Tooltip from "@mui/joy/Tooltip";
-import {Chip, Dropdown, IconButton, Menu, MenuButton, MenuItem} from "@mui/joy";
-import MoreVert from "@mui/icons-material/MoreVert";
+import { Menu, MenuHandler, MenuList, MenuItem, Chip, Tooltip, IconButton } from "@material-tailwind/react";
 import formatDate from "../../../utils/formatDate";
 import ChangeStatusModal from "./ChangeStatusModal";
 import DeleteJobModal from "./DeleteJobModal";
 import {useLoading} from "../../../context/LoadingProvider";
 import {useAdminContext} from "../../../context/AdminProvider";
-
+import {useTranslation} from "react-i18next";
+import {EllipsisVertical} from 'lucide-react'
 function JobCard({job,calculateAverageRating}) {
     const [changeStatusModal, setChangeStatusModal] = useState(false)
     const [deleteJobModal, setDeleteJobModal] = useState(false)
@@ -19,6 +18,10 @@ function JobCard({job,calculateAverageRating}) {
     }
     const {user} = useLoading()
     const {isAuthorized} = useAdminContext()
+
+    const {i18n} = useTranslation()
+    const {language:lng} = i18n
+
     return (
         <>
             <div className="relative p-4 border border-gray-200 rounded-lg shadow-lg bg-white">
@@ -29,45 +32,51 @@ function JobCard({job,calculateAverageRating}) {
                             alt={job?.userId?.name}
                             className="w-10 h-10 object-cover rounded-full"
                         />
-                        <Tooltip title={job.userId?.name} placement="top">
-                                            <span className="font-medium text-gray-700 truncate max-w-[120px] block">
-                                                {job?.userId?.name}
-                                            </span>
+                        <Tooltip content={job.userId?.name} placement="top">
+                            <span onClick={() => window.open(`http://localhost:3000/worker/${job._id}`, "_blank")}
+                                className="cursor-pointer font-medium text-gray-700 truncate max-w-[120px] block">
+                                {job?.userId?.name}
+                            </span>
                         </Tooltip>
                     </div>
-                    <Dropdown>
-                        <MenuButton
-                            slots={{root: IconButton}}
-                            slotProps={{root: {variant: 'outlined', color: 'neutral'}}}
-                        >
-                            <MoreVert/>
-                        </MenuButton>
-                        <Menu>
-                            {job?.status === 'suspended' && (
-                                <MenuItem disabled={!isAuthorized(user,'edit_jobs')} onClick={() => changeStatus("active")}>Active</MenuItem>
+                    <Menu>
+                        <MenuHandler>
+                            <IconButton size={"sm"} variant={"outlined"}>
+                                <EllipsisVertical />
+                            </IconButton>
+                        </MenuHandler>
+                        <MenuList>
+                            {(job?.status === 'suspended' || job?.status === 'inactive') && (
+                                <MenuItem disabled={!isAuthorized(user,'edit_jobs')} onClick={() => changeStatus("active")}>
+                                    Active
+                                </MenuItem>
                             )}
-                            <MenuItem disabled={!isAuthorized(user,'edit_jobs')} onClick={() => changeStatus("suspended")}>Suspend</MenuItem>
+                            {(job?.status !== 'suspended' && job?.status !== 'inactive') && (
+                                <MenuItem disabled={!isAuthorized(user,'edit_jobs')} onClick={() => changeStatus("suspended")}>
+                                    Suspend
+                                </MenuItem>
+                            )}
                             <MenuItem disabled={!isAuthorized(user,'delete_jobs')} onClick={() => setDeleteJobModal(true)}>Delete</MenuItem>
                             <MenuItem onClick={() => window.open(`http://localhost:3000/worker/${job._id}`, '_blank')}>
                                 View
                             </MenuItem>
-                        </Menu>
-                    </Dropdown>
+                        </MenuList>
+                    </Menu>
                 </div>
 
                 <div className="flex justify-between items-center mb-2">
                     {/* Category */}
-                    <div className="text-base font-medium text-blue-gray-900">{job?.category?.name}</div>
+                    <div className="text-base font-medium text-blue-gray-900">{job?.category?.name?.[lng]}</div>
 
                     {/* Status */}
                     <div>
-                        <Chip color={
-                            job.status === 'active' ? 'success' : job.status === "inactive" ? 'warning' : 'danger'
-                        }>{job?.status}</Chip>
+                        <Chip size={"sm"} value={job?.status} color={
+                            job.status === 'active' ? 'green' : job.status === "inactive" ? 'amber' : 'red'
+                        } />
                     </div>
                 </div>
                 {/* City */}
-                <div className="text-sm text-gray-700 border-b pb-2 border-gray-200">{job?.userId?.city}</div>
+                <div className="text-sm text-gray-700 border-b pb-2 border-gray-200">{job?.userId?.city?.[lng]}</div>
 
 
                 {/* Description */}

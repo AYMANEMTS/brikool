@@ -9,6 +9,7 @@ import {AdminProvider} from "./context/AdminProvider";
 import {useTranslation} from "react-i18next";
 import {useEffect} from "react";
 import {axiosClient} from "./api/axios";
+import {ClientProvider} from "./context/ClientProvider";
 
 const queryClient = new QueryClient()
 
@@ -20,23 +21,26 @@ function App() {
         }
     }, [i18n.language]);
     return (
-          <AdminProvider>
-              <LoadingProvider>
-                  <QueryClientProvider client={queryClient}>
-                      <SnackbarProvider anchorOrigin={{
-                          vertical: 'bottom',
-                          horizontal: 'right',
-                      }} action={(snackbarId) => (
-                          <button onClick={() => closeSnackbar(snackbarId)}>
-                              X
-                          </button>
-                      )}>
-                          <RouterProvider router={router} />
-                          <Spinner />
-                      </SnackbarProvider>
-                  </QueryClientProvider>
-              </LoadingProvider>
-          </AdminProvider>
+        <AdminProvider>
+            <ClientProvider>
+                <LoadingProvider>
+                    <QueryClientProvider client={queryClient}>
+                        <SnackbarProvider
+                            anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "right",
+                            }}
+                            action={(snackbarId) => (
+                                <button onClick={() => closeSnackbar(snackbarId)}>X</button>
+                            )}
+                        >
+                            <RouterProvider router={router} />
+                            <Spinner />
+                        </SnackbarProvider>
+                    </QueryClientProvider>
+                </LoadingProvider>
+            </ClientProvider>
+        </AdminProvider>
   );
 }
 

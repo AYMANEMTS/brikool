@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
-import { Modal, ModalClose, ModalDialog, Option, Select } from "@mui/joy";
-import { Typography } from "@mui/material";
-import Button from "@mui/joy/Button";
+import React, { useState } from "react";
+import {Dialog, DialogHeader, DialogBody, DialogFooter, Button, Select, Option} from "@material-tailwind/react";
 import AdminApi from "../../../api/AdminApi";
 import { useQueryClient } from "react-query";
 import { useSnackbar } from "notistack";
@@ -15,7 +13,7 @@ function RoleModal({ open, handleOpen, user }) {
         try {
             if (newRole !== user?.role) {
                 await AdminApi.editRole(user._id, { role: newRole });
-                await queryClient.invalidateQueries('users');
+                await queryClient.invalidateQueries("users");
                 enqueueSnackbar("Role updated successfully", { variant: "success" });
             }
             handleOpen();
@@ -27,55 +25,43 @@ function RoleModal({ open, handleOpen, user }) {
     };
 
     return (
-        <>
-            <Modal
-                open={open}
-                onClose={handleOpen}
-                aria-labelledby="modal-title"
-                aria-describedby="modal-desc"
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}
-            >
-                <ModalDialog
-                    sx={{
-                        width: '100%',
-                        maxWidth: 700,
-                        padding: 2,
-                        '@media (max-width: 600px)': {
-                            width: '90%',
-                            maxWidth: 'none',
-                        },
-                    }}
+        <Dialog open={open} handler={handleOpen} size="lg" className="p-4">
+            <DialogHeader className="text-center text-lg font-bold">
+                Change Role for {user?.name}
+            </DialogHeader>
+            <DialogBody divider>
+                <div className="flex flex-col space-y-4">
+                    <Select
+                        value={newRole}
+                        onChange={(e) => setNewRole(e)}
+                        className="w-full"
+                        label="Select Role"
+                    >
+                        <Option disabled={user.role === 'admin'} value="admin">Admin</Option>
+                        <Option disabled={user.role === 'moderator'} value="moderator">Moderator</Option>
+                        <Option disabled={user.role === 'client'} value="client">Client</Option>
+                    </Select>
+                </div>
+            </DialogBody>
+            <DialogFooter>
+                <Button
+                    onClick={handleOpen}
+                    variant="outlined"
+                    color="blue-gray"
+                    className="mr-2"
                 >
-                    <ModalClose variant="plain" sx={{ margin: -1 }} />
-                    <Typography align="center" variant="h6" id="modal-desc">
-                        Change Role for {user?.name}
-                    </Typography>
-                    <div className="flex space-x-2">
-                        <Select
-                            defaultValue={user.role}
-                            sx={{ width: '100%' }}
-                            onChange={(e, v) => setNewRole(v)}
-                        >
-                            <Option value="admin">Admin</Option>
-                            <Option value="moderator">Moderator</Option>
-                            <Option value="client">Client</Option>
-                        </Select>
-                        <Button
-                            onClick={changeRole}
-                            disabled={newRole === user?.role}
-                            variant="solid"
-                            color="primary"
-                        >
-                            Save
-                        </Button>
-                    </div>
-                </ModalDialog>
-            </Modal>
-        </>
+                    Cancel
+                </Button>
+                <Button
+                    onClick={changeRole}
+                    disabled={newRole === user?.role}
+                    variant="filled"
+                    color="blue"
+                >
+                    Save
+                </Button>
+            </DialogFooter>
+        </Dialog>
     );
 }
 

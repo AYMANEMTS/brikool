@@ -4,30 +4,13 @@ import 'react-multi-carousel/lib/styles.css';
 import {useQuery, useQueryClient} from "react-query";
 import ClientApi from "../../../api/ClientApi";
 import {useLoading} from "../../../context/LoadingProvider";
+import {useTranslation} from "react-i18next";
+import {useClientContext} from "../../../context/ClientProvider";
 
 function CategoriesSlider({t}) {
-    const {startLoading, stopLoading} = useLoading();
-    const queryClient = useQueryClient()
-    const cashedCategories = queryClient.getQueryData('categories')?.data?.data?.category || []
-    const {data:categories=[],isFetching} = useQuery('categories',ClientApi.getCategories,{
-        initialData: cashedCategories.length > 0 ? cashedCategories : undefined,
-        select: (data) => data.data.category,
-        onSuccess: () => stopLoading(),
-        onError:() => stopLoading(),
-        refetchOnWindowFocus: false,
-        retry: 0,
-        cacheTime: 5 * 60 * 1000,
-        staleTime: 1000*60
-    })
-
-    useEffect(() => {
-        if (isFetching) {
-            startLoading();
-        } else {
-            stopLoading();
-        }
-    }, [isFetching, startLoading, stopLoading]);
-
+    const {categories} = useClientContext()
+    const {i18n} = useTranslation();
+    const {language:lng} = i18n
     return (
         <>
             <div className="flex justify-between items-center">
@@ -99,9 +82,9 @@ function CategoriesSlider({t}) {
                     <div key={key}
                          className="bg-blue-300 p-5 m-2  rounded-lg text-center shadow-md hover:shadow-lg transition">
                         <div className="text-green-500 mb-2 sm:mb-4">
-                            <img src={`http://localhost:8000/${item.image}`} alt={item.name}/>
+                            <img src={`http://localhost:8000/${item.image}`} alt={item?.name?.[lng]}/>
                         </div>
-                        <p className="text-black font-semibold text-xs capitalize sm:text-sm">{item.name}</p>
+                        <p className="text-black font-semibold text-xs capitalize sm:text-sm">{item?.name?.[lng]}</p>
                     </div>
                 ))}
             </Carousel>

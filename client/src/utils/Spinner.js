@@ -1,21 +1,12 @@
-// Spinner.js
 import React from "react";
-import { useLoading } from "../context/LoadingProvider";
-import CircularProgress from "@mui/material/CircularProgress";
-import Backdrop from "@mui/material/Backdrop";
 
-function Spinner() {
-    const { isLoading } = useLoading();
-
-    if (!isLoading) return null;
+function Spinner({ open }) {
+    if (!open) return null; // Do not render the spinner if it's not open
 
     return (
-        <Backdrop
-            sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
-            open={isLoading}
-        >
-            <CircularProgress color="inherit" />
-        </Backdrop>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="w-16 h-16 border-4 border-t-blue-500 border-t-solid border-white rounded-full animate-spin"></div>
+        </div>
     );
 }
 

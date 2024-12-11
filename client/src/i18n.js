@@ -24,6 +24,12 @@ import arValidation from "./locales/ar/validation.json"
 import enAnnounces from "./locales/en/announces.json"
 import arAnnounces from "./locales/ar/announces.json"
 import frAnnounces from "./locales/fr/announces.json"
+import enSettings from "./locales/en/settings.json"
+import arSettings from "./locales/ar/settings.json"
+import frSettings from "./locales/fr/settings.json"
+
+
+
 const resources = {
     en: {
         navbar: enNavbar,
@@ -34,6 +40,7 @@ const resources = {
         jobDetails: enJobDetails,
         validation: enValidation,
         announces: enAnnounces,
+        settings: enSettings,
     },
     fr: {
         navbar: frNavbar,
@@ -44,6 +51,7 @@ const resources = {
         jobDetails: frJobDetails,
         validation: frValidation,
         announces: frAnnounces,
+        settings: frSettings,
     },
     ar: {
         navbar: arNavbar,
@@ -54,6 +62,7 @@ const resources = {
         jobDetails: arJobDetails,
         validation: arValidation,
         announces: arAnnounces,
+        settings: arSettings,
     }
 };
 
@@ -61,13 +70,13 @@ i18n
     .use(initReactI18next)
     .init({
         resources,
-        fallbackLng: "en",
-        lng: "ar",
+        fallbackLng: "fr",
+        lng: "fr",
 
         interpolation: {
             escapeValue: false
         },
-        ns: ["navbar","home","login","register","workersInvite","jobDetails","validation","announces"],
+        ns: ["navbar","home","login","register","workersInvite","jobDetails","validation","announces","settings"],
 
     });
 

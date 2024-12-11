@@ -3,8 +3,8 @@ import CategoriesSlider from "../../components/client/home-page/CategoriesSlider
 import Hero from "../../components/client/home-page/Hero";
 import Workers from "../../components/client/home-page/Workers";
 import WorkersInvite from "../../components/client/home-page/WorkersInvite";
-import AvailableWorkes from "../../components/client/home-page/AvailableWorkers";
-import Faq from "../../components/client/home-page/Faq";
+import AvailableWorkers from "../../components/client/home-page/AvailableWorkers";
+import FAQContact from "../../components/client/home-page/FAQContact";
 import {useTranslation} from "react-i18next";
 
 function Home() {
@@ -15,8 +15,8 @@ function Home() {
             <Hero t={t}/>
             <Workers t={t}/>
             <WorkersInvite />
-            <AvailableWorkes t={t}/>
-            <Faq t={t} />
+            <AvailableWorkers t={t}/>
+            <FAQContact t={t} />
         </>
     )
 }

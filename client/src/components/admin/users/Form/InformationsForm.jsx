@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import { Controller,useForm } from "react-hook-form";
-import { TextField } from '@mui/material';
+import { Controller } from "react-hook-form";
 import {useQueryClient} from "react-query";
+import {Typography, Input} from "@material-tailwind/react";
 
 function InformationsForm({control,errors}) {
     const queryClient = useQueryClient();
@@ -16,25 +16,25 @@ function InformationsForm({control,errors}) {
         <div className='py-2'>
             <div className={"mb-2"}>
                 <Controller name="name" control={control}
-                            rules={{
-                                required: "Name is required",
-                                minLength: {
-                                    value: 8,
-                                    message: "Name must be at least 8 characters long",
-                                },
-                                maxLength: {
-                                    value: 20,
-                                    message: "Name cannot exceed 20 characters",
-                                },
+                    rules={{
+                        required: "Name is required",
+                        minLength: {
+                            value: 8,
+                            message: "Name must be at least 8 characters long",
+                        },
+                        maxLength: {
+                            value: 20,
+                            message: "Name cannot exceed 20 characters",
+                        },
 
-                            }}
-                            render={({field}) => (
-                                <TextField {...field} label="Full-Name" fullWidth type={"text"}
-                                           variant="outlined" error={!!errors.name}
-                                           helperText={errors.name ? errors.name.message : 'required'}
-                                />
-                            )}
+                    }}
+                    render={({field}) => (
+                        <Input {...field} label="Full-Name"  type={"text"} required
+                                   variant="outlined" error={errors.name}
+                        />
+                    )}
                 />
+                {errors.name && <Typography variant={"small"} color={"red"}>{errors.name.message}</Typography>}
             </div>
             <div className={"mb-2"}>
                 <Controller
@@ -53,17 +53,12 @@ function InformationsForm({control,errors}) {
                         },
                     }}
                     render={({field}) => (
-                        <TextField
-                            {...field}
-                            label="Email"
-                            fullWidth
-                            type="text"
-                            variant="outlined"
-                            error={!!errors.email}
-                            helperText={errors.email ? errors.email.message : "required"}
+                        <Input {...field} label="Email" type="text" required
+                            variant="outlined" error={errors.email}
                         />
                     )}
                 />
+                {errors.email && <Typography variant={"small"} color={"red"}>{errors.email.message}</Typography>}
 
             </div>
             <div className={"mb-2"}>
@@ -78,17 +73,12 @@ function InformationsForm({control,errors}) {
                         },
                     }}
                     render={({field}) => (
-                        <TextField
-                            {...field}
-                            label="Password"
-                            fullWidth
-                            type="password"
-                            variant="outlined"
-                            error={!!errors.password}
-                            helperText={errors.password ? errors.password.message : "required"}
+                        <Input required {...field}  label="Password"
+                            type="password" variant="outlined" error={errors.password}
                         />
                     )}
                 />
+                {errors.password && <Typography variant={"small"} color={"red"}>{errors.password.message}</Typography>}
             </div>
             <div className={"mb-2"}>
                 <Controller
@@ -100,17 +90,12 @@ function InformationsForm({control,errors}) {
                             value === control._formValues.password || "Passwords do not match",
                     }}
                     render={({field}) => (
-                        <TextField
-                            {...field}
-                            label="Password Confirmation"
-                            fullWidth
-                            type="password"
-                            variant="outlined"
-                            error={!!errors.passwordConfirm}
-                            helperText={errors.passwordConfirm ? errors.passwordConfirm.message : "required"}
+                        <Input{...field} label="Password Confirmation" type="password"
+                            variant="outlined" error={errors.passwordConfirm} required
                         />
                     )}
                 />
+                {errors.passwordConfirm && <Typography variant={"small"} color={"red"}>{errors.passwordConfirm.message}</Typography>}
             </div>
 
         </div>

@@ -1,13 +1,12 @@
-import { TextField, Grid } from "@mui/material";
 import { Controller } from "react-hook-form";
 import {useTranslation} from "react-i18next";
+import {Textarea,Typography} from "@material-tailwind/react";
 
 function DescriptionForm({ control, errors,t }) {
     const {t:tValidation} = useTranslation("validation");
     return (
-        <Grid container spacing={2} className="p-4">
-            <Grid item xs={12}>
-                <h3 className={"mb-4 font-bold text-gray-800 pl-2"}>{t('descriptionTitle')}</h3>
+        <div className="">
+            <div>
                 <Controller
                     name="description"
                     control={control}
@@ -20,20 +19,17 @@ function DescriptionForm({ control, errors,t }) {
                         }
                     }}
                     render={({ field }) => (
-                        <TextField
+                        <Textarea
                             {...field}
                             label={t('description')}
-                            fullWidth
-                            multiline // Add this to enable multiline text
-                            rows={7}  // Now this will work
                             variant="outlined" // Ensure the variant is set if needed
-                            error={!!errors.description}
-                            helperText={errors.description ? errors.description.message : ''}
+                            error={errors.description}
                         />
                     )}
                 />
-            </Grid>
-        </Grid>
+                {errors.description && <Typography variant={"small"} color={"red"}>{errors.description.message}</Typography>}
+            </div>
+        </div>
     );
 }
 

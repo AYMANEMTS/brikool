@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
-import { Box, Button, TextField, Typography, Link, Select, MenuItem, FormControl, InputLabel, FormHelperText } from '@mui/material';
-import GoogleIcon from '@mui/icons-material/Google';
 import citiesInMorocco from "../../utils/citiesInMorocco";
 import { useForm, Controller } from "react-hook-form";
 import ClientApi from "../../api/ClientApi";
-import Alert from "@mui/material/Alert";
 import {useNavigate} from "react-router-dom";
 import {useSnackbar} from "notistack";
 import {Loader} from "lucide-react";
 import {useLoading} from "../../context/LoadingProvider";
 import {useTranslation} from "react-i18next";
+import {Card,CardBody,Typography,Alert,Input,Button,Select,Option } from "@material-tailwind/react";
 
 function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
     const { register, handleSubmit, control,setError, formState: { errors,isValid } } = useForm();
@@ -18,7 +16,8 @@ function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
     const [message, setMessage] = useState(null)
     const { enqueueSnackbar } = useSnackbar();
     const [loading, setLoading] = useState(false)
-    const {t} = useTranslation('register');
+    const {t,i18n} = useTranslation('register');
+    const {language:lng} = i18n
     const handleRegister = async (data) => {
         setMessage(null)
         setLoading(true)
@@ -52,116 +51,116 @@ function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
         }
     };
     return (
-        <Box
-            component="form"
-            onSubmit={handleSubmit(handleRegister)}
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 2,
-                width: '100%',
-                maxWidth: 400,
-                padding: 2,
-                margin: 'auto',
-                '@media (max-width: 600px)': {
-                    padding: 1,
-                    width: '90%',
-                },
-            }}
-        >
-            <Typography variant="h5" sx={{ textAlign: 'center', mb: 2 }}>
-                {t('createAccount')}
-            </Typography>
-            {message !== null && (
-                <Alert variant="filled" severity="error">
-                    {message}
-                </Alert>
-            )}
-            <TextField
-                label={t('fullName')}
-                type="text"
-                fullWidth
-                variant="outlined"
-                {...register('name', {
-                    required: { value: true, message: "Full-name field is required " }
-                })}
-                error={!!errors.name}
-                helperText={errors.name ? errors.name.message : null}
-            />
-            <TextField
-                label={t('email')}
-                type="email"
-                fullWidth
-                variant="outlined"
-                {...register('email', {
-                    required: { value: true, message: "Email field is required " }
-                })}
-                error={!!errors.email}
-                helperText={errors.email ? errors.email.message : null}
-            />
-            <TextField
-                label={t('password')}
-                type="password"
-                fullWidth
-                variant="outlined"
-                {...register('password', {
-                    required: { value: true, message: "Password field is required " }
-                })}
-                error={!!errors.password}
-                helperText={errors.password ? errors.password.message : null}
-            />
+        <Card className={"w-full"}>
+            <CardBody>
+                <Typography variant="h5" className={"text-center mb-4"}>
+                    {t('createAccount')}
+                </Typography>
+                {message !== null && (
+                    <Alert variant="filled" severity="error" color={"red"} className={"mb-4"}>
+                        {message}
+                    </Alert>
+                )}
+                <form className="flex flex-col gap-4" onSubmit={handleSubmit(handleRegister)}>
+                    <div>
+                        <Input label={t('fullName')} type="text"  variant="outlined"
+                               {...register('name', {
+                                   required: {value: true, message: "Full-name field is required "}
+                               })}
+                               error={errors.name}
+                        />
+                        {errors.name &&
+                            <Typography variant="small" color="red">
+                                {errors.name.message}
+                            </Typography>
+                        }
+                    </div>
 
-            {/* City Dropdown with Controller */}
-            <FormControl fullWidth error={!!errors.city}>
-                <InputLabel id="city-label">{t('city')}</InputLabel>
-                <Controller
-                    name="city"
-                    control={control}
-                    defaultValue=""
-                    rules={{ required: { value: true, message: "City field is required" } }}
-                    render={({ field }) => (
-                        <Select
-                            labelId="city-label"
-                            label="City *"
-                            {...field}
-                        >
-                            {citiesInMorocco?.map((city, key) => (
-                                <MenuItem key={key} value={city}>
-                                    {city}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    )}
-                />
-                <FormHelperText>{errors.city ? errors.city.message : null}</FormHelperText>
-            </FormControl>
+                    <div>
+                        <Input label={t('email')} type="email"  variant="outlined"
+                               {...register('email', {
+                                   required: {value: true, message: "email field is required "}
+                               })}
+                               error={errors.email}
+                        />
+                        {errors.email &&
+                            <Typography variant="small" color="red">
+                                {errors.email.message}
+                            </Typography>
+                        }
+                    </div>
 
-            <Button disabled={!isValid}
-                type="submit"
-                variant="contained"
-                color="primary"
-                fullWidth
-                sx={{ mt: 2, mb: 1 }}
-            >
-                {loading ? <><Loader className={" mx-2 animate-spin text-white"} /></> : t('register')}
-            </Button>
+                    <div>
+                        <Input label={t('password')} type="password"  variant="outlined"
+                               {...register('password', {
+                                   required: {value: true, message: "Password field is required "}
+                               })}
+                               error={errors.password}
+                        />
+                        {errors.password &&
+                            <Typography variant="small" color="red">
+                                {errors.password.message}
+                            </Typography>
+                        }
+                    </div>
 
-            <Button
-                variant="outlined"
-                color="primary"
-                fullWidth
-                startIcon={<GoogleIcon />}
-                sx={{ mb: 2 }}
-            >
-                {t('registerWithGoogle')}
-            </Button>
+                    <div>
+                        <Controller
+                            name="city"
+                            control={control}
+                            rules={{required: 'City is required'}}
+                            render={({field}) => (
+                                <Select size={"md"}
+                                    label={"Select City"}
+                                    {...field}
+                                    error={errors.city}
+                                    value={field.value?.[lng] || ""}
+                                    className="bg-white border rounded-md w-full"
+                                    onChange={(val) => {
+                                        const selectedCity = citiesInMorocco.find(
+                                            (city) => city[lng] === val
+                                        );
+                                        field.onChange(selectedCity || {ar: "", fr: "", en: ""});
+                                    }}
+                                >
+                                    {citiesInMorocco.map((city, key) => (
+                                        <Option key={key} value={city[lng]}>
+                                            {city[lng]}
+                                        </Option>
+                                    ))}
+                                </Select>
+                            )}
+                        />
+                        {errors.city && (
+                            <Typography variant="small" color="red">
+                                {errors.city.message}
+                            </Typography>
+                        )}
+                    </div>
 
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }} onClick={handllSwapForm} className={"cursor-pointer"}>
-                <Link variant="body2" sx={{ textDecoration: 'none' }}>
-                    {t('alreadyHaveAccount')}
-                </Link>
-            </Box>
-        </Box>
+
+                    <Button type="submit" color="blue" size="sm" className="mt-4" disabled={!isValid}>
+                        {loading ? (
+                            <Loader className="animate-spin mx-auto text-white"/>
+                        ) : (
+                            t('register')
+                        )}
+                    </Button>
+                    <Button color="blue-gray" size="sm" variant="outlined" className=""
+                            onClick={() => (window.location.href = 'http://localhost:8000/auth/google')}>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
+                            <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"/>
+                        </svg>
+                        <span className={"ml-2"}>{t('registerWithGoogle')}</span>
+                    </Button>
+                </form>
+                <div className="flex justify-center mt-4">
+                    <span onClick={handllSwapForm} className="text-blue-500 cursor-pointer hover:underline">
+                        {t('alreadyHaveAccount')}
+                    </span>
+                </div>
+            </CardBody>
+        </Card>
     );
 }
 

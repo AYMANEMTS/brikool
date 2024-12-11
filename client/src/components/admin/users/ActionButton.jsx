@@ -1,17 +1,9 @@
 import * as React from 'react';
-import Menu from '@mui/joy/Menu';
-import MenuItem from '@mui/joy/MenuItem';
-import ListItemDecorator from '@mui/joy/ListItemDecorator';
-import ListDivider from '@mui/joy/ListDivider';
-import Edit from '@mui/icons-material/Edit';
-import ViewListIcon from '@mui/icons-material/ViewList';
-import SecurityIcon from '@mui/icons-material/Security';
-import DeleteForever from '@mui/icons-material/DeleteForever';
-import MenuButton from '@mui/joy/MenuButton';
-import Dropdown from '@mui/joy/Dropdown';
+import {Menu, MenuHandler, MenuList, MenuItem, IconButton} from "@material-tailwind/react";
 import {useAdminContext} from "../../../context/AdminProvider";
 import {useLoading} from "../../../context/LoadingProvider";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import {EllipsisVertical, Pencil, Eye, ShieldCheck, Trash2} from 'lucide-react'
+
 
 export default function ActionButton({user,togglePermissionsModal,toggleDetailsModal,setSelectedUser,toggleDeletesModal,toggleRoleModal}) {
     const onPermissionsClick = () => {
@@ -33,42 +25,41 @@ export default function ActionButton({user,togglePermissionsModal,toggleDetailsM
     const {isAuthorized} = useAdminContext()
     const {user: connectedUser} = useLoading()
     return (
-        <Dropdown>
-            <MenuButton style={{width: "2rem"}} disabled={!isAuthorized(connectedUser, 'edit_users')}>
-                <MoreVertIcon />
-            </MenuButton>
-
-            <Menu placement="bottom-end" >
-                <MenuItem onClick={onEditRoleClick} >
-                    <ListItemDecorator>
-                        <Edit />
-                    </ListItemDecorator>
-                    Role
+        <Menu>
+            <MenuHandler>
+                <IconButton variant={"outlined"} disabled={!isAuthorized(connectedUser, 'edit_users')}>
+                    <EllipsisVertical />
+                </IconButton>
+            </MenuHandler>
+            <MenuList>
+                <MenuItem onClick={onEditRoleClick}>
+                    <div className={"flex items-center space-x-2 "}>
+                        <Pencil />
+                        <span>Role</span>
+                    </div>
                 </MenuItem>
-
-                <MenuItem onClick={onPermissionsClick}>
-                    <ListItemDecorator>
-                        <SecurityIcon />
-                    </ListItemDecorator>
-                    Permissions
-                </MenuItem>
-
+                {user.role === 'moderator' && (
+                    <MenuItem onClick={onPermissionsClick}>
+                        <div className={"flex items-center space-x-2 "}>
+                            <ShieldCheck />
+                            <span>Permissions</span>
+                        </div>
+                    </MenuItem>
+                )}
                 <MenuItem onClick={onDetailsClick}>
-                    <ListItemDecorator>
-                        <ViewListIcon />
-                    </ListItemDecorator>
-                    Details
+                    <div className={"flex items-center space-x-2 "}>
+                        <Eye />
+                        <span>Details</span>
+                    </div>
                 </MenuItem>
 
-                <ListDivider />
-
-                <MenuItem variant="soft" color="danger" onClick={onDeleteClick}>
-                    <ListItemDecorator sx={{ color: 'inherit' }}>
-                        <DeleteForever />
-                    </ListItemDecorator>
-                    Delete
+                <MenuItem onClick={onDeleteClick}>
+                    <div className={"flex items-center space-x-2 "}>
+                        <Trash2 />
+                        <span>Delete</span>
+                    </div>
                 </MenuItem>
-            </Menu>
-        </Dropdown>
+            </MenuList>
+        </Menu>
     );
 }

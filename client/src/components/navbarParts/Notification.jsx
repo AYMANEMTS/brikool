@@ -1,10 +1,8 @@
 import React, {useState} from 'react';
-import Badge from '@mui/material/Badge';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import { IconButton} from "@mui/material";
 import NotificationDrawer from "../NotificationDrawer";
 import {useQuery} from "react-query";
 import ClientApi from "../../api/ClientApi";
+import {IconButton,Badge} from "@material-tailwind/react"
 
 function Notification() {
     const { data: notifications = [] } = useQuery("notifications", ClientApi.getUserNotifications, {
@@ -19,39 +17,20 @@ function Notification() {
         <>
             {notifications.length > 0 ? (
                 <>
-                    <IconButton
-                        onClick={() => toggleDrawer()}
-                        aria-label="notifications"
-                        size="small"
-                        sx={{
-                            backgroundColor: 'gray', // Initial background color
-                            color: 'white', // Icon color
-                            padding: '5px', // Adjust padding for better spacing
-                            borderRadius: '50%', // Round shape for the button
-                            transition: 'all 0.3s ease', // Smooth transitions
-                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
-                            '&:hover': {
-                                backgroundColor: 'darkgray', // Change background on hover
-                                transform: 'scale(1.1)', // Slight zoom effect
-                                boxShadow: '0 6px 16px rgba(0, 0, 0, 0.2)', // More pronounced shadow on hover
-                            },
-                            '& .MuiSvgIcon-root': {
-                                fontSize: '1.8rem', // Adjust icon size
-                            },
-                        }}
-                    >
-                        <Badge
-                            badgeContent={notifications.length}  // Pass the notification count here
-                            color="error"  // Customize the badge color
-                            max={99}       // Optional: limit the max number to display (e.g., "99+")
-                            overlap="circular"  // To position the badge on top of a circular element
-                        >
-                            <NotificationsIcon fontSize="inherit" />
-                        </Badge>
-                    </IconButton>
-                    <NotificationDrawer open={openNotificationDrawer} toggleDrawer={toggleDrawer} notifications={notifications} />
+                    <Badge withBorder content={notifications.length} color={"red"} placement={"top-end"}>
+                        <IconButton variant={"plain"} size={"sm"}
+                                    onClick={() => toggleDrawer()}>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
+                                 stroke="currentColor" className="size-6">
+                                <path strokeLinecap="round" strokeLinejoin="round"
+                                      d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0M3.124 7.5A8.969 8.969 0 0 1 5.292 3m13.416 0a8.969 8.969 0 0 1 2.168 4.5"/>
+                            </svg>
+                        </IconButton>
+                    </Badge>
+                    <NotificationDrawer open={openNotificationDrawer} toggleDrawer={toggleDrawer}
+                                        notifications={notifications}/>
                 </>
-            ):null}
+            ) : null}
 
 
         </>

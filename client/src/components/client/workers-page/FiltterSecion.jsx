@@ -1,118 +1,140 @@
-import React, { useEffect } from 'react';
-import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
-import { useQueryClient } from 'react-query';
-import { Controller, useForm } from "react-hook-form";
+import React, {useEffect} from 'react';
 import citiesInMorocco from "../../../utils/citiesInMorocco";
 import {useSearchParams} from "react-router-dom";
+import {useTranslation} from "react-i18next";
+import {useClientContext} from "../../../context/ClientProvider";
+import { Controller, useForm } from "react-hook-form";
+import {Select, Option} from "@material-tailwind/react"
 
-function FiltterSecion({ jobs, setFiltredJobS }) {
-    const [searchParams,setSearchParams] = useSearchParams();
-    const queryClient = useQueryClient();
-    const fake = queryClient.getQueryData('categories');
-    const categories = fake?.data?.category || [];
-    const { control, watch,setValue } = useForm({defaultValues:{city:'all',category:'all',userId:'all'}});
+function FilterSection({ jobs, setFiltredJobS }) {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const { categories } = useClientContext();
+    const { t, i18n } = useTranslation('announces');
+    const { language: lng } = i18n;
 
-    const cityParams = searchParams.get('city')
-    const category_idParams = searchParams.get('cat_id')
-    const user_idParams = searchParams.get('user_id')
+    const { control, watch, setValue } = useForm({
+        defaultValues: {
+            city: 'all',
+            category: 'all',
+            userId: 'all',
+            orderBy: 'all',
+        },
+    });
 
-    const selectedCity = watch('city', 'all');
-    const selectedCategory = watch('category', 'all');
-    const selectedUser = watch('userId', 'all');
+    const selectedCity = watch('city');
+    const selectedCategory = watch('category');
+    const selectedUser = watch('userId');
 
     useEffect(() => {
-        if (cityParams) setValue('city', cityParams);
+        const category_idParams = searchParams.get('cat_id');
+        const user_idParams = searchParams.get('user_id');
         if (category_idParams) setValue('category', category_idParams);
         if (user_idParams) setValue('userId', user_idParams);
-    }, [cityParams, category_idParams, user_idParams, setValue]);
+    }, [searchParams, setValue]);
 
     useEffect(() => {
         let filteredJobs = jobs;
+
         if (selectedCity !== 'all') {
-            filteredJobs = filteredJobs.filter(job => job.userId.city === selectedCity);
+            filteredJobs = filteredJobs.filter(job => job.userId.city?.[lng] === selectedCity);
         }
         if (selectedCategory !== 'all') {
             filteredJobs = filteredJobs.filter(job => job.category?._id === selectedCategory);
         }
-        if (selectedUser !== 'all'){
-            filteredJobs = filteredJobs.filter(job => job.userId._id === selectedUser)
+        if (selectedUser !== 'all') {
+            filteredJobs = filteredJobs.filter(job => job.userId._id === selectedUser);
         }
-        setFiltredJobS(filteredJobs);
-    }, [selectedCity, selectedCategory, jobs, setFiltredJobS,selectedUser]);
-     return (
-         <>
-             <div className="p-6 rounded-lg shadow-lg mb-3">
-                 <h2 className="text-2xl font-semibold mb-4">Filter Workers</h2>
-                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                     {/* City Select */}
-                     <div>
-                         <FormControl fullWidth variant="outlined" size="small">
-                             <InputLabel id="city-label">City *</InputLabel>
-                             <Controller
-                                 control={control}
-                                 name="city"
-                                 defaultValue="all" // Default value for city
-                                 render={({field}) => (
-                                     <Select
-                                         labelId="city-label"
-                                         label="City *"
-                                         {...field}
-                                     >
-                                         <MenuItem value={"all"}>All City</MenuItem>
-                                         {citiesInMorocco
-                                             .filter(city => jobs.some(job => job.userId.city === city))
-                                             .map((city, key) => (
-                                                 <MenuItem key={key} value={city}>
-                                                     {city}
-                                                 </MenuItem>
-                                             ))
-                                         }
-                                     </Select>
-                                 )}
-                             />
-                         </FormControl>
-                     </div>
 
-                     {/* Category Select */}
-                     <div>
-                         <FormControl fullWidth variant="outlined" size="small">
-                             <InputLabel id="category-label">Category *</InputLabel>
-                             <Controller
-                                 control={control}
-                                 name="category"
-                                 defaultValue="all" // Default value for category
-                                 render={({field}) => (
-                                     <Select
-                                         labelId="category-label"
-                                         label="Category *"
-                                         {...field}
-                                     >
-                                         <MenuItem value="all">All Categories</MenuItem>
-                                         {categories
-                                             .filter(cate => jobs.some(job => job.category?._id === cate._id))
-                                             .map((category) => (
-                                                 <MenuItem key={category?._id} value={category?._id}>
-                                                     {category.name}
-                                                 </MenuItem>
-                                             ))}
-                                     </Select>
-                                 )}
-                             />
-                         </FormControl>
-                     </div>
-                 </div>
-             </div>
-             {selectedUser !== 'all' && (
-                 <button onClick={() => {
-                     setFiltredJobS(jobs)
-                     setValue('userId','all')
-                     setSearchParams({})
-                 }}
-                     className={"p-2 bg-blue-500 text-white text-lg font-bold w-full rounded-lg mb-4 hover:bg-blue-800"}>All
-                     workers</button>
-             )}
-         </>
-     );
+        setFiltredJobS(filteredJobs);
+    }, [selectedCity, selectedCategory, selectedUser, jobs, setFiltredJobS, lng]);
+
+    return (
+        <>
+            <div className="p-6 rounded-lg shadow-lg mb-3 dark:bg-gray-800 dark:text-white">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <Controller name="city" control={control}
+                        render={({field}) => {
+                            const allCitiesWithDefaultValue = [...citiesInMorocco
+                                .filter(city => jobs.some(job => city.en !== 'all' && job.userId.city?.[lng] === city?.[lng])),
+                                {en: "all",fr: "all",ar: "all"}]
+                            return <Select size={"md"} label={t('city')} {...field}
+                                           value={field.value?.[lng] || ""}
+                                           className="bg-white border rounded-md w-full"
+                                           onChange={(val) => {
+                                               field.onChange(val)
+                                               setValue('city', val)
+                                           }}>
+                                {allCitiesWithDefaultValue.reverse()
+                                    ?.map((city, key) => (
+                                        city[lng] === 'all' ?
+                                            <Option value={'all'}>{t('all_city')}</Option> :
+                                            <Option key={key} value={city[lng]}>
+                                                {city[lng]}
+                                            </Option>
+                                    ))}
+                            </Select>
+                        }}
+                    />
+
+
+                    <Controller name="category" control={control}
+                                render={({field}) => {
+                                    const allCategoriesWithDefaultValue = [...categories
+                                        .filter(cate => jobs.some(job => job.category?._id === cate._id)),
+                                        {en: "all",fr: "all",ar: "all"}]
+                                    return <Select size={"md"} label={t('category')} {...field}
+                                                   value={field.value?.[lng] || ""}
+                                                   className="bg-white border rounded-md w-full"
+                                                   onChange={(val) => {
+                                                       field.onChange(val)
+                                                       setValue('category', val)
+                                                   }}>
+                                        {allCategoriesWithDefaultValue.reverse()
+                                            ?.map((cate, key) => (
+                                                cate[lng] === 'all' ?
+                                                    <Option value={'all'}>{t('all_category')}</Option> :
+                                                    <Option key={key} value={cate._id}>
+                                                        {cate?.name?.[lng]}
+                                                    </Option>
+                                            ))}
+                                    </Select>
+                                }}
+                    />
+
+                    {/* Order Select */}
+                    <Controller
+                        control={control}
+                        name="orderBy"
+                        render={({ field }) => (
+                            <Select
+                                label={t('order_by')}
+                                {...field}
+                                className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            >
+                                <Option value="all">{t('order_by')}</Option>
+                                <Option value="name">{t('order_by_name')}</Option>
+                                <Option value="createdAt">{t('order_by_created_at')}</Option>
+                                <Option value="reviewed">{t('order_by_reviewed')}</Option>
+                            </Select>
+                        )}
+                    />
+                </div>
+            </div>
+
+            {selectedUser !== 'all' && (
+                <button
+                    onClick={() => {
+                        setFiltredJobS(jobs);
+                        setValue('userId', 'all');
+                        setSearchParams({});
+                    }}
+                    className="p-2 bg-blue-500 text-white text-lg font-bold w-full rounded-lg mb-4 hover:bg-blue-800 dark:bg-blue-700 dark:hover:bg-blue-600"
+                >
+                    {t('all_workers')}
+                </button>
+            )}
+        </>
+    );
 }
 
-export default FiltterSecion;
+export default FilterSection;

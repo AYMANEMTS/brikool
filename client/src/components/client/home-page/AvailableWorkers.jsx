@@ -3,28 +3,11 @@ import Carousel from "react-multi-carousel";
 import WorkerCard from "../WorkerCard";
 import {useQuery, useQueryClient} from "react-query";
 import ClientApi from "../../../api/ClientApi";
+import {useClientContext} from "../../../context/ClientProvider";
 
 
-function AvailableWorkes({t}) {
-    const queryClient = useQueryClient();
-    const cachedWorkers = queryClient.getQueryData('jobs')?.data || [];
-    const [workers, setWorkers] = useState(cachedWorkers || []);
-
-    const { data } = useQuery('jobs', ClientApi.getJobs, {
-        initialData: cachedWorkers.length > 0 ? cachedWorkers : undefined,
-        select: (response) => response.data,
-        refetchOnWindowFocus: false,
-        retry: false,
-        cacheTime: 5 * 60 * 1000,
-        staleTime: 1000*60,
-    });
-
-    useEffect(() => {
-        if (data && data.length > 0) {
-            setWorkers(data);
-        }
-    }, [data]);
-
+function AvailableWorkers({t}) {
+    const {workers} = useClientContext()
     return (
         <>
             <div className="flex justify-between items-center my-3">
@@ -99,4 +82,4 @@ function AvailableWorkes({t}) {
     )
 }
 
-export default AvailableWorkes;
+export default AvailableWorkers;

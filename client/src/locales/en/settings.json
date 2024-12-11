@@ -1,0 +1,13 @@
+{
+  "settings_title_1": "Update Your Information",
+  "settings_title_2": "Change Password",
+  "success_update_info": "You updated your informations successfully",
+  "failed_updated_info": "Failed to updated your informations",
+  "success_change_pass": "You password changed successfully",
+  "failed_change_pass": "Failed to change password",
+  "current_password": "Current password",
+  "new_password": "New password",
+  "confirm_password": "Confirm password",
+  "password_not_match": "Passwords do not match",
+  "update_password_button": "Update Password"
+}

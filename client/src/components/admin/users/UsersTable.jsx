@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import Table from '@mui/joy/Table';
-import Tooltip from '@mui/joy/Tooltip';
+import {Avatar, Card, Typography} from "@material-tailwind/react";
 import displayImage from "../../../utils/imageFromServer";
 import ActionButton from './ActionButton';
 import PermissionsModal from "./permissions/PermissionsModal";
@@ -9,6 +8,10 @@ import DeleteModal from "./DeleteModal";
 import {useNavigate} from "react-router-dom";
 import {useLoading} from "../../../context/LoadingProvider";
 import RoleModal from "./RoleModal";
+import {useTranslation} from "react-i18next";
+
+
+const TABLE_HEAD = ["User","Email","Role", "City","Jobs","Action"];
 
 function UsersTable({ users }) {
     const [permissionModal, setPermissionModal] = useState(false);
@@ -25,121 +28,103 @@ function UsersTable({ users }) {
     const navigate = useNavigate();
     const {user: connectedUser} = useLoading()
 
+    const {i18n} = useTranslation();
+    const {language:lng} = i18n
+
     return (
         <>
-            <div className="overflow-x-auto bg-white shadow rounded-lg">
-                <Table
-                    sx={{
-                        '& th': {
-                            backgroundColor: '#f3f4f6',
-                            fontSize: '0.875rem',
-                            textAlign: 'center',
-                            fontWeight: 'bold',
-                            textTransform: 'uppercase',
-                            padding: '12px',
-                        },
-                        '& td': {
-                            padding: '16px',
-                            fontSize: '0.875rem',
-                            textAlign: 'center',
-                            whiteSpace: 'nowrap',
-                        },
-                        '& tbody tr:hover': {
-                            backgroundColor: '#f9fafb',
-                        },
-                        '& tr > *:not(:first-of-type)': {
-                            textAlign: 'right',
-                        },
-                    }}
-                    size="lg"
-                    hoverRow
-                >
+            <Card className="h-full w-full overflow-scroll px-6">
+                <table className="w-full min-w-max table-auto text-left">
                     <thead>
                     <tr>
-                        <th>User</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>City</th>
-                        <th>Jobs</th>
-                        <th>Action</th>
+                        {TABLE_HEAD.map((head) => (
+                            <th key={head} className="border-b border-gray-300 pb-4 pt-10">
+                                <Typography
+                                    variant="small"
+                                    color="blue-gray"
+                                    className="font-bold leading-none"
+                                >
+                                    {head}
+                                </Typography>
+                            </th>
+                        ))}
                     </tr>
                     </thead>
                     <tbody>
                     {users
                         ?.filter(user => user?._id !== connectedUser?._id)
-                        ?.map((user, key) => (
-                        <tr key={key}>
-                            {/* User Info */}
-                            <td style={{ width: '15%' }} className="px-6 py-4">
-                                <div className="flex items-center space-x-2">
-                                    <img
-                                        src={displayImage('', user)}
-                                        alt={user.name}
-                                        className="w-10 h-10 object-cover rounded-full"
-                                    />
-                                    <Tooltip title={user.name} placement="top">
-                                            <span className="font-medium text-gray-700 truncate max-w-[120px] block">
-                                                {user.name}
-                                            </span>
-                                    </Tooltip>
-                                </div>
-                            </td>
+                        ?.map((user, index) => {
+                        const isLast = index === users.length - 1;
+                        const classes = isLast ? "py-4" : "py-4 border-b border-gray-300";
 
-                            {/* Email */}
-                            <td style={{ width: '40%' }} className="px-6 py-4 font-semibold">
-                                <Tooltip title={user.email} placement="top">
-                                        <span className="text-gray-600 truncate max-w-[180px] block">
-                                            {user.email}
-                                        </span>
-                                </Tooltip>
-                            </td>
-
-                            {/* Role */}
-                            <td style={{ width: '10%' }} className="px-6 py-4 font-semibold">
-                                {user.role}
-                            </td>
-
-                            {/* City */}
-                            <td style={{ width: '10%' }} className="px-6 py-4 font-semibold">
-                                {user.city}
-                            </td>
-
-                            {/* Jobs */}
-                            <td style={{ width: '10%' }} className="px-6 py-4 font-semibold">
-                                {user.role === 'client' && user.jobs_count > 0 ? (
-                                    <span onClick={() => navigate(`/admin/jobs?userId=${user._id}`)}
-                                        className="underline cursor-pointer text-blue-500 hover:text-blue-800">
+                        return (
+                            <tr key={user?._id} className="hover:bg-gray-50">
+                                <td className={classes}>
+                                    <div className={"flex items-center space-x-2"}>
+                                        <Avatar src={displayImage("", user)}/>
+                                        <Typography
+                                            variant="small"
+                                            color="blue-gray"
+                                            className="font-bold"
+                                        >
+                                            {user?.name}
+                                        </Typography>
+                                    </div>
+                                </td>
+                                <td className={classes}>
+                                    <Typography
+                                        variant="small"
+                                        className="font-normal text-gray-600"
+                                    >
+                                        {user?.email}
+                                    </Typography>
+                                </td>
+                                <td className={classes}>
+                                    <Typography
+                                        variant="small"
+                                        className="font-normal text-gray-600"
+                                    >
+                                        {user?.role}
+                                    </Typography>
+                                </td>
+                                <td className={classes}>
+                                    <Typography
+                                        variant="small"
+                                        className="font-normal text-gray-600"
+                                    >
+                                        {user?.city?.[lng]}
+                                    </Typography>
+                                </td>
+                                <td className={classes}>
+                                    {user.role === 'client' && user.jobs_count > 0 ? (
+                                        <span onClick={() => navigate(`/admin/jobs?userId=${user._id}`)}
+                                              className="underline cursor-pointer text-blue-500 hover:text-blue-800">
                                             {user.jobs_count}
                                         </span>
-                                ) : (
-                                    '-'
-                                )}
-                            </td>
-
-                            {/* Action */}
-                            <td style={{ width: '15%' }} className="px-6 py-4 text-center">
-                                <ActionButton
-                                    togglePermissionsModal={togglePermissionsModal}
-                                    toggleDetailsModal={toggleDetailsModal}
-                                    user={user}
-                                    setSelectedUser={setSelectedUser}
-                                    toggleDeletesModal={toggleDeletesModal}
-                                    toggleRoleModal={toggleRoleModal}
-                                />
-                            </td>
-                        </tr>
-                    ))}
+                                    ) : (
+                                        '-'
+                                    )}
+                                </td>
+                                <td className={classes}>
+                                    <ActionButton user={user} setSelectedUser={setSelectedUser}
+                                                  toggleDeletesModal={toggleDeletesModal}
+                                                  toggleRoleModal={toggleRoleModal}
+                                                  toggleDetailsModal={toggleDetailsModal}
+                                                  togglePermissionsModal={togglePermissionsModal}/>
+                                </td>
+                            </tr>
+                    );
+                    })}
                     </tbody>
-                </Table>
-            </div>
-
+                </table>
+            </Card>
             {/* Modals */}
             <PermissionsModal
                 open={permissionModal}
                 handleOpen={togglePermissionsModal}
                 user={selectedUser}
             />
-            <DetailsModal
+            <DetailsModal lng={lng}
                 open={detailsModal}
                 handleOpen={toggleDetailsModal}
                 user={selectedUser}

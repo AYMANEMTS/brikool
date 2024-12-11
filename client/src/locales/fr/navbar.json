@@ -10,5 +10,7 @@
   "chat": "Discussion",
   "settings": "Paramètres",
   "support": "Support" ,
-  "logout": "Déconnexion"
+  "logout": "Déconnexion",
+  "nav_mobile_title": "Bienvenue sur Besma",
+  "nav_mobile_text": "Premier site web pour les travailleurs indépendants"
 }

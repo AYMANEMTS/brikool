@@ -1,0 +1,13 @@
+{
+  "settings_title_1": "تحديث معلوماتك",
+  "settings_title_2": "تغيير كلمة المرور",
+  "success_update_info": "تم تحديث معلوماتك بنجاح",
+  "failed_updated_info": "فشل في تحديث معلوماتك",
+  "success_change_pass": "تم تغيير كلمة المرور الخاصة بك بنجاح",
+  "failed_change_pass": "فشل في تغيير كلمة المرور",
+  "current_password": "كلمة المرور الحالية",
+  "new_password": "كلمة المرور الجديدة",
+  "confirm_password": "تأكيد كلمة المرور",
+  "password_not_match": "كلمات المرور غير متطابقة",
+  "update_password_button": "تحديث كلمة المرور"
+}
