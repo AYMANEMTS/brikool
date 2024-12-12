@@ -28,7 +28,7 @@ function Trudiction() {
         <>
             <Menu>
                 <MenuHandler>
-                    <IconButton variant={"outlined"} >
+                    <IconButton variant={"outlined"} size={"sm"} className={"p-1"}>
                         <img src={getFlagSrc(selectedLanguage)} alt={"mo"} className={"w-5 h-5"}/>
                     </IconButton>
                 </MenuHandler>

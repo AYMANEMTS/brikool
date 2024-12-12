@@ -32,11 +32,11 @@ export default function DemoUserMenu() {
             <MenuHandler>
                 <Button
                     size="sm"
-                    variant="outlined"
-                    className="flex items-center p-0 px-1 lg:py-2 bg-white text-black dark:bg-gray-800 dark:text-white rounded-md shadow-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                    variant="solid"
+                    className="flex items-center p-1 text-white bg-teal-blue dark:bg-bright-yellow rounded-md shadow-sm hover:bg-teal-blue dark:hover:bg-bright-yellow"
                 >
-                    <User className={"w-6 h-6"} />
-                    <span className={"hidden lg:!flex lg:px-2"}>{user?.name}</span>
+                    <User className={"w-6 h-6 md:text-xl dark:text-black "} />
+                    <span className={"hidden lg:!flex lg:px-2 dark:text-black"}>{user?.name}</span>
                 </Button>
             </MenuHandler>
             <MenuList className="bg-white dark:bg-gray-800 dark:text-white rounded-md shadow-lg">

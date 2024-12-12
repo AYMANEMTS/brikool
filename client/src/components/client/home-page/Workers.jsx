@@ -1,21 +1,18 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import Carousel from "react-multi-carousel";
 import WorkerCard from "../WorkerCard";
-import {useQuery, useQueryClient} from "react-query";
-import ClientApi from "../../../api/ClientApi";
 import {useClientContext} from "../../../context/ClientProvider";
-
 
 export default function Workers({t}) {
     const {workers} = useClientContext()
     return (
-        <div className={"my-4 h-full"}>
-            <div className="flex justify-between items-center my-3">
+        <div className="my-4 h-full">
+            <div className="flex justify-between items-center ">
                 <div>
-                    <h1 className="text-2xl font-semibold mb-6 text-center">{t('popularWorkers')}</h1>
+                    <h1 className="text-2xl font-semibold text-center text-gray-700 dark:text-bright-yellow">{t('popularWorkers')}</h1>
                 </div>
                 <div>
-                    <a href="#" className="text-blue-600 font-semibold hover:underline">{t('showMore')}</a>
+                    <a href="#" className="text-teal-blue dark:text-bright-yellow font-semibold hover:underline hover:text-bright-yellow dark:hover:text-teal-blue">{t('showMore')}</a>
                 </div>
             </div>
 
@@ -26,7 +23,7 @@ export default function Workers({t}) {
                 autoPlaySpeed={2500}
                 centerMode={false}
                 className="h-full my-5 py-5"
-                containerClass="container-padding-bottom "
+                containerClass="container-padding-bottom"
                 draggable
                 focusOnSelect={false}
                 infinite={true}
@@ -39,29 +36,20 @@ export default function Workers({t}) {
                 renderDotsOutside={false}
                 responsive={{
                     desktop: {
-                        breakpoint: {
-                            max: 3000,
-                            min: 1024
-                        },
+                        breakpoint: { max: 3000, min: 1024 },
                         items: 4,
-                        partialVisibilityGutter: 40
+                        partialVisibilityGutter: 40,
                     },
                     mobile: {
-                        breakpoint: {
-                            max: 464,
-                            min: 0
-                        },
+                        breakpoint: { max: 464, min: 0 },
                         items: 1,
-                        partialVisibilityGutter: 30
+                        partialVisibilityGutter: 30,
                     },
                     tablet: {
-                        breakpoint: {
-                            max: 1024,
-                            min: 464
-                        },
+                        breakpoint: { max: 1024, min: 464 },
                         items: 2,
-                        partialVisibilityGutter: 30
-                    }
+                        partialVisibilityGutter: 30,
+                    },
                 }}
                 rewind={false}
                 rewindWithAnimation={false}
@@ -71,11 +59,10 @@ export default function Workers({t}) {
                 sliderClass=""
                 slidesToSlide={2}
                 swipeable
-
             >
                 {workers.map((job, key) => (
-                    <div  key={key} className={"flex flex-wrap gap-4 justify-center h-full m-2 items-stretch"}>
-                        <WorkerCard job={job}/>
+                    <div key={key} className="flex flex-wrap gap-4 justify-center h-full mx-2 items-stretch">
+                        <WorkerCard job={job} />
                     </div>
                 ))}
             </Carousel>

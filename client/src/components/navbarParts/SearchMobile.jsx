@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {useClientContext} from "../../context/ClientProvider";
+import {Search as SearchIcon} from "lucide-react";
 
 function SearchMobile() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -42,48 +43,52 @@ function SearchMobile() {
     const {t,i18n} = useTranslation('navbar')
     const {language:lng} = i18n
     return (
-        <div className="flex-1 lg:hidden">
-            <div className="relative w-full">
-                <input onChange={(e) => setSearchTerm(e.target.value)}
-                    type="text" placeholder={t('search')} value={searchTerm}
-                    className="w-full px-1 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+        <div className="flex-1 lg:hidden md:hidden">
+            <div className="relative w-full bg-gray-200 mx-1 dark:bg-gray-700 rounded-lg focus-within:bg-transparent">
+                <input
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    type="text"
+                    placeholder={t('search')}
+                    value={searchTerm}
+                    className="w-full px-1 py-1 pl-10 border border-gray-300 dark:border-bright-yellow rounded-lg focus:outline-none focus:ring text-teal-blue placeholder:text-teal-blue font-semibold placeholder:dark:text-bright-yellow dark:text-bright-yellow dark:bg-gray-800"
                 />
-                <span className="absolute inset-y-0 left-2 flex items-center text-gray-500">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M10.5 17a6.5 6.5 0 100-13 6.5 6.5 0 000 13z"/>
-                      </svg>
-                </span>
+
+                <SearchIcon className="absolute inset-y-1 left-2 flex items-center text-teal-blue dark:text-bright-yellow"/>
             </div>
             {(userResults.length > 0 || categoryResults.length > 0) && (
-                <div className="absolute top-4 left-0 right-0 bg-white border border-gray-300 rounded-md mt-10 shadow-lg max-h-96 overflow-auto z-50">
+                <div
+                    className="absolute top-4 left-0 right-0 bg-white dark:bg-teal-blue border border-gray-300 dark:border-gray-700 rounded-md mt-10 shadow-lg max-h-96 overflow-auto z-50">
                     {/* Section for Workers */}
                     {userResults.length > 0 && (
                         <>
-                            <h3 className="px-4 py-2 text-lg font-bold text-gray-800">Workers</h3>
+                            <h3 className="px-4 py-2 text-lg font-bold text-teal-blue dark:text-bright-yellow">
+                                Workers
+                            </h3>
                             {userResults.map((result, key) => (
                                 <span
                                     key={`user-${key}`}
-                                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100 cursor-pointer"
-                                    onClick={() => searchAction("user_id", result.userId._id)}
+                                    className="block px-4 py-2 text-teal-blue dark:text-bright-yellow hover:bg-teal-blue dark:hover:bg-bright-yellow hover:text-white dark:hover:text-black cursor-pointer transition-colors duration-300"
+                                    onClick={() => searchAction('user_id', result.userId._id)}
                                 >
-                                            {result.userId.name}
-                                </span>
+              {result.userId.name}
+            </span>
                             ))}
                         </>
                     )}
-
                     {/* Section for Categories */}
                     {categoryResults.length > 0 && (
                         <>
-                            <h3 className="px-4 py-2 text-lg font-bold text-gray-800 mt-2">Categories</h3>
+                            <h3 className="px-4 py-2 text-lg font-bold text-teal-blue dark:text-bright-yellow mt-2">
+                                Categories
+                            </h3>
                             {categoryResults.map((result, key) => (
                                 <span
                                     key={`category-${key}`}
-                                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100 cursor-pointer"
-                                    onClick={() => searchAction("cat_id", result?._id)}
+                                    className="block px-4 py-2 text-teal-blue dark:text-bright-yellow hover:bg-teal-blue dark:hover:bg-bright-yellow cursor-pointer transition-colors duration-300"
+                                    onClick={() => searchAction('cat_id', result?._id)}
                                 >
-                                        {result?.name?.[lng]}
-                                </span>
+              {result?.name?.[lng]}
+            </span>
                             ))}
                         </>
                     )}

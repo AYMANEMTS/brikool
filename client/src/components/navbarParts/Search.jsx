@@ -44,36 +44,33 @@ function Search({isAtTop}) {
     const {t,i18n} = useTranslation('navbar')
     const {language:lng} = i18n
     return (
-        <div >
+        <div>
             {isAtTop && pathname !== '/chat' && (
                 <div
-                    className={`relative hidden md:flex items-center space-x-2 bg-gray-100 dark:bg-gray-800 border border-transparent focus-within:border-blue-500 focus-within:bg-transparent px-6 rounded-full h-10 lg:w-2/4 mt-3 mx-auto max-lg:mt-6 transition-colors duration-300`}
+                    className={`relative hidden md:flex  items-center space-x-2 bg-gray-200 dark:bg-gray-700 border border-teal-blue dark:border-bright-yellow focus-within:border-teal-blue focus:border-2 focus-within:bg-transparent px-6 rounded-full h-10 lg:w-2/4 mt-3 mx-auto max-lg:mt-6 transition-colors duration-300`}
                 >
                     {/* Search Input */}
-                    <SearchIcon className="h-6 w-6 text-gray-500 dark:text-gray-300"
-                    />
+                    <SearchIcon className="h-6 w-6 text-teal-blue dark:text-bright-yellow"/>
                     <input
                         type="text"
                         placeholder={t('search')}
-                        className="w-full outline-none bg-transparent text-gray-600 dark:text-gray-300 font-semibold text-[15px] transition-colors duration-300"
+                        className="w-full outline-none bg-transparent  text-teal-blue dark:text-bright-yellow font-semibold text-[15px] transition-colors duration-300"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
 
                     {(userResults.length > 0 || categoryResults.length > 0) && (
-                        <div
-                            className="absolute left-0 right-0 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md mt-10 shadow-lg max-h-48 overflow-auto z-50"
-                        >
+                        <div className="absolute top-2 left-0 right-0 bg-white dark:bg-teal-blue border border-gray-300 dark:border-gray-700 rounded-md mt-10 shadow-lg max-h-80 overflow-auto z-50">
                             {/* Section for Workers */}
                             {userResults.length > 0 && (
                                 <>
-                                    <h3 className="px-4 py-2 text-lg font-bold text-gray-800 dark:text-gray-200">
+                                    <h3 className="px-4 py-2 text-lg font-bold text-teal-blue dark:text-bright-yellow">
                                         Workers
                                     </h3>
                                     {userResults.map((result, key) => (
                                         <span
                                             key={`user-${key}`}
-                                            className="block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer transition-colors duration-300"
+                                            className="block px-4 py-2 text-teal-blue dark:text-bright-yellow hover:bg-teal-blue dark:hover:bg-bright-yellow hover:text-white dark:hover:text-black cursor-pointer transition-colors duration-300"
                                             onClick={() => searchAction('user_id', result.userId._id)}
                                         >
                                           {result.userId.name}
@@ -85,13 +82,13 @@ function Search({isAtTop}) {
                             {/* Section for Categories */}
                             {categoryResults.length > 0 && (
                                 <>
-                                    <h3 className="px-4 py-2 text-lg font-bold text-gray-800 dark:text-gray-200 mt-2">
+                                    <h3 className="px-4 py-2 text-lg font-bold text-teal-blue dark:text-bright-yellow mt-2">
                                         Categories
                                     </h3>
                                     {categoryResults.map((result, key) => (
                                         <span
                                             key={`category-${key}`}
-                                            className="block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer transition-colors duration-300"
+                                            className="block px-4 py-2 text-teal-blue dark:text-bright-yellow hover:bg-teal-blue dark:hover:bg-bright-yellow cursor-pointer transition-colors duration-300"
                                             onClick={() => searchAction('cat_id', result?._id)}
                                         >
                                           {result?.name?.[lng]}
@@ -104,6 +101,7 @@ function Search({isAtTop}) {
                 </div>
             )}
         </div>
+
 
     );
 }

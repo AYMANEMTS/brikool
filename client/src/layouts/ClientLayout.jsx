@@ -50,8 +50,8 @@ function ClientLayout() {
             setCategories(data.data.category);
         },
         onError: err => console.error(err),
-        retry: false
-
+        retry: false,
+        refetchOnWindowFocus: false,
     });
 
     const { data: workers = [], isFetching: isFetchingWorkers, isError: isErrorWorkers } = useQuery("jobs", ClientApi.getJobs, {
@@ -59,8 +59,8 @@ function ClientLayout() {
             setWorkers(data.data);
         },
         onError: err => console.error(err),
-        retry: false
-
+        retry: false,
+        refetchOnWindowFocus: false,
     });
 
     const { data: userJobs = [], isFetching: isFetchingUserJobs, isError: isErrorUserJobs } = useQuery("userJobs", ClientApi.getUserJobs, {
@@ -68,6 +68,7 @@ function ClientLayout() {
             setUserJobs(data.data);
         },
         onError: err => console.error(err),
+        refetchOnWindowFocus: false,
         retry: false,
         enabled: !!user
 
@@ -83,7 +84,7 @@ function ClientLayout() {
     }
     return (
         <>
-            <div className={`flex flex-col min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300 `}>
+            <div className={`flex flex-col min-h-screen bg-gray-200 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300 `}>
                 <ScrollToTop />
 
                 {/* Navbar */}

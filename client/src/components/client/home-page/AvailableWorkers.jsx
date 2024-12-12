@@ -10,12 +10,13 @@ function AvailableWorkers({t}) {
     const {workers} = useClientContext()
     return (
         <>
-            <div className="flex justify-between items-center my-3">
+            <div className="flex justify-between items-center ">
                 <div>
-                    <h1 className="text-2xl font-semibold mb-6 text-center">{t('availableWorkers')}</h1>
+                    <h1 className="text-2xl font-semibold text-center text-gray-700 dark:text-bright-yellow">{t('availableWorkers')}</h1>
                 </div>
                 <div>
-                    <a href="#" className="text-blue-600 font-semibold hover:underline">{t('showMore')}</a>
+                    <a href="#"
+                       className="text-teal-blue dark:text-bright-yellow font-semibold hover:underline hover:text-bright-yellow dark:hover:text-teal-blue">{t('showMore')}</a>
                 </div>
             </div>
 
@@ -74,7 +75,7 @@ function AvailableWorkers({t}) {
             >
                 {workers?.map((job, key) => (
                     <div key={key} className={"flex flex-wrap gap-4 justify-center h-full m-2 items-stretch"}>
-                        <WorkerCard job={job} />
+                        <WorkerCard job={job}/>
                     </div>
                 ))}
             </Carousel>
