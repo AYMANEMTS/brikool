@@ -7,7 +7,7 @@ import AuthModal from "../../auth/AuthModal";
 import {useLoading} from "../../../context/LoadingProvider";
 import {useTranslation} from "react-i18next";
 import displayImage from "../../../utils/imageFromServer";
-import {Textarea} from "@material-tailwind/react";
+import {Button, Textarea} from "@material-tailwind/react";
 
 function Comments({jobId,job={}}) {
     const {user} = useLoading()
@@ -48,14 +48,14 @@ function Comments({jobId,job={}}) {
 
     return (
         <>
-            <div className="container mt-2">
+            <div className="container mt-8">
                 {job?.comments?.length > 0 && (
                     <span
                         className="text-xl font-semibold p-4 mb-2 text-gray-800 dark:text-white">{t('comments')}</span>
                 )}
                 <div className="space-y-4">
                     {job?.comments?.slice(0, commentsCount)?.map((item, key) => (
-                        <div className="bg-white dark:bg-gray-800 p-4 mt-3 rounded-lg shadow dark:shadow-gray-700"
+                        <div className="bg-gray-200 dark:bg-gray-800 p-4 mt-3 rounded-lg shadow dark:shadow-gray-700"
                              key={key}>
                             <div className="flex items-center mb-2">
                                 <img
@@ -64,11 +64,11 @@ function Comments({jobId,job={}}) {
                                     className="w-10 h-10 rounded-full mr-3"
                                 />
                                 <div>
-                                    <h3 className="font-semibold text-gray-800 dark:text-white">{item?.userId?.name}</h3>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400">{formatDate(item?.createdAt)}</p>
+                                    <h3 className="font-semibold text-teal-blue dark:text-white">{item?.userId?.name}</h3>
+                                    <p className="text-sm text-gray-700 dark:text-gray-400">{formatDate(item?.createdAt)}</p>
                                 </div>
                             </div>
-                            <p className="text-gray-700 dark:text-gray-300 line-clamp-3">{item?.comment}</p>
+                            <p className="text-gray-800 text-md  dark:text-gray-300 line-clamp-3">{item?.comment}</p>
                             {/* <div className="flex items-center mt-2"> */}
                             {/*    <button className="text-red-500 hover:text-red-700 mr-2"> */}
                             {/*        <FavoriteBorderIcon/> */}
@@ -81,29 +81,26 @@ function Comments({jobId,job={}}) {
                     <div className="flex justify-center mt-4 space-x-4">
                         {/* Show More Button */}
                         {commentsCount < (job?.comments?.length || 0) && (
-                            <button
-                                onClick={() => incrementCommentsCount(job?.comments?.length)}
-                                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                            >
+                            <Button onClick={() => incrementCommentsCount(job?.comments?.length)}>
                                 {t('showMore')}
-                            </button>
+                            </Button>
                         )}
 
                         {/* Show Less Button */}
                         {commentsCount > 4 && (
-                            <button
+                            <Button
                                 onClick={decrementCommentsCount}
-                                className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                                className="bg-gray-500 text-white hover:text-white px-4 py-2 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                             >
                                 {t('showLess')}
-                            </button>
+                            </Button>
                         )}
                     </div>
                 </div>
 
                 {/* Add Comment Form */}
-                <form className="mt-2 bg-white dark:bg-gray-800 p-4 rounded-lg shadow dark:shadow-gray-700">
-                    <h3 className="text-lg font-semibold mb-2 text-gray-800 dark:text-white">{t('addComment')}</h3>
+                <form className="mt-2 bg-gray-200 dark:bg-gray-800 p-4 rounded-lg shadow dark:shadow-gray-700">
+                    <h3 className="text-lg font-semibold mb-2 text-teal-blue dark:text-white">{t('addComment')}</h3>
                     <div className="mb-4">
 
                         <Textarea label={t('comment')} error={errors.comment} {...register('comment', {
@@ -121,13 +118,9 @@ function Comments({jobId,job={}}) {
                             <p className="text-red-500 text-sm mt-1">{errors.comment.message}</p>
                         )}
                     </div>
-                    <button
-                        type="submit"
-                        onClick={handleSubmit(handleComment)}
-                        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                    >
+                    <Button type="submit" onClick={handleSubmit(handleComment)}>
                         {t('postComment')}
-                    </button>
+                    </Button>
                 </form>
             </div>
             <AuthModal open={loginForm} handleOpen={() => setLoginForm(!loginForm)} redirectRoute={"/worker/" + jobId}

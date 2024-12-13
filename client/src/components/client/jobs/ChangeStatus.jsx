@@ -28,19 +28,15 @@ function ChangeStatus({ handleDialog, open, job, t }) {
 
     return (
         <Dialog open={open} handler={handleDialog}>
-            <DialogHeader>{t('change_status_title')}</DialogHeader>
+            <DialogHeader className={"text-teal-blue"}>{t('change_status_title')}</DialogHeader>
             <DialogBody>
-                <p>{t('change_status_description')}</p>
+                <p className={"font-semibold"}>{t('change_status_description')}</p>
             </DialogBody>
-            <DialogFooter>
-                <Button onClick={handleDialog} variant="text">{t('cancel')}</Button>
-                <Button
-                    onClick={changeJobStatus}
-                    disabled={loading}
-                    variant="filled"
-                    color="blue"
-                    className="mt-2 mb-1"
-                >
+            <DialogFooter className={"flex justify-between items-center"}>
+                <Button className={"text-white bg-gray-700 hover:bg-gray-800 hover:text-white"} onClick={handleDialog} >
+                    {t('cancel')}
+                </Button>
+                <Button onClick={changeJobStatus} disabled={loading} >
                     {loading ? <><Loader className="mx-2 animate-spin text-white" /></> : t('save')}
                 </Button>
             </DialogFooter>

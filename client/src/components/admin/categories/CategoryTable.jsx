@@ -45,8 +45,8 @@ function CategoryTable({categories,openModal,setDeleteModal,setSelectedCategory}
                                     </td>
                                     <td className={classes}>
                                         <Typography
-                                            variant="small"
-                                            className="font-normal text-gray-600"
+                                            variant="h6"
+                                            className="font-semibold text-gray-600"
                                         >
                                             {category?.name?.[lng]}
                                         </Typography>

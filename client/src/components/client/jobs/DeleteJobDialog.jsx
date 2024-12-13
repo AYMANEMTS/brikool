@@ -28,19 +28,15 @@ function DeleteJobDialog({ handleDialog, open, job, t }) {
 
     return (
         <Dialog open={open} handler={handleDialog}>
-            <DialogHeader>{t('delete_title')}</DialogHeader>
+            <DialogHeader className={"text-teal-blue"}>{t('delete_title')}</DialogHeader>
             <DialogBody>
-                <p>{t('delete_description')}</p>
+                <p className={"font-semibold"}>{t('delete_description')}</p>
             </DialogBody>
-            <DialogFooter>
-                <Button onClick={handleDialog} variant="text">{t('cancel')}</Button>
-                <Button
-                    onClick={deleteJob}
-                    disabled={loading}
-                    variant="filled"
-                    color="red"
-                    className="mt-2 mb-1"
-                >
+            <DialogFooter className={"flex justify-between items-center"}>
+                <Button onClick={handleDialog} className={"text-white bg-gray-700 hover:bg-gray-800 hover:text-white"}>
+                    {t('cancel')}
+                </Button>
+                <Button onClick={deleteJob} disabled={loading}>
                     {loading ? <><Loader className="mx-2 animate-spin text-white" /></> : t('delete')}
                 </Button>
             </DialogFooter>

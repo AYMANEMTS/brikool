@@ -52,7 +52,7 @@ function JobCard({ job, user, t }) {
 
                     <Menu>
                         <MenuHandler>
-                            <IconButton variant={"outlined"} size={"sm"}>
+                            <IconButton>
                                 <EllipsisVertical />
                             </IconButton>
                         </MenuHandler>

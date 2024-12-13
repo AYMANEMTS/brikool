@@ -1,13 +1,11 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
 import displayImage from '../../../utils/imageFromServer';
-import { useQueryClient } from 'react-query';
-import {Input} from "@material-tailwind/react";
+import {Input, Select,Option} from "@material-tailwind/react";
+import {useClientContext} from "../../../context/ClientProvider";
 
 function InformationForm({ control, user, errors, job, t, lng }) {
-    const queryClient = useQueryClient();
-    const categories = queryClient.getQueryData('categories')?.data?.category || [];
-
+    const {categories} = useClientContext()
     return (
         <>
             <h2 className="mb-4 font-bold text-gray-800 pl-2 flex justify-center">{t('information')}</h2>
@@ -40,29 +38,19 @@ function InformationForm({ control, user, errors, job, t, lng }) {
                         </div>
                         <div>
                             <div className="relative">
-                                <label
-                                    htmlFor="category"
-                                >
-                                    {t('category')}
-                                </label>
                                 <Controller
                                     name="category"
                                     control={control}
                                     defaultValue={job?.category?._id || ''}
                                     rules={{ required: 'Category field is required' }}
                                     render={({ field }) => (
-                                        <select
-                                            id="category"
-                                            {...field}
-                                            className={`w-full p-3 rounded-md border bg-white text-black border-gray-300`}
-                                        >
-                                            <option value={""}>{t('category')}</option>
+                                        <Select label={t('category')} {...field} >
                                             {categories?.map((category, key) => (
-                                                <option key={key} value={category._id}>
+                                                <Option key={key} value={category._id}>
                                                     {category?.name?.[lng]}
-                                                </option>
+                                                </Option>
                                             ))}
-                                        </select>
+                                        </Select>
                                     )}
                                 />
                                 {errors.category && (

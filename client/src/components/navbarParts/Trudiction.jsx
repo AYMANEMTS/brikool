@@ -5,7 +5,7 @@ import fr from "../../flags-emoji/fr.png";
 import en from "../../flags-emoji/us.png";
 import {useTranslation} from "react-i18next";
 
-function Trudiction() {
+function Trudiction({isSpeedDiaal}) {
     const {i18n} = useTranslation();
     const {language} = i18n
     const [selectedLanguage, setSelectedLanguage] = useState(language || "en")
@@ -28,11 +28,11 @@ function Trudiction() {
         <>
             <Menu>
                 <MenuHandler>
-                    <IconButton variant={"outlined"} size={"sm"} className={"p-1"}>
+                    <IconButton size={isSpeedDiaal ? "md" : "sm"} className={`p-1 ${isSpeedDiaal && 'bg-teal-blue hover:bg-teal-blue shadow-none rounded-full'}`}>
                         <img src={getFlagSrc(selectedLanguage)} alt={"mo"} className={"w-5 h-5"}/>
                     </IconButton>
                 </MenuHandler>
-                <MenuList>
+                <MenuList className={"bg-gray-200 text-teal-blue hover:text-teal-blue hover:font-semibold"}>
                     <MenuItem className={"flex items-center gap-2"}
                         selected={selectedLanguage === "ar"} onClick={() => changeLanguage("ar")}>
                         <img src={ar} alt={"ar"} className={"w-5 h-5"}/> العربية

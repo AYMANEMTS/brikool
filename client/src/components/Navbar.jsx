@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import MobileDrawer from "./navbarParts/MobileDrawer";
 import SearchMobile from "./navbarParts/SearchMobile";
 import DarkMode from "./navbarParts/DarkMode";
-import { Button, IconButton } from "@material-tailwind/react";
+import {Button, IconButton, useTheme} from "@material-tailwind/react";
 import { LogInIcon, Menu, LayoutDashboard, Megaphone } from "lucide-react";
 
 export default function Navbar() {
@@ -38,11 +38,10 @@ export default function Navbar() {
             window.removeEventListener('scroll', handleScroll);
         };
     }, []);
-
     return (
         <>
             <header
-                className={`fixed top-0 left-0 right-0 border-b bg-gray-200 dark:bg-gray-900 font-sans min-h-[60px] px-2 md:px-10 py-3 z-50 transition-colors duration-300 border-gray-200 dark:border-gray-700`}>
+                className={`fixed top-0 left-0 right-0 border-b-2 border-teal-blue bg-white dark:bg-gray-900 font-sans min-h-[60px] px-2 md:px-10 py-3 z-50 transition-colors duration-300  dark:border-bright-yellow`}>
                 <div className="flex flex-wrap items-center max-lg:gap-y-6 max-sm:gap-x-1 justify-between w-full">
                     {/* Logo */}
                     <a href="/">
@@ -54,7 +53,7 @@ export default function Navbar() {
                         <img
                             src="/logo_lg.png"
                             alt="logo"
-                            className="w-auto h-10 hidden md:flex lg:flex "
+                            className="w-auto h-10 hidden md:flex lg:flex  "
                         />
                     </a>
 
@@ -103,18 +102,12 @@ export default function Navbar() {
                             <>
                                 <div className="hidden md:flex items-center space-x-2">
                                     {user.role === "client" ? (
-                                        <Button variant="solid" size="sm"
-                                                onClick={() => navigate("/announces?showForm=true")}
-                                                className="p-1  ml-2  rounded-md shadow-sm  flex items-center gap-2 text-white bg-teal-blue dark:text-black dark:bg-bright-yellow hover:bg-teal-blue dark:hover:bg-bright-yellow"
-                                        >
+                                        <Button onClick={() => navigate("/announces?showForm=true")} className="p-1 ml-2 flex items-center gap-2 ">
                                             <Megaphone/>
                                             {t("createNewJob")}
                                         </Button>
                                     ) : (
-                                        <Button variant="solid" size="sm"
-                                                className="p-1 text-white bg-teal-blue dark:bg-teal-blue rounded-md shadow-sm hover:bg-teal-700 dark:hover:bg-teal-500 flex items-center gap-2"
-                                                onClick={() => navigate("/admin")}
-                                        >
+                                        <Button className="p-1 flex items-center gap-2" onClick={() => navigate("/admin")}>
                                             <LayoutDashboard/>
                                             {t("dashboard")}
                                         </Button>
@@ -128,26 +121,19 @@ export default function Navbar() {
                         ) : (
                             <>
                                 <div className="hidden md:flex items-center space-x-2">
-                                    <Button
-                                        variant="solid"
-                                        size={"sm"}
-                                        className="p-1 ml-2 text-white bg-teal-blue dark:bg-teal-blue rounded-md shadow-sm hover:bg-teal-700 dark:hover:bg-teal-500 flex items-center gap-2 "
+                                    <Button className="p-1 ml-2 flex items-center gap-2"
                                         onClick={() => {
                                             setSwapSate(true);
                                             handleOpen();
-                                        }}
-                                    >
+                                        }}>
                                         {t("createNewJob")}
                                         <Megaphone />
                                     </Button>
 
-                                    <Button variant="solid" size="sm"
-                                            className="p-1 text-white bg-teal-blue dark:bg-teal-blue hover:bg-teal-700 dark:hover:bg-teal-500 rounded-md shadow-sm  flex items-center gap-2 "
-                                            onClick={() => {
+                                    <Button className="p-1 flex items-center gap-2 " onClick={() => {
                                                 setSwapSate(false);
                                                 handleOpen();
-                                            }}
-                                    >
+                                            }}>
                                         <span className={"lg:hidden"}>{t("signIn")}</span>
                                         <LogInIcon/>
                                     </Button>
@@ -166,18 +152,16 @@ export default function Navbar() {
                                 <UserMenu/>
                             </>
                         ) : (
-                            <IconButton variant={"outlined"} size={"sm"}
-                                        onClick={() => {
+                            <IconButton onClick={() => {
                                             setSwapSate(false);
                                             handleOpen();
-                                        }}
-                            >
+                                        }} >
                                 <LogInIcon/>
                             </IconButton>
                         )}
                     </div>
                     <div className={"lg:hidden mx-1 "}>
-                        <IconButton className={"bg-teal-blue dark:bg-bright-yellow"} variant={"solid"} size={"sm"} onClick={toggleMobileDrawer}>
+                        <IconButton onClick={toggleMobileDrawer}>
                             <Menu className={"w-6 h-6 text-xl dark:text-black"}/>
                         </IconButton>
                     </div>

@@ -32,3 +32,25 @@
         @apply scale-x-100;
     }
 }
+
+
+/* scroll bar width */
+::-webkit-scrollbar {
+    width: 13px;
+}
+
+/* scroll bar Track */
+::-webkit-scrollbar-track {
+    background: #E2E8F0;
+}
+
+/* scroll bar Handle */
+::-webkit-scrollbar-thumb {
+    background: #008080;
+    border-radius: 5px;
+}
+
+/* scroll bar Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

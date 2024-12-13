@@ -1,5 +1,4 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
-
 const LoadingContext = createContext();
 
 export const LoadingProvider = ({ children }) => {
@@ -23,9 +22,10 @@ export const LoadingProvider = ({ children }) => {
         isAuthenticated, setIsAuthenticated,
         user, setUser, toggleDarkMode, darkMode
     };
+
     return (
         <LoadingContext.Provider value={value}>
-            {children}
+                {children}
         </LoadingContext.Provider>
     );
 };

@@ -22,7 +22,6 @@ function DescriptionForm({ control, errors,t }) {
                         <Textarea
                             {...field}
                             label={t('description')}
-                            variant="outlined" // Ensure the variant is set if needed
                             error={errors.description}
                         />
                     )}

@@ -63,7 +63,7 @@ function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
                 )}
                 <form className="flex flex-col gap-4" onSubmit={handleSubmit(handleRegister)}>
                     <div>
-                        <Input label={t('fullName')} type="text"  variant="outlined"
+                        <Input label={t('fullName')} type="text"
                                {...register('name', {
                                    required: {value: true, message: "Full-name field is required "}
                                })}
@@ -77,7 +77,7 @@ function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
                     </div>
 
                     <div>
-                        <Input label={t('email')} type="email"  variant="outlined"
+                        <Input label={t('email')} type="email"
                                {...register('email', {
                                    required: {value: true, message: "email field is required "}
                                })}
@@ -91,7 +91,7 @@ function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
                     </div>
 
                     <div>
-                        <Input label={t('password')} type="password"  variant="outlined"
+                        <Input label={t('password')} type="password"
                                {...register('password', {
                                    required: {value: true, message: "Password field is required "}
                                })}
@@ -110,12 +110,8 @@ function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
                             control={control}
                             rules={{required: 'City is required'}}
                             render={({field}) => (
-                                <Select size={"md"}
-                                    label={"Select City"}
-                                    {...field}
-                                    error={errors.city}
+                                <Select label={"Select City"}{...field} error={errors.city}
                                     value={field.value?.[lng] || ""}
-                                    className="bg-white border rounded-md w-full"
                                     onChange={(val) => {
                                         const selectedCity = citiesInMorocco.find(
                                             (city) => city[lng] === val
@@ -146,9 +142,9 @@ function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
                             t('register')
                         )}
                     </Button>
-                    <Button color="blue-gray" size="sm" variant="outlined" className=""
+                    <Button color="blue-gray" size="sm" variant="outlined" className="flex items-center justify-center bg-gray-500 text-white hover:bg-gray-800 hover:text-white space-x-2"
                             onClick={() => (window.location.href = 'http://localhost:8000/auth/google')}>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
+                        <svg className={"h-4 w-4 fill-white"} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
                             <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"/>
                         </svg>
                         <span className={"ml-2"}>{t('registerWithGoogle')}</span>

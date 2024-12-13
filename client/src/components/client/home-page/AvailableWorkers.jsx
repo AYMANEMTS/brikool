@@ -1,8 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import Carousel from "react-multi-carousel";
 import WorkerCard from "../WorkerCard";
-import {useQuery, useQueryClient} from "react-query";
-import ClientApi from "../../../api/ClientApi";
 import {useClientContext} from "../../../context/ClientProvider";
 
 
@@ -10,15 +8,7 @@ function AvailableWorkers({t}) {
     const {workers} = useClientContext()
     return (
         <>
-            <div className="flex justify-between items-center ">
-                <div>
-                    <h1 className="text-2xl font-semibold text-center text-gray-700 dark:text-bright-yellow">{t('availableWorkers')}</h1>
-                </div>
-                <div>
-                    <a href="#"
-                       className="text-teal-blue dark:text-bright-yellow font-semibold hover:underline hover:text-bright-yellow dark:hover:text-teal-blue">{t('showMore')}</a>
-                </div>
-            </div>
+
 
             <Carousel
                 additionalTransfrom={0}
@@ -26,7 +16,7 @@ function AvailableWorkers({t}) {
                 arrows={false}
                 autoPlaySpeed={3500}
                 centerMode={false}
-                className="h-full my-5 py-5"
+                className="h-full  py-5"
                 containerClass="container-padding-bottom"
                 draggable
                 focusOnSelect={false}
@@ -73,9 +63,12 @@ function AvailableWorkers({t}) {
                 slidesToSlide={2}
                 swipeable
             >
+
                 {workers?.map((job, key) => (
-                    <div key={key} className={"flex flex-wrap gap-4 justify-center h-full m-2 items-stretch"}>
-                        <WorkerCard job={job}/>
+                    <div>
+                        <div key={key} className={"flex flex-wrap gap-4 justify-center h-full m-2 items-stretch"}>
+                            <WorkerCard job={job}/>
+                        </div>
                     </div>
                 ))}
             </Carousel>

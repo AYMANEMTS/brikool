@@ -91,26 +91,20 @@ function JobForm({ handleOpen ,user,context}) {
             {/* Buttons Section */}
             <div className="mt-4 flex justify-between">
                 <div>
-                    <Button variant={"outlined"} color={"black"}
-                        onClick={handleCancel}
-                    >
+                    <Button onClick={handleCancel} className={"text-white bg-gray-700 hover:bg-gray-800 hover:text-white"}>
                         {t('cancel')}
                     </Button>
                 </div>
                 <div className="flex space-x-2">
                     {formSteper !== 1 && (
-                        <Button variant={"outlined"} color={"blue"}
-                            onClick={handleBack}
-                        >
+                        <Button onClick={handleBack} className={"text-black bg-bright-yellow hover:bg-gray-800 hover:text-white"}>
                             {t('back')}
                         </Button>
                     )}
-                    <Button variant={"outlined"}
-                        type="submit"
-                        className={`px-4 py-2  rounded-md focus:outline-none focus:ring-2 ${
-                            !isValid || loading
-                                ? 'bg-gray-400 cursor-not-allowed'
-                                : 'bg-blue-500 hover:bg-blue-600 focus:ring-blue-500'
+                    <Button type="submit"
+                        className={`px-4 py-2  ${
+                            (!isValid || loading)
+                                && 'bg-gray-400 cursor-not-allowed'
                         }`}
                         disabled={!isValid || loading}
                     >

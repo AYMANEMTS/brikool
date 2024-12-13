@@ -1,11 +1,9 @@
 import React from "react";
 import {Button, Input, Textarea} from "@material-tailwind/react"
-import {useLoading} from "../../../context/LoadingProvider";
 
 const FAQContact = () => {
-    const {darkMode} = useLoading()
     return (
-        <div className="text-gray-700 dark:text-bright-yellow flex items-center justify-center py-8">
+        <div className="text-gray-700 dark:text-bright-yellow flex items-center justify-center ">
             <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* FAQ Section */}
                 <div>
@@ -59,52 +57,26 @@ const FAQContact = () => {
                 </div>
 
                 {/* Contact Form */}
-                <div className="p-8 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+                <div className="p-8 bg-gray-200 dark:bg-gray-800 rounded-lg shadow-md">
                     <h2 className="text-xl font-semibold mb-4 text-teal-blue dark:text-bright-yellow">
                         Didn't find your answer in the FAQ? Contact our sales
                     </h2>
-                    <form className="space-y-4">
+                    <form className="space-y-4" id={"FAQ"}>
                         {/* Name Input */}
-                        <div className={""}>
-                            <Input variant={"standard"}
-                                   label="Name"
-                                   type="text"
-                                   color={darkMode ? "yellow" : "teal"}
-                                   labelProps={{
-                                       className: "!text-teal-blue dark:!text-bright-yellow",
-                                   }}
-                                   className="text-teal-blue dark:text-bright-yellow font-semibold !border-teal-blue focus:!border-teal-blue dark:!border-bright-yellow dark:focus:!border-bright-yellow"
-                            />
+                        <div>
+                            <Input label="Name" type="text" />
                         </div>
 
                         {/* Email Input */}
-                        <div className={""}>
-                            <Input variant={"standard"}
-                                   label="Email"
-                                   type="email"
-                                   color={darkMode ? "yellow" : "teal"}
-                                   labelProps={{
-                                       className: "!text-teal-blue dark:!text-bright-yellow",
-                                   }}
-                                   className="text-teal-blue dark:text-bright-yellow font-semibold !border-teal-blue focus:!border-teal-blue dark:!border-bright-yellow dark:focus:!border-bright-yellow"
-                            />
+                        <div>
+                            <Input label="Email" type="email" />
                         </div>
-
 
                         {/* Message Input */}
                         <div>
-                            <div className="relative">
-                                  <Textarea variant={"standard"} label={"Message"} color={darkMode ? "yellow" : "teal"}
-                                            labelProps={{
-                                                className: "!text-teal-blue dark:!text-bright-yellow",
-                                            }}
-                                            className="text-teal-blue dark:text-bright-yellow font-semibold !border-teal-blue focus:!border-teal-blue dark:!border-bright-yellow dark:focus:!border-bright-yellow"
-                                  />
-                            </div>
-
+                            <Textarea label={"Message"} />
                         </div>
-                        <Button variant="solid"
-                                className="w-full text-white bg-teal-blue hover:bg-teal-blue dark:bg-bright-yellow dark:hover:bg-bright-yellow dark:text-black dark:border-bright-yellow   ">
+                        <Button className="w-full  ">
                             Send
                         </Button>
                     </form>

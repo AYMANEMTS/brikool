@@ -36,7 +36,7 @@ function WorkerDetails() {
         <>
             <div className="px-4 py-6">
                 <div
-                    className="flex flex-col md:flex-row items-center justify-between bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg dark:shadow-gray-700">
+                    className="flex flex-col md:flex-row items-center justify-between bg-gray-200 dark:bg-gray-800 p-6 rounded-lg shadow-lg dark:shadow-gray-700">
                     <div className="w-full md:w-1/3 mb-6 md:mb-0">
                         <img
                             src={displayImage("", job?.userId)}
@@ -46,30 +46,30 @@ function WorkerDetails() {
                     </div>
 
                     <div className="w-full md:w-2/3 md:pl-6">
-                        <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">{job?.userId?.name}</h2>
-
+                        <h2 className="text-2xl font-semibold text-teal-blue dark:text-white">{job?.userId?.name}</h2>
+                        <br />
                         <div className="text-lg text-gray-500 dark:text-gray-300 flex items-center space-x-2 mb-2">
-                            <MapPin className={"h-6 w-6"}/>
+                            <MapPin className={"h-6 w-6 text-teal-blue"}/>
                             <span className="text-gray-700 pl-1 dark:text-gray-200">
                                 {job?.userId?.city?.[lng]}
                             </span>
                         </div>
 
                         <div className="text-lg text-gray-500 dark:text-gray-300 flex items-center space-x-2 mb-2">
-                            <ChartBarStacked className={"h-6 w-6"}/>
+                            <ChartBarStacked className={"h-6 w-6 text-teal-blue"}/>
                             <span className="text-gray-700 pl-1 dark:text-gray-200">
                                 {job?.category?.name?.[lng]}
                             </span>
                         </div>
 
                         <div className="text-lg text-gray-500 dark:text-gray-300 flex items-center space-x-2 mb-2">
-                            <Clock8 className={"h-6 w-6"}/>
+                            <Clock8 className={"h-6 w-6 text-teal-blue"}/>
                             <span className="text-gray-700 pl-1 dark:text-gray-200">
                                 {formatDate(job?.createdAt)}
                             </span>
                         </div>
 
-                        <p className="mt-4 text-gray-600 dark:text-gray-400">
+                        <p className="mt-4 text-gray-800 dark:text-gray-400">
                             {job?.description}
                         </p>
 

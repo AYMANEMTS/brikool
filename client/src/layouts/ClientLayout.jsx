@@ -17,6 +17,7 @@ function ClientLayout() {
     const {pathname} = useLocation()
     const [requiredCity, setRequiredCity] = useState(false)
     const {setUser, setIsAuthenticated,user} = useLoading()
+
     useEffect(() => {
         const checkAuth = async () => {
             try {
@@ -35,17 +36,19 @@ function ClientLayout() {
             }
         };
         checkAuth().catch(e => console.log(e))
-    }, []);
+    }, [setIsAuthenticated, setUser]);
+    
     useEffect(() => {
-        if (user && user.googleId && !user.city ){
+        if (user && !user?.city ) {
             setRequiredCity(true)
         }else{
             setRequiredCity(false)
         }
     }, [user,pathname,requiredCity]);
+    
     const {setWorkers,setCategories,setUserJobs} = useClientContext()
 
-    const { data: categories = [], isFetching: isFetchingCategory, isError: isErrorCategory } = useQuery('categories', ClientApi.getCategories, {
+    const { isFetching: isFetchingCategory, isError: isErrorCategory } = useQuery('categories', ClientApi.getCategories, {
         onSuccess: (data) => {
             setCategories(data.data.category);
         },
@@ -53,8 +56,7 @@ function ClientLayout() {
         retry: false,
         refetchOnWindowFocus: false,
     });
-
-    const { data: workers = [], isFetching: isFetchingWorkers, isError: isErrorWorkers } = useQuery("jobs", ClientApi.getJobs, {
+    const { isFetching: isFetchingWorkers, isError: isErrorWorkers } = useQuery("jobs", ClientApi.getJobs, {
         onSuccess: (data) => {
             setWorkers(data.data);
         },
@@ -62,8 +64,7 @@ function ClientLayout() {
         retry: false,
         refetchOnWindowFocus: false,
     });
-
-    const { data: userJobs = [], isFetching: isFetchingUserJobs, isError: isErrorUserJobs } = useQuery("userJobs", ClientApi.getUserJobs, {
+    const { isFetching: isFetchingUserJobs, isError: isErrorUserJobs } = useQuery("userJobs", ClientApi.getUserJobs, {
         onSuccess: (data) => {
             setUserJobs(data.data);
         },
@@ -76,15 +77,17 @@ function ClientLayout() {
 
     const isLoading = isFetchingCategory || isFetchingWorkers || isFetchingUserJobs;
     const isError = isErrorCategory || isErrorWorkers || isErrorUserJobs;
+
     if (isError){
         return <ServerNotRespond />
     }
     if (isLoading){
         return <Spinner open={isLoading} />
     }
+
     return (
         <>
-            <div className={`flex flex-col min-h-screen bg-gray-200 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300 `}>
+            <div className={`flex flex-col min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300 `}>
                 <ScrollToTop />
 
                 {/* Navbar */}
@@ -92,14 +95,16 @@ function ClientLayout() {
 
                 {/* Main Content Area */}
                 <main className={`flex-grow w-full h-full py-0 ${pathname !== '/chat' && 'md:mt-32'}`}>
-                    <div className="container mx-auto px-2 sm:px-4 md:px-6 lg:px-8 max-w-6xl h-full">
+                    <div className="container mt-3 mx-auto px-2 sm:px-4 md:px-6 lg:px-8 max-w-6xl h-full">
                         <Outlet />
                     </div>
                 </main>
 
                 {/* Footer */}
                 {pathname === "/chat" ? null : (
-                    <Footer  />
+                    <div className={"    mt-14"}>
+                        <Footer />
+                    </div>
                 )}
 
                 {requiredCity && (
@@ -111,7 +116,6 @@ function ClientLayout() {
             </div>
             <ClientSpeedDial />
         </>
-
     );
 }
 

@@ -27,19 +27,11 @@ function Announces() {
         <>
             <div className={"pb-5"}>
                 <div className="flex justify-between items-center flex-wrap gap-3 mb-5">
-                    <Typography
-                        variant="h5"
-                        className="font-bold text-xl sm:text-2xl"
-                    >
+                    <Typography variant="h5" className="font-bold text-xl sm:text-2xl text-teal-blue">
                         {t('yourAnnouncement')}
                     </Typography>
 
-                    <Button
-                        size="sm"
-                        onClick={handleOpen}
-                        variant="outlined"
-                        className="sm:w-auto w-full mt-3 sm:mt-0 sm:text-base text-sm hover:bg-blue-600 hover:text-white"
-                    >
+                    <Button onClick={handleOpen} className="sm:w-auto w-full mt-3 sm:mt-0 sm:text-base text-sm ">
                         {t('createNewAnnounces')}
                     </Button>
                 </div>

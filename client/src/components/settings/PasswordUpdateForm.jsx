@@ -38,15 +38,14 @@ const PasswordUpdateForm = () => {
         <form onSubmit={handleSubmit(handleForm)} className="my-3 space-y-6 mx-3">
             {/* Error Alert */}
             {errorMessage !== null && (
-                <Alert color="red">
+                <Alert color="red" className={"text-md font-semibold"}>
                     {errorMessage}
                 </Alert>
             )}
 
             {/* Current Password */}
             <div>
-                <Input label={t("current_password")} type="password" variant="outlined"
-                    {...register('currentPassword', {
+                <Input label={t("current_password")} type="password" {...register('currentPassword', {
                         required: tValidation('requiredField'),
                         minLength: {
                             value: 7,
@@ -64,8 +63,7 @@ const PasswordUpdateForm = () => {
 
             {/* New Password */}
             <div className="">
-                <Input label={t("new_password")} type="password" variant="outlined"
-                    {...register('newPassword', {
+                <Input label={t("new_password")} type="password"{...register('newPassword', {
                         required: tValidation('requiredField'),
                         minLength: {
                             value: 7,
@@ -84,8 +82,7 @@ const PasswordUpdateForm = () => {
 
             {/* Confirm Password */}
             <div className="">
-                <Input label={t("confirm_password")} type="password" variant="outlined"
-                    {...register('confirmPassword', {
+                <Input label={t("confirm_password")} type="password"{...register('confirmPassword', {
                         required: tValidation('requiredField'),
                         validate: value =>
                             value === newPassword || t('password_not_match')
@@ -98,9 +95,7 @@ const PasswordUpdateForm = () => {
 
             {/* Submit Button */}
             <div>
-                <Button disabled={!isValid || loading} type="submit" variant="gradient" color="blue"
-                    className="flex justify-center items-center w-full"
-                >
+                <Button disabled={!isValid || loading} type="submit" className="flex justify-center items-center w-full">
                     {loading ? <><Loader className="mx-2 animate-spin text-white" /> </> : t('update_password_button')}
                 </Button>
             </div>

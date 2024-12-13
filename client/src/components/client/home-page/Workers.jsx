@@ -6,7 +6,7 @@ import {useClientContext} from "../../../context/ClientProvider";
 export default function Workers({t}) {
     const {workers} = useClientContext()
     return (
-        <div className="my-4 h-full">
+        <div className="h-full">
             <div className="flex justify-between items-center ">
                 <div>
                     <h1 className="text-2xl font-semibold text-center text-gray-700 dark:text-bright-yellow">{t('popularWorkers')}</h1>

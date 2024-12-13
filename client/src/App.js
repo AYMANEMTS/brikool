@@ -10,6 +10,8 @@ import {useTranslation} from "react-i18next";
 import {useEffect} from "react";
 import {axiosClient} from "./api/axios";
 import {ClientProvider} from "./context/ClientProvider";
+import {ThemeProvider} from "@material-tailwind/react";
+import defaultStyle from "./utils/defaultStyles";
 
 const queryClient = new QueryClient()
 
@@ -20,6 +22,7 @@ function App() {
             axiosClient.defaults.headers['Accept-Language'] = i18n.language;
         }
     }, [i18n.language]);
+
     return (
         <AdminProvider>
             <ClientProvider>
@@ -34,8 +37,10 @@ function App() {
                                 <button onClick={() => closeSnackbar(snackbarId)}>X</button>
                             )}
                         >
-                            <RouterProvider router={router} />
-                            <Spinner />
+                            <ThemeProvider value={defaultStyle}>
+                                <RouterProvider router={router} />
+                                <Spinner />
+                            </ThemeProvider>
                         </SnackbarProvider>
                     </QueryClientProvider>
                 </LoadingProvider>

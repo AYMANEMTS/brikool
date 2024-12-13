@@ -1,4 +1,4 @@
-import React from "react";
+    import React from "react";
 import {Drawer, Typography, List, ListItem, Button} from "@material-tailwind/react";
 import {Link, useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
@@ -31,17 +31,17 @@ export default function MobileDrawer({ open, toggleDrawer }) {
                 <List >
                     <ListItem>
                         <Link to="/" onClick={toggleDrawer}>
-                            <Button variant="text" color="secondary">{t('home')}</Button>
+                            <Button >{t('home')}</Button>
                         </Link>
                     </ListItem>
                     <ListItem>
                         <Link to="/workers" onClick={toggleDrawer}>
-                            <Button variant="text" color="secondary">{t('workers')}</Button>
+                            <Button>{t('workers')}</Button>
                         </Link>
                     </ListItem>
                     <ListItem>
                         <Link to="/about-us" onClick={toggleDrawer}>
-                            <Button variant="text" color="secondary">{t('about')}</Button>
+                            <Button>{t('about')}</Button>
                         </Link>
                     </ListItem>
                 </List>

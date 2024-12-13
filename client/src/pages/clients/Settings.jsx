@@ -16,7 +16,7 @@ function Settings() {
         <div className="w-full">
             {/* First Accordion */}
             <Accordion open={open === 1}>
-                <AccordionHeader onClick={() => handleOpen(1)}>
+                <AccordionHeader onClick={() => handleOpen(1)} className={"text-teal-blue hover:text-teal-blue"}>
                     {t("settings_title_1")}
                 </AccordionHeader>
                 <AccordionBody>
@@ -28,7 +28,7 @@ function Settings() {
 
             {/* Second Accordion */}
             <Accordion open={open === 2}>
-                <AccordionHeader onClick={() => handleOpen(2)}>
+                <AccordionHeader onClick={() => handleOpen(2)} className={"text-teal-blue hover:text-teal-blue"}>
                     {t("settings_title_2")}
                 </AccordionHeader>
                 <AccordionBody>

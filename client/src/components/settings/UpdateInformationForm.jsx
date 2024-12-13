@@ -8,7 +8,7 @@ import { Loader } from "lucide-react";
 import { useLoading } from "../../context/LoadingProvider";
 import { useQueryClient } from "react-query";
 import { useTranslation } from "react-i18next";
-import { Input, Button } from "@material-tailwind/react";
+import {Input, Button, Select, Option} from "@material-tailwind/react";
 
 const UpdateInformationForm = () => {
     const { t, i18n } = useTranslation('announces');
@@ -37,9 +37,12 @@ const UpdateInformationForm = () => {
         }
     };
 
-    const handleCityChange = (e) => {
-        setSelectedCity(e.target.value);
-        setValue('city', e.target.value);
+    const handleCityChange = (value) => {
+        console.log(value)
+        setSelectedCity(value);
+        const cityObject = citiesInMorocco.filter(city => city?.[lng] === value);
+        console.log(cityObject)
+        setValue('city', cityObject);
     };
 
     const handleUpdateInformation = async (data) => {
@@ -84,7 +87,7 @@ const UpdateInformationForm = () => {
 
     return (
         <>
-            <div className="flex flex-col md:flex-row justify-center items-center p-4">
+            <div className="flex flex-col justify-center items-center p-4">
                 {/* Image and File Input */}
                 <div className="w-full md:w-1/2 flex flex-col items-center space-y-4 mb-6 md:mb-0">
                     <img
@@ -92,19 +95,16 @@ const UpdateInformationForm = () => {
                         className="object-cover w-36 h-36 rounded-full"
                         alt="avatar"
                     />
-                    <label className={"p-2 bg-gray-200 rounded"} htmlFor={"user_image"}>{t('chose_image')}</label>
-                    <input id={"user_image"}
-                           type="file"
-                           accept="image/*"
-                           onChange={handleImageChange}
-                           className="mt-2" hidden
-                    />
+                    <label className={"p-2 bg-teal-600 text-white font-semibold cursor-pointer rounded"} htmlFor={"user_image"}>
+                        {t('chose_image')}
+                    </label>
+                    <input id={"user_image"} type="file" accept="image/*" onChange={handleImageChange} className="mt-2" hidden/>
                 </div>
 
                 {/* Input Fields */}
-                <div className="w-full md:w-1/2 space-y-4">
+                <div className="w-full md:w-1/2 space-y-8">
                     <div>
-                        <Input label={t('name')} type="text" variant="outlined" required error={errors.name}
+                        <Input label={t('name')} required error={errors.name}
                                {...register('name', {
                                    required: { value: true, message: tValidation('requiredField') },
                                    minLength: { value: 4, message: tValidation('minLength', { field: t('name'), min: 4, max: 20 }) },
@@ -114,30 +114,20 @@ const UpdateInformationForm = () => {
                         {errors.name && (<span className={"text-red-600"}>{errors.name.message}</span>)}
                     </div>
                     <div>
-                        <Input disabled={true} label={t('email')} type="email" variant="outlined"
-                               {...register('email')}
-                        />
+                        <Input disabled={true} label={t('email')} type="email"{...register('email')}/>
                     </div>
                     <div>
-                        <label id={"city"}>{t('city')}</label>
-                        <Controller
-                            name="city"
-                            control={control}
-                            defaultValue={selectedCity}
+                        <Controller name="city" control={control} defaultValue={selectedCity}
                             rules={{ required: { value: true, message: tValidation('requiredField') } }}
                             render={({ field: { value, onChange } }) => (
-                                <select
-                                    id={"city"}
-                                    value={value || selectedCity} // Use selectedCity or field value
-                                    onChange={(e) => handleCityChange(e)}
-                                    className={"w-full border-2 border-blue-500 p-3 rounded-md"}
-                                >
+                                <Select value={value?.[lng] || selectedCity} label={t('city')}
+                                    onChange={(value) => handleCityChange(value)}>
                                     {citiesInMorocco?.map((city, key) => (
-                                        <option key={key} value={city?.[lng]}>
+                                        <Option key={key} value={city?.[lng]}>
                                             {city?.[lng]}
-                                        </option>
+                                        </Option>
                                     ))}
-                                </select>
+                                </Select>
                             )}
                         />
                         {errors.city && (<span className={"text-red-600"}>{errors.city.message}</span>)}

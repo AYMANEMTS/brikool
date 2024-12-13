@@ -11,7 +11,7 @@ function Workers() {
         setFiltredJobS(workers);
     }, [workers]);
     return (
-        <>
+        <div className={"mt-20 md:mt-0"}>
             {/* Filter section */}
             <FiltterSecion
                 setFiltredJobS={setFiltredJobS}
@@ -30,7 +30,7 @@ function Workers() {
             </div>
 
 
-        </>
+        </div>
     );
 }
 

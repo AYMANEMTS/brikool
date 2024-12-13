@@ -3,7 +3,7 @@ import {useTranslation} from "react-i18next";
 function WorkersInvite() {
     const {t} = useTranslation('workersInvite')
     return (
-        <section className="bg-gray-200 dark:bg-gray-900">
+        <section className="bg-white dark:bg-gray-900">
             <div className="container flex flex-col items-center px-4 py-12 mx-auto xl:flex-row">
                 <div className="flex justify-center xl:w-1/2">
                     <img className="h-80 w-80 sm:w-[28rem] sm:h-[28rem] flex-shrink-0 object-cover rounded-full"

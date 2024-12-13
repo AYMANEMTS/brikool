@@ -10,7 +10,17 @@ import {LogOut,SlidersHorizontal,Megaphone,MessageCircleMore,Headset,User } from
 export default function DemoUserMenu() {
     const { t } = useTranslation("navbar");
     const { startLoading, stopLoading, setIsAuthenticated, setUser, user } = useLoading();
+
     const navigate = useNavigate();
+    const scrollToFaq = () => {
+        navigate("/");
+        setTimeout(() => {
+            const faqElement = document.getElementById("FAQ");
+            if (faqElement) {
+                faqElement.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+        }, 100);
+    };
 
     const handleLogout = async () => {
         try {
@@ -30,11 +40,7 @@ export default function DemoUserMenu() {
     return (
         <Menu>
             <MenuHandler>
-                <Button
-                    size="sm"
-                    variant="solid"
-                    className="flex items-center p-1 text-white bg-teal-blue dark:bg-bright-yellow rounded-md shadow-sm hover:bg-teal-blue dark:hover:bg-bright-yellow"
-                >
+                <Button className="flex items-center p-1" >
                     <User className={"w-6 h-6 md:text-xl dark:text-black "} />
                     <span className={"hidden lg:!flex lg:px-2 dark:text-black"}>{user?.name}</span>
                 </Button>
@@ -64,7 +70,7 @@ export default function DemoUserMenu() {
                     {t("settings")}
                 </MenuItem>
 
-                <MenuItem
+                <MenuItem onClick={scrollToFaq}
                     className="hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 p-2"
                 >
                     <Headset className={"w-6 h-6"} />

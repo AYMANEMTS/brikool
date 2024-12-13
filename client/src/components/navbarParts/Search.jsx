@@ -47,14 +47,14 @@ function Search({isAtTop}) {
         <div>
             {isAtTop && pathname !== '/chat' && (
                 <div
-                    className={`relative hidden md:flex  items-center space-x-2 bg-gray-200 dark:bg-gray-700 border border-teal-blue dark:border-bright-yellow focus-within:border-teal-blue focus:border-2 focus-within:bg-transparent px-6 rounded-full h-10 lg:w-2/4 mt-3 mx-auto max-lg:mt-6 transition-colors duration-300`}
+                    className={`relative hidden md:flex  items-center space-x-2 bg-gray-200 dark:bg-gray-700 border border-teal-blue dark:border-bright-yellow focus-within:border-teal-blue focus:border-2 focus-within:bg-gray-50 dark:focus-within:bg-gray-900 px-6 rounded-full h-10 lg:w-2/4 mt-3 mx-auto max-lg:mt-6 transition-colors duration-300`}
                 >
                     {/* Search Input */}
                     <SearchIcon className="h-6 w-6 text-teal-blue dark:text-bright-yellow"/>
                     <input
                         type="text"
                         placeholder={t('search')}
-                        className="w-full outline-none bg-transparent  text-teal-blue dark:text-bright-yellow font-semibold text-[15px] transition-colors duration-300"
+                        className="w-full outline-none bg-transparent  text-teal-blue dark:text-bright-yellow font-semibold text-[15px] transition-colors duration-300 placeholder:text-teal-blue dark:placeholder:text-bright-yellow "
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
