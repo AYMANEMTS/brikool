@@ -79,15 +79,15 @@ const changePassword = async (req, res) => {
         const token = req.cookies.jwt || req.headers['authorization']?.split(' ')[1];
         const user = await getUserFromToken(token)
         if (!user) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ error: req.t('user_not_found') });
         }
         const isMatch = await bcrypt.compare(currentPassword, user.password);
         if (!isMatch) {
-            return res.status(400).json({ error: 'Current password is incorrect' });
+            return res.status(400).json({ error: req.t('current_password_incorrect') });
         }
         user.password = newPassword
         await user.save()
-        return res.status(200).json({ message: 'Password changed successfully',user });
+        return res.status(200).json({ message: req.t('password_changed_successfully'),user });
 
     } catch (error) {
         res.status(500).json({error: e})

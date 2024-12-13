@@ -4,16 +4,30 @@ const User = require("../models/User");
 const Notification = require('../models/Notification');
 const getUserFromToken = require('../utils/getUserFromToken');
 const { sendPushNotification } = require("../services/notificationService")
-const getJobs = async (req,res) => {
+
+
+const getJobs = async (req, res) => {
     try {
+        // Fetch all jobs with related data populated
         const jobs = await Job.find({})
-            .populate("category").populate("userId").sort({createdAt: -1})
+            .populate("category")
+            .populate("userId")
             .populate("comments.userId")
-        return res.status(200).json(jobs)
-    }catch (e) {
-        return res.status(500).json({error:e})
+            .sort({ createdAt: -1 });
+
+        // Map over each job to calculate and include the average rating
+        const jobsWithRatings = jobs.map((job) => {
+            const jobObject = job.toObject(); // Convert job document to plain JS object
+            jobObject.averageRating = job.averageRating;
+            return jobObject;
+        });
+
+        return res.status(200).json(jobsWithRatings);
+    } catch (e) {
+        return res.status(500).json({ error: e.message });
     }
-}
+};
+
 
 const showJob = async (req,res) => {
     try {

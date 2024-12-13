@@ -4,7 +4,6 @@ const checkAuthorization = (requiredPermission = "") => async (req, res, next) =
     try {
         const jwt = req.cookies['jwt'] || req.headers['authorization']?.split(' ')[1];
         const user = await getUserFromToken(jwt);
-        console.log(user)
         if (user.role === 'admin') {
             return next();
         }

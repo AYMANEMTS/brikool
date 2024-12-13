@@ -58,5 +58,16 @@ const destroyClient = async (req, res) => {
         res.status(500).json({ error: e.message || e });
     }
 };
+const getUserJobs = async (req, res) => {
+    try {
+        const jwt = req.cookies['jwt'] || req.headers['authorization']?.split(' ')[1];
+        const user = await getUserFromToken(jwt)
+        const userJobs = await Job.find({userId: user._id})
+            .populate("category").populate("userId").populate("comments.userId").sort({createdAt: -1})
 
-module.exports = { updateClient, destroyClient, showClient,storeClient}
+        res.status(200).json(userJobs)
+    }catch (e) {
+        res.status(500).json({error: e})
+    }
+}
+module.exports = { updateClient, destroyClient, showClient,storeClient,getUserJobs}

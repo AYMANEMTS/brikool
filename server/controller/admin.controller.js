@@ -48,7 +48,6 @@ const changeJobStatus = async (req, res) => {
     try {
         const { id } = req.params;
         const { newStatus } = req.body;
-        console.log(newStatus)
         const job = await Job.findById(id);
         if (!job) {
             return res.status(404).json({ error: 'Job not found' });

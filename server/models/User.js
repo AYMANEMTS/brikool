@@ -5,7 +5,13 @@ const UserSchema = mongoose.Schema( {
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     image: { type: String, required: false },
-    city: { type: String, required: false },
+    city: { type: {
+            fr: { type: String, required: true, minlength: 1, maxlength: 50 },
+            ar: { type: String, required: true, minlength: 1, maxlength: 50 },
+            en: { type: String, required: true, minlength: 1, maxlength: 50 },
+        },
+        required: false
+    },
     googleId: { type: String, required: false },
     secret: { type: String, required: false },
     role: { type: String, default: "client" },
