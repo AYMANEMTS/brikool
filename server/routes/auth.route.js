@@ -1,17 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const {registerClient,loginClient, logout,authenticateToken,changePassword, checkAuthAdmin} = require('../controller/auth.controller');
+const {registerClient,loginClient, logout,authenticateToken,changePassword, checkAuthAdmin, verifyEmail, forgotPassword,
+    resetPassword
+} = require('../controller/auth.controller');
 const {createClientValidation,loginValidation} = require("../validators/userValidation");
 const checkValidation = require("../middlewares/checkValidation");
-const protectedRoute = require("../middlewares/protectedRoute");
 const upload = require('../config/multerConfig');
+const verifyToken = require("../middlewares/verifyToken");
 
 
-router.get("/check-auth",authenticateToken)
-router.get("/admin/checkAuth",checkAuthAdmin)
+router.get("/check-auth", verifyToken, authenticateToken)
+router.get("/admin/checkAuth",verifyToken,checkAuthAdmin)
 router.post('/register',upload.none(), createClientValidation,checkValidation,registerClient);
+router.post('/verify-email',upload.none(),verifyEmail)
 router.post('/login', upload.none(),loginValidation,checkValidation,loginClient);
-router.post('/logout',protectedRoute,logout)
-router.post('/changePassword',upload.none(),protectedRoute,changePassword)
+router.post('/logout',verifyToken,logout)
+router.post('/changePassword',upload.none(),verifyToken,changePassword)
+router.post('/forget-password',upload.none(),forgotPassword)
+router.post('/reset-password/:token',upload.none(),resetPassword)
 
 module.exports = router;

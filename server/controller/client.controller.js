@@ -1,5 +1,4 @@
 const Client = require("../models/User")
-const getUserFromToken = require('../utils/getUserFromToken');
 const Job = require("../models/Job");
 
 const storeClient = async (req, res) => {
@@ -27,11 +26,7 @@ const showClient = async (req,res) => {
 
 const updateClient = async (req,res) => {
     try {
-        const jwt = req.cookies['jwt'] || req.headers['authorization']?.split(' ')[1];
-        const actualClient = await getUserFromToken(jwt)
-        if (!actualClient) {
-            return res.status(404).json({error: 'Client not found'})
-        }
+        const actualClient = await Client.findById(req.userId)
         const {name,city} = req.body
         const image = req.file ? req.file.path : undefined;
         actualClient.name = name;
@@ -60,8 +55,7 @@ const destroyClient = async (req, res) => {
 };
 const getUserJobs = async (req, res) => {
     try {
-        const jwt = req.cookies['jwt'] || req.headers['authorization']?.split(' ')[1];
-        const user = await getUserFromToken(jwt)
+        const user = await Client.findById(req.userId)
         const userJobs = await Job.find({userId: user._id})
             .populate("category").populate("userId").populate("comments.userId").sort({createdAt: -1})
 

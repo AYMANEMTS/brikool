@@ -2,16 +2,16 @@ const express = require('express');
 const {updateClient, destroyClient, getUserJobs} = require("../controller/client.controller");
 const router = express.Router();
 const upload = require('../config/multerConfig');
-const protectedRoute = require('../middlewares/protectedRoute');
+const verifyToken = require("../middlewares/verifyToken");
 
 // router.post('/', storeClient)
 
 
 // router.get("/:id",showClient)
 
-router.put("/",upload.single('image') ,protectedRoute,updateClient)
+router.put("/",upload.single('image') ,verifyToken,updateClient)
 
-router.delete("/:id",upload.single('image') ,protectedRoute, destroyClient)
-router.get('/jobs',protectedRoute,getUserJobs)
+router.delete("/:id",upload.single('image') ,verifyToken, destroyClient)
+router.get('/jobs',verifyToken,getUserJobs)
 
 module.exports = router;

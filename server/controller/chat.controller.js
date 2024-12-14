@@ -1,14 +1,12 @@
 const Chat = require('../models/Chat');
 const User = require('../models/User');
 const Notification = require('../models/Notification');
-const getUserFromToken = require("../utils/getUserFromToken");
 
 // Create or get an existing chat between two users
 const getChat = async (req, res) => {
     const {userId2 } = req.params;
-    const token = req.cookies.jwt
     try {
-        const user = await getUserFromToken(token)
+        const user = await User.findById(req.userId)
         let chat = await Chat.findOne({ participants: { $all: [user._id, userId2] } })
         .populate('participants', 'name image')
         if (!chat) {
@@ -58,8 +56,7 @@ const sendMessage = async (req, res) => {
 // Fetch all chats for a user
 const getUserChats = async (req, res) => {
     try {
-        const token = req.cookies.jwt
-        const user = await getUserFromToken(token)
+        const user = await User.findById(req.userId)
         const chats = await Chat.find({ participants: user._id })
             .populate('participants', 'name image')  // Get participant details
             .sort({ updatedAt: -1 });  // Sort by latest messages

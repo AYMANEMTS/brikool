@@ -1,9 +1,7 @@
-const getUserFromToken = require("../utils/getUserFromToken");
-
+const {findById} = require("../models/User");
 const checkAuthorization = (requiredPermission = "") => async (req, res, next) => {
     try {
-        const jwt = req.cookies['jwt'] || req.headers['authorization']?.split(' ')[1];
-        const user = await getUserFromToken(jwt);
+        const user = await findById(req.userId)
         if (user.role === 'admin') {
             return next();
         }

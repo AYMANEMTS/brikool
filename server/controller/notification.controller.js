@@ -1,10 +1,9 @@
 const Notification = require('../models/Notification')
-const getUserFromToken = require('../utils/getUserFromToken');
+const User = require("../models/User");
 
 const getUserNotifications = async (req, res) => {
     try {
-        const token = req.cookies['jwt'] || req.headers['authorization']?.split(' ')[1];
-        const user = await getUserFromToken(token)
+        const user = await User.findById(req.userId)
         const notifications = await Notification.find({ userId:user._id }).sort({ createdAt: -1 }).populate("senderId")
 
         const groupedNotifications = notifications.reduce((acc, notification) => {
@@ -33,8 +32,7 @@ const getUserNotifications = async (req, res) => {
 
 const getUserUnreceivedNotifications = async (req, res) => {
     try {
-        const token = req.cookies['jwt'] || req.headers['authorization']?.split(' ')[1];
-        const user = await getUserFromToken(token)
+        const user = await User.findById(req.userId)
         const unreceivedNotification = await Notification.find({userId:user._id, received: false})
         res.status(200).json(unreceivedNotification)
     }catch (e) {
@@ -83,8 +81,7 @@ const markAsRead = async (req, res) => {
 
 const clearAll = async (req,res) => {
     try {
-        const token = req.cookies.jwt
-        const user = await getUserFromToken(token)
+        const user = await User.findById(req.userId)
         await Notification.deleteMany({ userId: user._id });
         res.status(200).json({ message: 'All notifications cleared successfully' });
     } catch (error) {

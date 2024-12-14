@@ -1,10 +1,9 @@
-const getUserFromToken = require("../utils/getUserFromToken");
+const User = require("../models/User");
 
 
 const togglePermission = async (req, res) => {
     try {
-        const jwt = req.cookies['jwt'] || req.headers['authorization']?.split(' ')[1];
-        const user = await getUserFromToken(jwt)
+        const user = await User.findById(req.userId);
         const {permissions} = req.body;
         if (!permissions || !Array.isArray(permissions) || permissions.length === 0) {
             return res.status(400).json({ error: 'No permissions provided or invalid format' });

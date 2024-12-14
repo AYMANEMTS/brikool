@@ -2,7 +2,6 @@ const Job = require('../models/Job')
 const mongoose = require('mongoose');
 const User = require("../models/User");
 const Notification = require('../models/Notification');
-const getUserFromToken = require('../utils/getUserFromToken');
 const { sendPushNotification } = require("../services/notificationService")
 
 
@@ -99,8 +98,7 @@ const addComment = async (req,res) => {
         if (!job) {
             return res.status(404).json({ message: 'Job not found' });
         }
-        const jwt = req.cookies['jwt'] || req.headers['authorization']?.split(' ')[1];
-        const user = await getUserFromToken(jwt)
+        const user = await User.findById(req.userId)
         const newComment = {
             userId: user._id,
             comment: req.body.comment
@@ -131,8 +129,7 @@ const addRating = async (req, res) => {
     const { id } = req.params;
     const { rating } = req.body;
     try {
-        const jwt = req.cookies['jwt'] || req.headers['authorization']?.split(' ')[1];
-        const user = await getUserFromToken(jwt)
+        const user = await User.findById(req.userId)
         const job = await Job.findById(id);
         if (!job) {
             return res.status(404).json({ error: 'Job not found' });

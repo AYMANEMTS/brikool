@@ -21,6 +21,10 @@ const UserSchema = mongoose.Schema( {
         default: 'inverified' 
     },
     permissions: { type: [String], default: [], required: false },
+    resetPasswordToken: { type: String, required: false },
+    resetPasswordExpires: { type: Date, required: false },
+    verificationToken: { type: String, required: false },
+    verificationExpires: { type: Date, required: false },
 }, {
     timestamps: true
 });

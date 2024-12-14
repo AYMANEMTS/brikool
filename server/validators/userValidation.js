@@ -44,8 +44,6 @@ exports.createClientValidation = [
         .notEmpty().withMessage(requiredFieldMessage)
         .isLength({min:7}).withMessage(minimumFieldMessage(7)),
 
-    check('city')
-        .notEmpty().withMessage(requiredFieldMessage)
 ]
 
 exports.loginValidation = [
