@@ -1,5 +1,4 @@
 import React, { useState} from 'react';
-import ClientApi from "../../api/ClientApi";
 import {useForm} from "react-hook-form";
 import {useNavigate} from "react-router-dom";
 import {useSnackbar} from "notistack";
@@ -7,6 +6,7 @@ import {Loader} from "lucide-react";
 import {useLoading} from "../../context/LoadingProvider";
 import {useTranslation} from "react-i18next";
 import {Button, Typography, Input, Alert, Card, CardBody,} from "@material-tailwind/react";
+import AuthApi from "../../api/AuthApi";
 
 function LoginForm({handllSwapForm,handleOpen,redirectRoute}) {
     const { enqueueSnackbar } = useSnackbar();
@@ -25,7 +25,7 @@ function LoginForm({handllSwapForm,handleOpen,redirectRoute}) {
             const formData = new FormData()
             formData.append('email',data.email)
             formData.append('password',data.password)
-            const res = await ClientApi.login(formData);
+            const res = await AuthApi.login(formData);
             if (res.status === 200) {
                 setIsAuthenticated(true)
                 setUser(res?.data?.user)
@@ -59,6 +59,20 @@ function LoginForm({handllSwapForm,handleOpen,redirectRoute}) {
             console.error('AdminLogin failed:', error);
         } finally {
             setLoading(false)
+        }
+    }
+
+    const handleForgetPassword = async () => {
+        try {
+            const res = await AuthApi.forgetPassword({email:"oujdimraymane@gmail.com"})
+            if (res.data.redirect) {
+                window.location.href = `http://localhost:8000/${res.data.url}`;
+            } else {
+                console.log(res.data.message);
+            }
+            window.open("http://localhost:8000")
+        }catch (e) {
+            console.log(e)
         }
     }
     return (
@@ -133,7 +147,7 @@ function LoginForm({handllSwapForm,handleOpen,redirectRoute}) {
                     >
                         {t('register')}
                     </span>
-                    <span
+                    <span onClick={handleForgetPassword}
                         className="text-blue-500 cursor-pointer hover:underline"
                     >
                         {t('forgotPassword')}

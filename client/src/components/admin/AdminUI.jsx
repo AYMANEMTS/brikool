@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import {Outlet, useNavigate, Link, useLocation} from "react-router-dom";
-import ClientApi from "../../api/ClientApi";
 import {useLoading} from "../../context/LoadingProvider";
 import {useAdminContext} from "../../context/AdminProvider";
 import Trudiction from "../navbarParts/Trudiction";
 import {ChartBarStacked } from 'lucide-react';
+import AuthApi from "../../api/AuthApi";
 
 function AdminUi() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const navigate = useNavigate();
     const logout = async () => {
         try {
-            await ClientApi.logout()
-            navigate("/")
+            await AuthApi.logout()
+            window.location.href = '/'
         }catch (e) {
             console.log(e)
         }

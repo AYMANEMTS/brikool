@@ -2,10 +2,10 @@ import {Menu, MenuHandler, MenuList, MenuItem, Button,} from "@material-tailwind
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import ClientApi from "../../api/ClientApi";
 import { enqueueSnackbar } from "notistack";
 import { useLoading } from "../../context/LoadingProvider";
 import {LogOut,SlidersHorizontal,Megaphone,MessageCircleMore,Headset,User } from "lucide-react";
+import AuthApi from "../../api/AuthApi";
 
 export default function DemoUserMenu() {
     const { t } = useTranslation("navbar");
@@ -25,7 +25,7 @@ export default function DemoUserMenu() {
     const handleLogout = async () => {
         try {
             startLoading();
-            await ClientApi.logout();
+            await AuthApi.logout();
             setIsAuthenticated(false);
             setUser(null);
             navigate("/");

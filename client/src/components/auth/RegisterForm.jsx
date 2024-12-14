@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import citiesInMorocco from "../../utils/citiesInMorocco";
 import { useForm, Controller } from "react-hook-form";
-import ClientApi from "../../api/ClientApi";
 import {useNavigate} from "react-router-dom";
 import {useSnackbar} from "notistack";
 import {Loader} from "lucide-react";
 import {useLoading} from "../../context/LoadingProvider";
 import {useTranslation} from "react-i18next";
 import {Card,CardBody,Typography,Alert,Input,Button,Select,Option } from "@material-tailwind/react";
+import AuthApi from "../../api/AuthApi";
 
 function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
     const { register, handleSubmit, control,setError, formState: { errors,isValid } } = useForm();
@@ -22,7 +22,7 @@ function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
         setMessage(null)
         setLoading(true)
         try {
-            const res = await ClientApi.register(data);
+            const res = await AuthApi.register(data);
             setIsAuthenticated(true)
             setUser(res.data.user)
             handleOpen()

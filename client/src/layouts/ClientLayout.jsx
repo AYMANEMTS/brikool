@@ -11,6 +11,7 @@ import {useQuery} from "react-query";
 import {useClientContext} from "../context/ClientProvider";
 import Spinner from "../utils/Spinner";
 import ServerNotRespond from "../utils/ServerNotRespond";
+import AuthApi from "../api/AuthApi";
 
 
 function ClientLayout() {
@@ -21,7 +22,7 @@ function ClientLayout() {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const res = await ClientApi.checkAuth();
+                const res = await AuthApi.checkAuth();
                 if (res.status === 200) {
                     setIsAuthenticated(true)
                     setUser(res.data.user)
