@@ -65,23 +65,15 @@ function UserForm({ handleOpen }) {
             {renderStep()}
             <div className="flex justify-between mt-4">
                 <div>
-                    <Button
-                        variant="outlined"
-                        color="blue-gray"
-                        onClick={handleOpen}
-                        className="mr-2"
-                    >
+                    <Button onClick={handleOpen}
+                        className="mr-2 bg-gray-500 hover:bg-gray-800 text-white">
                         Cancel
                     </Button>
                 </div>
                 <div className="flex space-x-2">
                     {formStep !== 1 && (
-                        <Button
-                            variant="filled"
-                            color="blue"
-                            onClick={handlePrevious}
-                            className="mr-2"
-                        >
+                        <Button onClick={handlePrevious}
+                            className="mr-2 bg-gray-500 hover:bg-gray-800 text-white ">
                             Back
                         </Button>
                     )}

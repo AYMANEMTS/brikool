@@ -41,7 +41,7 @@ function JobCard({job,calculateAverageRating}) {
                     </div>
                     <Menu>
                         <MenuHandler>
-                            <IconButton size={"sm"} variant={"outlined"}>
+                            <IconButton size={"sm"} >
                                 <EllipsisVertical />
                             </IconButton>
                         </MenuHandler>

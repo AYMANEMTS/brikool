@@ -49,11 +49,12 @@ function ChangeStatusModal({ open, toggleModal, newStatus, jobId }) {
                 Are you sure you want to <strong>{newStatus}</strong> this job?
             </DialogBody>
             <DialogFooter className="space-x-2">
-                <Button color="red" onClick={changeStatusCallBack}>
-                    Change
-                </Button>
-                <Button color="gray" variant="outlined" onClick={toggleModal}>
+                <Button className={"bg-gray-500 hover:bg-gray-800 text-white"} onClick={toggleModal}>
                     Cancel
+                </Button>
+
+                <Button  onClick={changeStatusCallBack}>
+                    Change
                 </Button>
             </DialogFooter>
         </Dialog>

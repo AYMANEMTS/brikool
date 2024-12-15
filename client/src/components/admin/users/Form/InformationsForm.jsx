@@ -30,7 +30,7 @@ function InformationsForm({control,errors}) {
                     }}
                     render={({field}) => (
                         <Input {...field} label="Full-Name"  type={"text"} required
-                                   variant="outlined" error={errors.name}
+                                    error={errors.name}
                         />
                     )}
                 />
@@ -54,7 +54,7 @@ function InformationsForm({control,errors}) {
                     }}
                     render={({field}) => (
                         <Input {...field} label="Email" type="text" required
-                            variant="outlined" error={errors.email}
+                             error={errors.email}
                         />
                     )}
                 />
@@ -74,7 +74,7 @@ function InformationsForm({control,errors}) {
                     }}
                     render={({field}) => (
                         <Input required {...field}  label="Password"
-                            type="password" variant="outlined" error={errors.password}
+                            type="password" error={errors.password}
                         />
                     )}
                 />
@@ -91,7 +91,7 @@ function InformationsForm({control,errors}) {
                     }}
                     render={({field}) => (
                         <Input{...field} label="Password Confirmation" type="password"
-                            variant="outlined" error={errors.passwordConfirm} required
+                             error={errors.passwordConfirm} required
                         />
                     )}
                 />

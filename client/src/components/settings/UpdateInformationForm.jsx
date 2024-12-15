@@ -4,11 +4,11 @@ import citiesInMorocco from "../../utils/citiesInMorocco";
 import ClientApi from "../../api/ClientApi";
 import displayImage from "../../utils/imageFromServer";
 import { useSnackbar } from "notistack";
-import { Loader } from "lucide-react";
+import {Loader, Pencil} from "lucide-react";
 import { useLoading } from "../../context/LoadingProvider";
 import { useQueryClient } from "react-query";
 import { useTranslation } from "react-i18next";
-import {Input, Button, Select, Option} from "@material-tailwind/react";
+import {Input, Button, Select, Option, Typography, Badge, Avatar} from "@material-tailwind/react";
 
 const UpdateInformationForm = () => {
     const { t, i18n } = useTranslation('announces');
@@ -38,10 +38,8 @@ const UpdateInformationForm = () => {
     };
 
     const handleCityChange = (value) => {
-        console.log(value)
         setSelectedCity(value);
         const cityObject = citiesInMorocco.filter(city => city?.[lng] === value);
-        console.log(cityObject)
         setValue('city', cityObject);
     };
 
@@ -69,7 +67,7 @@ const UpdateInformationForm = () => {
             setValue('name', user.name);
             setValue('email', user.email);
             setValue('city', user.city?.[lng]);
-            setSelectedCity(user.city?.[lng]); // Ensure selectedCity is updated on user change
+            setSelectedCity(user.city?.[lng]);
         }
     }, [user, setValue, lng]);
 
@@ -78,69 +76,66 @@ const UpdateInformationForm = () => {
         const isImageChanged =
             (image && image !== user?.image) ||
             (image?.name && image.name !== user?.image?.name);
-
-        // Check if the city has changed by comparing the selected city and the city in the form
         const isCityChanged = city !== user?.city?.[lng];
-
         return name !== user?.name || isCityChanged || isImageChanged;
     };
 
     return (
         <>
-            <div className="flex flex-col justify-center items-center p-4">
-                {/* Image and File Input */}
-                <div className="w-full md:w-1/2 flex flex-col items-center space-y-4 mb-6 md:mb-0">
-                    <img
-                        src={displayImage(preview, user)}
-                        className="object-cover w-36 h-36 rounded-full"
-                        alt="avatar"
-                    />
-                    <label className={"p-2 bg-teal-600 text-white font-semibold cursor-pointer rounded"} htmlFor={"user_image"}>
-                        {t('chose_image')}
+            <Typography variant={"lead"} className={"text-dark-teal-blue dark:text-bright-yellow mt-4"}>Information</Typography>
+            <div className={"grid grid-cols-1 md:grid-cols-2 gap-4 mt-2"}>
+                <div className={"flex flex-row items-center justify-center"}>
+                    <label className="cursor-pointer">
+                        <Badge placement="top-end" overlap="circular" color="teal" withBorder data-to-toggle={"tooltip"} title={"Change profile image"}
+                               className="hover:bg-dark-teal-blue" content={<Pencil className="w-4 h-4"/>}>
+                            <Avatar src={displayImage(preview, user)} size="xxl" withBorder color="teal"/>
+                        </Badge>
+                        <input type="file" accept="image/*" className="hidden"
+                               onChange={(e) => handleImageChange(e)}/>
                     </label>
-                    <input id={"user_image"} type="file" accept="image/*" onChange={handleImageChange} className="mt-2" hidden/>
                 </div>
-
-                {/* Input Fields */}
-                <div className="w-full md:w-1/2 space-y-8">
+                <div className={"space-y-7"}>
                     <div>
                         <Input label={t('name')} required error={errors.name}
                                {...register('name', {
-                                   required: { value: true, message: tValidation('requiredField') },
-                                   minLength: { value: 4, message: tValidation('minLength', { field: t('name'), min: 4, max: 20 }) },
-                                   maxLength: { value: 20, message: tValidation('maxLength', { field: t('name'), min: 4, max: 20 }) },
+                                   required: {value: true, message: tValidation('requiredField')},
+                                   minLength: {
+                                       value: 4,
+                                       message: tValidation('minLength', {field: t('name'), min: 4, max: 20})
+                                   },
+                                   maxLength: {
+                                       value: 20,
+                                       message: tValidation('maxLength', {field: t('name'), min: 4, max: 20})
+                                   },
                                })}
                         />
                         {errors.name && (<span className={"text-red-600"}>{errors.name.message}</span>)}
                     </div>
                     <div>
-                        <Input disabled={true} label={t('email')} type="email"{...register('email')}/>
-                    </div>
-                    <div>
                         <Controller name="city" control={control} defaultValue={selectedCity}
-                            rules={{ required: { value: true, message: tValidation('requiredField') } }}
-                            render={({ field: { value, onChange } }) => (
-                                <Select value={value?.[lng] || selectedCity} label={t('city')}
-                                    onChange={(value) => handleCityChange(value)}>
-                                    {citiesInMorocco?.map((city, key) => (
-                                        <Option key={key} value={city?.[lng]}>
-                                            {city?.[lng]}
-                                        </Option>
-                                    ))}
-                                </Select>
-                            )}
+                                    rules={{required: {value: true, message: tValidation('requiredField')}}}
+                                    render={({field: {value, onChange}}) => (
+                                        <Select value={value?.[lng] || selectedCity} label={t('city')}
+                                                onChange={(value) => handleCityChange(value)}>
+                                            {citiesInMorocco?.map((city, key) => (
+                                                <Option key={key} value={city?.[lng]}>
+                                                    {city?.[lng]}
+                                                </Option>
+                                            ))}
+                                        </Select>
+                                    )}
                         />
                         {errors.city && (<span className={"text-red-600"}>{errors.city.message}</span>)}
                     </div>
-                    <div>
-                        <Button className={"w-full"} onClick={handleSubmit(handleUpdateInformation)} disabled={!isValid()} type="submit" variant="contained" color="blue">
-                            {loading ? <><Loader className={"mx-2 animate-spin text-white"} /> </> : t('save')}
-                        </Button>
-                    </div>
+                    <Button className={"w-full"} onClick={handleSubmit(handleUpdateInformation)} disabled={!isValid()} type="submit" variant="contained" color="blue">
+                        {loading ? <><Loader className={"mx-2 animate-spin text-white"} /> </> : t('save')}
+                    </Button>
                 </div>
             </div>
+
         </>
     );
 };
 
 export default UpdateInformationForm;
+

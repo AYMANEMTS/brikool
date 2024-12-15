@@ -8,5 +8,6 @@ const AuthApi= {
     forgetPassword: async (data) => await axiosClient.post("/forget-password",data),
     resetPassword: async (data,token) => await axiosClient.post(`/reset-password/${token}`,data),
     verifyEmail: async (data) => await axiosClient.post(`/verify-email/`,data),
+    verifyUserEmail: async () => await axiosClient.get('/send-verification-token')
 }
 export default AuthApi

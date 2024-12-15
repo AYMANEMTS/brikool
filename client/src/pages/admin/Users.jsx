@@ -98,8 +98,6 @@ function Users() {
                     <Button
                         disabled={!isAuthorized(user, "create_users")}
                         onClick={() => setUserForm(true)}
-                        variant={"outlined"}
-                        color={"blue"}
                     >
                         Create New User
                     </Button>

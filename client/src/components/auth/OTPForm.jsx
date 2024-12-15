@@ -1,10 +1,16 @@
 import React from "react";
-import { Input, Typography } from "@material-tailwind/react";
+import {Button, IconButton, Input, Typography} from "@material-tailwind/react";
 import {useLoading} from "../../context/LoadingProvider";
+import {Send} from "lucide-react";
+import AuthApi from "../../api/AuthApi";
+import {useSnackbar} from "notistack";
 
-export function OTPForm({setOtp,otp}) {
+export function OTPForm({setOtpForm}) {
+    const [otp, setOtp] = React.useState(Array(6).fill(""));
     const inputRefs = React.useRef([]);
-    const {user} = useLoading()
+    const {user, setUser} = useLoading()
+    const { enqueueSnackbar } = useSnackbar();
+
     const handleChange = (index, value) => {
         const newOtp = [...otp];
         newOtp[index] = value.replace(/[^0-9]/g, "");
@@ -21,7 +27,22 @@ export function OTPForm({setOtp,otp}) {
             inputRefs.current[index - 1].focus();
         }
     }
-
+    const isValid = otp.every((digit) => digit.trim() !== "");
+    const otpString = otp.join("");
+    const verifyEmail = async () => {
+        try {
+            const res = await AuthApi.verifyEmail({token: otpString})
+            if (res.data.user) {
+                setUser(res.data.user);
+            }
+            enqueueSnackbar("You Account is verified successfully",{variant: "success"})
+        }catch (e) {
+            console.log(e)
+            enqueueSnackbar("Failed to verify email",{variant: "error"})
+        } finally {
+            setOtpForm(false)
+        }
+    }
     return (
         <div className="w-full ">
             <Typography
@@ -33,7 +54,7 @@ export function OTPForm({setOtp,otp}) {
                 <span className="font-bold text-teal-blue">{user?.email}</span>
             </Typography>
 
-            <div className="my-4 flex items-center justify-center gap-2">
+            <div className="my-4 flex items-center justify-center gap-2 ">
                 {otp.map((digit, index) => (
                     <React.Fragment key={index}>
                         <Input variant={"outlined"}
@@ -54,6 +75,15 @@ export function OTPForm({setOtp,otp}) {
                         {index === 2 && <span className="text-2xl text-slate-700">-</span>}
                     </React.Fragment>
                 ))}
+                <IconButton size={"md"} disabled={!isValid} className={"hidden md:flex"}
+                            onClick={verifyEmail}>
+                    <Send className={"h-5 w-5"} />
+                </IconButton>
+            </div>
+            <div className={"flex justify-center items-center mb-2 md:hidden "}>
+                <Button disabled={!isValid} onClick={verifyEmail}>
+                    Verify Account
+                </Button>
             </div>
 
             <Typography

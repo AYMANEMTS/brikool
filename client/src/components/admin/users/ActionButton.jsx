@@ -27,7 +27,7 @@ export default function ActionButton({user,togglePermissionsModal,toggleDetailsM
     return (
         <Menu>
             <MenuHandler>
-                <IconButton variant={"outlined"} disabled={!isAuthorized(connectedUser, 'edit_users')}>
+                <IconButton disabled={!isAuthorized(connectedUser, 'edit_users')}>
                     <EllipsisVertical />
                 </IconButton>
             </MenuHandler>

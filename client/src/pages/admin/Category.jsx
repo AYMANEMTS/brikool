@@ -32,7 +32,7 @@ function Category() {
         <div className={"p-4"}>
             <div className={"bg-white p-4 shadow-md rounded-lg mb-6"}>
                 <div className={"grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4"}>
-                    <Input variant={"outlined"} icon={<Search className={"h-6 w-6"}/>} label="Search" value={search}
+                    <Input  icon={<Search className={"h-6 w-6"}/>} label="Search" value={search}
                            onChange={(e) => setSearch(e.target.value)}
 
                     />
@@ -44,8 +44,7 @@ function Category() {
                     </Select>
 
                     <Button disabled={!isAuthorized(user,'create_category')}
-                        onClick={() => openModal(null)}
-                        variant={"outlined"} color={"blue"}>
+                        onClick={() => openModal(null)}>
                         Create New Category
                     </Button>
                 </div>

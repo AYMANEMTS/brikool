@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import ClientApi from "../../api/ClientApi";
 import { useSnackbar } from "notistack";
-import { Loader } from "lucide-react";
+import {Eye, EyeOff, Loader} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import {Input, Button, Alert, Typography} from "@material-tailwind/react";
 
@@ -12,7 +12,16 @@ const PasswordUpdateForm = () => {
     const { enqueueSnackbar } = useSnackbar();
     const [loading, setLoading] = useState(false);
     const { t } = useTranslation('settings');
-
+    const [showPassword, setShowPassword] = useState({
+        currentPassword: false,
+        newPassword: false,
+    })
+    const togglePasswordVisibility = (field) => {
+        setShowPassword((prevState) => ({
+            ...prevState,
+            [field]: !prevState[field],
+        }));
+    };
     const handleForm = async (data) => {
         try {
             setLoading(true);
@@ -35,71 +44,80 @@ const PasswordUpdateForm = () => {
     const { t: tValidation } = useTranslation('validation');
 
     return (
-        <form onSubmit={handleSubmit(handleForm)} className="my-3 space-y-6 mx-3">
-            {/* Error Alert */}
+        <>
+            <Typography variant={"lead"} className={"text-dark-teal-blue dark:text-bright-yellow mt-4"}>Password</Typography>
             {errorMessage !== null && (
-                <Alert color="red" className={"text-md font-semibold"}>
+                <Alert color="red" className={"text-md font-semibold mt-2"}>
                     {errorMessage}
                 </Alert>
             )}
-
-            {/* Current Password */}
-            <div>
-                <Input label={t("current_password")} type="password" {...register('currentPassword', {
-                        required: tValidation('requiredField'),
-                        minLength: {
-                            value: 7,
-                            message: tValidation('minLength', { field: t("current_password"), min: 7, max: 40 })
-                        },
-                        maxLength: {
-                            value: 40,
-                            message: tValidation('maxLength', { field: t("current_password"), min: 7, max: 40 })
+            <div className={"mt-2"}>
+                <div className={"grid grid-cols-1 md:grid-cols-2 gap-4 m"}>
+                    <div className={"relative"}>
+                        <Input label={t("current_password")} className={"pr-9"}
+                               type={showPassword.currentPassword ? "text" : "password"} {...register('currentPassword', {
+                            required: tValidation('requiredField'),
+                            minLength: {
+                                value: 7,
+                                message: tValidation('minLength', {field: t("current_password"), min: 7, max: 40})
+                            },
+                            maxLength: {
+                                value: 40,
+                                message: tValidation('maxLength', {field: t("current_password"), min: 7, max: 40})
+                            }
+                        })} />
+                        <div className={"absolute inset-y-4 right-3 cursor-pointer"}
+                             onClick={() => togglePasswordVisibility("currentPassword")}>
+                            {showPassword.currentPassword ?
+                                <EyeOff className={"text-teal-blue hover:text-dark-teal-blue h-5 w-5 "}/>
+                                :
+                                <Eye className={"text-teal-blue hover:text-dark-teal-blue h-5 w-5 "}/>
+                            }
+                        </div>
+                        {errors.currentPassword &&
+                            <Typography variant={"small"} color={"red"}>{errors.currentPassword.message}</Typography>
                         }
-                    })}
-                    error={errors.currentPassword}
-                />
-                {errors.currentPassword && <Typography variant={"small"} color={"red"}>{errors.currentPassword.message}</Typography>}
-            </div>
 
-            {/* New Password */}
-            <div className="">
-                <Input label={t("new_password")} type="password"{...register('newPassword', {
-                        required: tValidation('requiredField'),
-                        minLength: {
-                            value: 7,
-                            message: tValidation('minLength', { field: t("new_password"), min: 7, max: 40 })
-                        },
-                        maxLength: {
-                            value: 40,
-                            message: tValidation('maxLength', { field: t("new_password"), min: 7, max: 40 })
+                    </div>
+
+                    <div className={"relative"}>
+                        <Input label={t("new_password")} className={"pr-9"}
+                               type={showPassword.newPassword ? "text" : "password"} {...register('newPassword', {
+                            required: tValidation('requiredField'),
+                            minLength: {
+                                value: 7,
+                                message: tValidation('minLength', {field: t("new_password"), min: 7, max: 40})
+                            },
+                            maxLength: {
+                                value: 40,
+                                message: tValidation('maxLength', {field: t("new_password"), min: 7, max: 40})
+                            }
+                        })}/>
+                        <div className={"absolute inset-y-4 right-3 cursor-pointer"}
+                             onClick={() => togglePasswordVisibility("newPassword")}>
+                            {showPassword.newPassword ?
+                                <EyeOff className={"text-teal-blue hover:text-dark-teal-blue h-5 w-5 "}/>
+                                :
+                                <Eye className={"text-teal-blue hover:text-dark-teal-blue h-5 w-5 "}/>
+                            }
+                        </div>
+                        {errors.newPassword &&
+                            <Typography variant={"small"} color={"red"}>{errors.newPassword.message}</Typography>
                         }
-                    })}
-                    error={errors.newPassword}
-                />
-                {errors.newPassword && <Typography variant={"small"} color={"red"}>{errors.newPassword.message}</Typography>}
 
+                    </div>
+                </div>
+                <div className={"flex justify-end mt-4"}>
+                    <Button disabled={!isValid || loading} className={"w-full md:w-1/3"} onClick={handleSubmit(handleForm)}>
+                        {loading ? <>
+                            <Loader className="mx-2 animate-spin text-white"/>
+                        </> : t('update_password_button')
+                        }
+                    </Button>
+                </div>
             </div>
+        </>
 
-            {/* Confirm Password */}
-            <div className="">
-                <Input label={t("confirm_password")} type="password"{...register('confirmPassword', {
-                        required: tValidation('requiredField'),
-                        validate: value =>
-                            value === newPassword || t('password_not_match')
-                    })}
-                    error={errors.confirmPassword}
-                />
-                {errors.confirmPassword && <Typography variant={"small"} color={"red"}>{errors.confirmPassword.message}</Typography>}
-
-            </div>
-
-            {/* Submit Button */}
-            <div>
-                <Button disabled={!isValid || loading} type="submit" className="flex justify-center items-center w-full">
-                    {loading ? <><Loader className="mx-2 animate-spin text-white" /> </> : t('update_password_button')}
-                </Button>
-            </div>
-        </form>
     );
 };
 

@@ -41,8 +41,8 @@ export default function DemoUserMenu() {
         <Menu>
             <MenuHandler>
                 <Button className="flex items-center p-1" >
-                    <User className={"w-6 h-6 md:text-xl dark:text-black "} />
-                    <span className={"hidden lg:!flex lg:px-2 dark:text-black"}>{user?.name}</span>
+                    <User className={"w-6 h-6 md:text-xl  "} />
+                    <span className={"hidden lg:!flex lg:px-2 "}>{user?.name}</span>
                 </Button>
             </MenuHandler>
             <MenuList className="bg-white dark:bg-gray-800 dark:text-white rounded-md shadow-lg">

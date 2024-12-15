@@ -45,11 +45,12 @@ function DeleteJobModal({open,toggleModal,jobId}) {
                 Are you sure you want to <strong>delete</strong> this job?
             </DialogBody>
             <DialogFooter className="space-x-2">
-                <Button color="red" onClick={deleteJob}>
-                    Delete
-                </Button>
-                <Button color="gray" variant="outlined" onClick={toggleModal}>
+                <Button className={"bg-gray-500 hover:bg-gray-800 text-white"} onClick={toggleModal}>
                     Cancel
+                </Button>
+
+                <Button className={"bg-red-500 hover:bg-red-800 text-white"} onClick={deleteJob}>
+                    Delete
                 </Button>
             </DialogFooter>
         </Dialog>

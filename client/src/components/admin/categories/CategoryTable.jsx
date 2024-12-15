@@ -61,12 +61,12 @@ function CategoryTable({categories,openModal,setDeleteModal,setSelectedCategory}
                                     <td className={classes}>
                                         <div className={"flex space-x-1"}>
                                             <Button disabled={!isAuthorized(user, 'edit_category')}
-                                                    size={"sm"} variant={"solid"} color={"blue"}
+                                                    size={"sm"}
                                                     onClick={() => openModal(category)}>
                                                 Edit
                                             </Button>
-                                            <Button disabled={!isAuthorized(user, 'delete_category')}
-                                                    size={"sm"} variant={"solid"} color={"red"} onClick={() => {
+                                            <Button className={"bg-red-500 hover:bg-red-800"} disabled={!isAuthorized(user, 'delete_category')}
+                                                    size={"sm"} onClick={() => {
                                                 setSelectedCategory(category)
                                                 setDeleteModal(true)
                                             }}>

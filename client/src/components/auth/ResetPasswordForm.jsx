@@ -3,7 +3,8 @@ import {Button, Card, CardBody, Dialog, Input, Typography} from "@material-tailw
 import {useForm} from "react-hook-form";
 import {useTranslation} from "react-i18next";
 import AuthApi from "../../api/AuthApi";
-import {enqueueSnackbar, useSnackbar} from "notistack";
+import {useSnackbar} from "notistack";
+import {useSearchParams} from "react-router-dom";
 
 function ResetPasswordForm({open,handleOpen,token}) {
     const {register,watch,handleSubmit,formState:{errors,isValid,isSubmitting}} = useForm({mode:"onChange"})
@@ -11,7 +12,7 @@ function ResetPasswordForm({open,handleOpen,token}) {
     const { t: tValidation } = useTranslation('validation');
     const { t } = useTranslation('settings');
     const { enqueueSnackbar } = useSnackbar();
-
+    const [setSearchParams] = useSearchParams();
     const resetPassword = async (data) => {
         try {
             await AuthApi.resetPassword(data,token)
@@ -21,6 +22,8 @@ function ResetPasswordForm({open,handleOpen,token}) {
             handleOpen()
             enqueueSnackbar("Failed to reset password", { variant: "error" });
             console.log(e)
+        }finally {
+            setSearchParams({})
         }
     }
     return (
