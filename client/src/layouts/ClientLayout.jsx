@@ -12,24 +12,21 @@ import {useClientContext} from "../context/ClientProvider";
 import Spinner from "../utils/Spinner";
 import ServerNotRespond from "../utils/ServerNotRespond";
 import AuthApi from "../api/AuthApi";
+import VerifyEmail from "../components/auth/VerifyEmail";
 
 
 function ClientLayout() {
     const {pathname} = useLocation()
     const [requiredCity, setRequiredCity] = useState(false)
+    const [verifyEmailModal, setVerifyEmailModal] = useState(false)
     const {setUser, setIsAuthenticated,user} = useLoading()
 
     useEffect(() => {
         const checkAuth = async () => {
             try {
                 const res = await AuthApi.checkAuth();
-                if (res.status === 200) {
-                    setIsAuthenticated(true)
-                    setUser(res.data.user)
-                }else {
-                    setIsAuthenticated(false)
-                    setUser(null)
-                }
+                setIsAuthenticated(true)
+                setUser(res.data.user)
             } catch (error) {
                 setIsAuthenticated(false)
                 setUser(null)
@@ -38,14 +35,27 @@ function ClientLayout() {
         };
         checkAuth().catch(e => console.log(e))
     }, [setIsAuthenticated, setUser]);
-    
+
     useEffect(() => {
-        if (user && !user?.city ) {
-            setRequiredCity(true)
-        }else{
-            setRequiredCity(false)
+        if (user) {
+            if (!user?.city) {
+                setRequiredCity(true);
+            } else {
+                setRequiredCity(false);
+            }
+
+            // if (user.status === "unverified") {
+            //     setVerifyEmailModal(true);
+            // } else {
+            //     setVerifyEmailModal(false);
+            // }
+        } else {
+            setVerifyEmailModal(false);
+            setRequiredCity(false);
         }
-    }, [user,pathname,requiredCity]);
+
+    }, [user, pathname]);
+
     
     const {setWorkers,setCategories,setUserJobs} = useClientContext()
 
@@ -109,10 +119,11 @@ function ClientLayout() {
                 )}
 
                 {requiredCity && (
-                    <RequiredCity
-                        handleOpen={() => setRequiredCity(!requiredCity)}
-                        open={requiredCity}
-                    />
+                    <RequiredCity handleOpen={() => setRequiredCity(!requiredCity)} open={requiredCity}/>
+                )}
+
+                {verifyEmailModal && (
+                    <VerifyEmail handleOpen={() => setVerifyEmailModal(!verifyEmailModal)} open={verifyEmailModal} />
                 )}
             </div>
             <ClientSpeedDial />

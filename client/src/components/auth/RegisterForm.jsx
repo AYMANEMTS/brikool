@@ -18,6 +18,7 @@ function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
     const [loading, setLoading] = useState(false)
     const {t,i18n} = useTranslation('register');
     const {language:lng} = i18n
+
     const handleRegister = async (data) => {
         setMessage(null)
         setLoading(true)
@@ -50,6 +51,7 @@ function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
             setLoading(false)
         }
     };
+
     return (
         <Card className={"w-full"}>
             <CardBody>
@@ -79,7 +81,11 @@ function RegisterForm({ handllSwapForm,handleOpen, redirectRoute }) {
                     <div>
                         <Input label={t('email')} type="email"
                                {...register('email', {
-                                   required: {value: true, message: "email field is required "}
+                                   required: {value: true, message: "email field is required "},
+                                   pattern: {
+                                       value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                                       message: "Please enter a valid email address",
+                                   },
                                })}
                                error={errors.email}
                         />

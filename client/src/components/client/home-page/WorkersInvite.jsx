@@ -17,7 +17,7 @@ function WorkersInvite() {
                     </h2>
 
                     <p className="block max-w-2xl mt-4 text-gray-500 dark:text-gray-300">{t('mobileInviteDescription')}</p>
-                    <div className="mt-6 sm:-mx-2">
+                    <div className="mt-6 sm:-mx-2 flex">
                         <a href="#"
                            className="inline-flex items-center justify-center w-full px-4 text-sm py-2.5 overflow-hidden text-black transition-colors duration-300 bg-bright-yellow rounded-lg shadow sm:w-auto sm:mx-2    focus:ring focus:ring-gray-300 focus:ring-opacity-80">
                             <svg className="w-5 h-5 mx-2 fill-current" xlink="http://www.w3.org/1999/xlink"

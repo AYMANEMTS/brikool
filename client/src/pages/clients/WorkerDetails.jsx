@@ -46,30 +46,30 @@ function WorkerDetails() {
                     </div>
 
                     <div className="w-full md:w-2/3 md:pl-6">
-                        <h2 className="text-2xl font-semibold text-teal-blue dark:text-white">{job?.userId?.name}</h2>
+                        <h2 className="text-2xl font-semibold text-teal-blue dark:text-bright-yellow">{job?.userId?.name}</h2>
                         <br />
                         <div className="text-lg text-gray-500 dark:text-gray-300 flex items-center space-x-2 mb-2">
-                            <MapPin className={"h-6 w-6 text-teal-blue"}/>
+                            <MapPin className={"h-6 w-6 text-teal-blue dark:text-bright-yellow"}/>
                             <span className="text-gray-700 pl-1 dark:text-gray-200">
                                 {job?.userId?.city?.[lng]}
                             </span>
                         </div>
 
                         <div className="text-lg text-gray-500 dark:text-gray-300 flex items-center space-x-2 mb-2">
-                            <ChartBarStacked className={"h-6 w-6 text-teal-blue"}/>
+                            <ChartBarStacked className={"h-6 w-6 text-teal-blue dark:text-bright-yellow"}/>
                             <span className="text-gray-700 pl-1 dark:text-gray-200">
                                 {job?.category?.name?.[lng]}
                             </span>
                         </div>
 
                         <div className="text-lg text-gray-500 dark:text-gray-300 flex items-center space-x-2 mb-2">
-                            <Clock8 className={"h-6 w-6 text-teal-blue"}/>
+                            <Clock8 className={"h-6 w-6 text-teal-blue dark:text-bright-yellow"}/>
                             <span className="text-gray-700 pl-1 dark:text-gray-200">
                                 {formatDate(job?.createdAt)}
                             </span>
                         </div>
 
-                        <p className="mt-4 text-gray-800 dark:text-gray-400">
+                        <p className="mt-4 text-gray-800 dark:text-white">
                             {job?.description}
                         </p>
 

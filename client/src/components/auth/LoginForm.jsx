@@ -7,6 +7,7 @@ import {useLoading} from "../../context/LoadingProvider";
 import {useTranslation} from "react-i18next";
 import {Button, Typography, Input, Alert, Card, CardBody,} from "@material-tailwind/react";
 import AuthApi from "../../api/AuthApi";
+import ForgetPasswordForm from "./ForgetPasswordForm";
 
 function LoginForm({handllSwapForm,handleOpen,redirectRoute}) {
     const { enqueueSnackbar } = useSnackbar();
@@ -17,8 +18,9 @@ function LoginForm({handllSwapForm,handleOpen,redirectRoute}) {
     const {setUser, setIsAuthenticated,user} = useLoading()
     const [loading, setLoading] = useState(false)
     const {t} = useTranslation('login')
+    const [resetPassword, setResetPassword] = useState(false)
 
-    const handlLogin = async (data) => {
+    const handleLogin = async (data) => {
         setMessage(null)
         setLoading(true)
         try {
@@ -61,19 +63,8 @@ function LoginForm({handllSwapForm,handleOpen,redirectRoute}) {
             setLoading(false)
         }
     }
-
-    const handleForgetPassword = async () => {
-        try {
-            const res = await AuthApi.forgetPassword({email:"oujdimraymane@gmail.com"})
-            if (res.data.redirect) {
-                window.location.href = `http://localhost:8000/${res.data.url}`;
-            } else {
-                console.log(res.data.message);
-            }
-            window.open("http://localhost:8000")
-        }catch (e) {
-            console.log(e)
-        }
+    if (resetPassword){
+        return <ForgetPasswordForm />
     }
     return (
         <Card className="w-full  p-4 md:p-8">
@@ -88,11 +79,15 @@ function LoginForm({handllSwapForm,handleOpen,redirectRoute}) {
                     </Alert>
                 )}
 
-                <form className="flex flex-col gap-4" onSubmit={handleSubmit(handlLogin)}>
+                <form className="flex flex-col gap-4" onSubmit={handleSubmit(handleLogin)}>
                     <div>
                         <Input
                             {...register('email', {
                                 required: { value: true, message: "Email field is required" },
+                                pattern: {
+                                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                                    message: "Please enter a valid email address",
+                                },
                             })}
                             label={t('email')}
                             type="email"
@@ -143,12 +138,12 @@ function LoginForm({handllSwapForm,handleOpen,redirectRoute}) {
                 <div className="flex justify-between mt-4">
                     <span
                         onClick={handllSwapForm}
-                        className="text-blue-500 cursor-pointer hover:underline"
+                        className="text-teal-blue hover:text-dark-teal-blue cursor-pointer hover:underline"
                     >
                         {t('register')}
                     </span>
-                    <span onClick={handleForgetPassword}
-                        className="text-blue-500 cursor-pointer hover:underline"
+                    <span onClick={() => setResetPassword(!resetPassword)}
+                        className="text-teal-blue hover:text-dark-teal-blue cursor-pointer hover:underline"
                     >
                         {t('forgotPassword')}
                     </span>

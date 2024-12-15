@@ -28,13 +28,13 @@ const defaultStyle = {
     },
     button: {
         defaultProps: {
-            className: "bg-teal-blue hover:bg-dark-teal-blue hover:text-black focus:outline-none focus:ring-2",
+            className: "bg-teal-blue hover:bg-dark-teal-blue hover:text-gray-200 focus:outline-none focus:ring-2",
             size: "sm"
         },
     },
     iconButton: {
         defaultProps: {
-            className: "bg-teal-blue hover:bg-dark-teal-blue hover:text-black focus:outline-none focus:ring-2",
+            className: "bg-teal-blue hover:bg-dark-teal-blue hover:text-gray-200 focus:outline-none focus:ring-2",
             size: "sm"
         },
     },

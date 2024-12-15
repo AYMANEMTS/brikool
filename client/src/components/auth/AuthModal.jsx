@@ -6,7 +6,6 @@ import {Dialog, Card} from "@material-tailwind/react";
 function AuthModal({ open, handleOpen, redirectRoute="/settings" ,swapState}) {
     const [swapForm, setSwapForm] = useState(swapState);
     const handllSwapForm = () => setSwapForm(!swapForm)
-
     useEffect(() => {
         setSwapForm(swapState);
     }, [swapState]);

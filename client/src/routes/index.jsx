@@ -12,6 +12,7 @@ import HomePage from "../pages/admin/HomePage";
 import Users from "../pages/admin/Users";
 import Jobs from "../pages/admin/Jobs";
 import Category from "../pages/admin/Category";
+import NotFoundPage from "../utils/NotFoundPage";
 
 export const router = createBrowserRouter([
     {
@@ -34,5 +35,9 @@ export const router = createBrowserRouter([
             { path: '/admin/jobs', element: <Jobs /> },
             { path: '/admin/category', element: <Category /> },
         ]
+    },
+    {
+        path: "*",
+        element: <NotFoundPage />,
     }
 ]);

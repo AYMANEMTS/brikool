@@ -76,7 +76,7 @@ const FAQContact = () => {
                         <div>
                             <Textarea label={"Message"} />
                         </div>
-                        <Button className="w-full  ">
+                        <Button className="w-full ">
                             Send
                         </Button>
                     </form>

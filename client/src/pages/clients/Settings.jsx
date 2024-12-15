@@ -3,6 +3,7 @@ import { Accordion, AccordionHeader, AccordionBody } from "@material-tailwind/re
 import UpdateInformationForm from "../../components/settings/UpdateInformationForm";
 import PasswordUpdateForm from "../../components/settings/PasswordUpdateForm";
 import { useTranslation } from "react-i18next";
+import {OTPForm} from "../../components/auth/OTPForm";
 
 function Settings() {
     const [open, setOpen] = React.useState(1);
@@ -11,9 +12,11 @@ function Settings() {
     const handleOpen = (value) => {
         setOpen(open === value ? 0 : value);
     };
+    const [otp, setOtp] = React.useState(Array(6).fill(""));
 
     return (
         <div className="w-full">
+            {/*<OTPForm otp={otp} setOtp={setOtp} />*/}
             {/* First Accordion */}
             <Accordion open={open === 1}>
                 <AccordionHeader onClick={() => handleOpen(1)} className={"text-teal-blue hover:text-teal-blue"}>

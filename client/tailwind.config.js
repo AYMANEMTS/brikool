@@ -11,9 +11,12 @@ module.exports = withMT({
     extend: {
       colors: {
         'teal-blue': '#008080',
-        'dark-teal-blue': '#98FF98',
+        'dark-teal-blue': '#116060',
         'bright-yellow': '#FFD700',
         'steel-gray': '#708090',
+      },
+      fontFamily: {
+        sans: ['Poppins', 'sans-serif'],
       },
     },
   },

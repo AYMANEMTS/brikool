@@ -93,7 +93,7 @@ function RatingComponent({ job }) {
                 </div>
                 {/* Rating text */}
                 {value !== null && (
-                    <div className="ml-2 text-sm text-gray-700">
+                    <div className="ml-2 text-sm text-gray-700 dark:text-white">
                         {value} ({job?.ratings?.length} reviews)
                     </div>
                 )}

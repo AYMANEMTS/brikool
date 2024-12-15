@@ -12,10 +12,10 @@ function CategoriesSlider({ t }) {
         <>
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-semibold mb-6 text-center text-gray-700 dark:text-bright-yelliw">{t('whatAreYouLookingFor')}</h1>
+                    <h1 className="text-2xl font-semibold mb-6 text-center text-gray-700 dark:text-bright-yellow">{t('whatAreYouLookingFor')}</h1>
                 </div>
                 <div>
-                    <a href="#" className="text-teal-blue dark:text-bright-yelliw font-semibold hover:underline hover:text-bright-yelliw dark:hover:text-teal-blue">
+                    <a href="#" className="text-teal-blue dark:text-bright-yellow font-semibold hover:underline hover:text-bright-yelliw dark:hover:text-teal-blue">
                         {t('seeMore')}
                     </a>
                 </div>
@@ -75,7 +75,7 @@ function CategoriesSlider({ t }) {
                             <div className="mb-2 sm:mb-4">
                                 <img src={`http://localhost:8000/${item.image}`} alt={item?.name?.[lng]} className="rounded-md" />
                             </div>
-                            <p className="text-teal-blue dark:text-bright-yelliw font-semibold text-xs capitalize sm:text-sm">
+                            <p className="text-teal-blue dark:text-bright-yellow font-semibold text-xs capitalize sm:text-sm">
                                 {item?.name?.[lng]}
                             </p>
                         </div>

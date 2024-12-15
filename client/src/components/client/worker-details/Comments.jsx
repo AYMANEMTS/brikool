@@ -100,7 +100,7 @@ function Comments({jobId,job={}}) {
 
                 {/* Add Comment Form */}
                 <form className="mt-2 bg-gray-200 dark:bg-gray-800 p-4 rounded-lg shadow dark:shadow-gray-700">
-                    <h3 className="text-lg font-semibold mb-2 text-teal-blue dark:text-white">{t('addComment')}</h3>
+                    <h3 className="text-lg font-semibold mb-2 text-teal-blue dark:text-bright-yellow">{t('addComment')}</h3>
                     <div className="mb-4">
 
                         <Textarea label={t('comment')} error={errors.comment} {...register('comment', {
