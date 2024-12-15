@@ -1,7 +1,7 @@
-const {findById} = require("../models/User");
+const User = require("../models/User");
 const checkAuthorization = (requiredPermission = "") => async (req, res, next) => {
     try {
-        const user = await findById(req.userId)
+        const user = await User.findById(req.userId)
         if (user.role === 'admin') {
             return next();
         }

@@ -11,6 +11,7 @@ const sendVerificationEmail = async (email, verificationEmail) => {
             subject: "Verify Your Email Address Now",
             html: emailVerificationTemplate.replace("{verificationToken}",verificationEmail),
         });
+        if (error) throw error
     }catch (e) {
         console.log("Error In Verification email: ",e)
         throw new Error("Error In Verification email")

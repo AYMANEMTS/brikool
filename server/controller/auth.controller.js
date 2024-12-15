@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const generateJWTToken = require("../utils/generateJWTToken");
 const generateVerificationToken = require("../utils/generateVerificationToken");
-const sendVerificationEmail = require("../config/resend/email");
+const { sendVerificationEmail } = require("../config/resend/email");
 const {sendWelcomeEmail, sendPasswordResetEmail, sendResetSuccessEmail} = require("../config/resend/email");
 
 
@@ -20,6 +20,28 @@ const registerClient = async (req, res) => {
         res.status(200).json({user:{...client._doc,password: undefined},jwt: token})
     }catch (e) {
         console.log(e)
+        res.status(500).json({error: e})
+    }
+}
+
+const sendVerificationUserEmail = async (req,res) => {
+    try {
+        const user = await Users.findById(req.userId)
+        if (user.verificationToken) {
+            if (user.verificationExpires > Date.now()) {
+                return res.status(200).json({
+                    success: true,
+                    message: "A verification token has already been sent and is still valid."
+                });
+            }
+        }
+        const token = generateVerificationToken();
+        user.verificationToken = token;
+        user.verificationExpires = Date.now() + 60 * 60 * 1000
+        await user.save()
+        await sendVerificationEmail(user.email, token)
+        res.status(200).json({success:true,message:"Verification token send successfully"})
+    }catch (e) {
         res.status(500).json({error: e})
     }
 }
@@ -42,7 +64,7 @@ const verifyEmail = async (req, res) => {
         user.verificationExpires = undefined;
         await user.save();
         await sendWelcomeEmail(user.email, user.name);
-        res.status(200).json({ success: true, message: "Email verified successfully" });
+        res.status(200).json({ success: true, message: "Email verified successfully", user: {...user._doc, password: undefined} });
     } catch (error) {
         console.log("error verifying email", error);
         res.status(400).json({ success: false, message: error.message });
@@ -91,7 +113,7 @@ const forgotPassword = async (req, res) => {
         user.resetPasswordExpires = Date.now() +  60 * 60 * 1000;
         await user.save();
         await sendPasswordResetEmail(user.email,
-            `${process.env.FRONTEND_URL}/reset-password/${resetPasswordToken}`
+            `${process.env.FRONTEND_URL}?reset-password=true&token=${resetPasswordToken}`
         );
         res.status(200).json({success: true, message: "Password reset email sent successfully!",});
     } catch (error) {
@@ -162,4 +184,7 @@ const checkAuthAdmin = async (req, res) => {
     }
 };
 
-module.exports = {registerClient,loginClient,logout,authenticateToken,changePassword,checkAuthAdmin,verifyEmail,forgotPassword,resetPassword};
+module.exports = {
+    registerClient,loginClient,logout,authenticateToken,changePassword,checkAuthAdmin,
+    verifyEmail,forgotPassword,resetPassword,sendVerificationUserEmail
+};

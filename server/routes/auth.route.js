@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {registerClient,loginClient, logout,authenticateToken,changePassword, checkAuthAdmin, verifyEmail, forgotPassword,
-    resetPassword
+    resetPassword, sendVerificationUserEmail
 } = require('../controller/auth.controller');
 const {createClientValidation,loginValidation} = require("../validators/userValidation");
 const checkValidation = require("../middlewares/checkValidation");
@@ -11,6 +11,7 @@ const verifyToken = require("../middlewares/verifyToken");
 
 router.get("/check-auth", verifyToken, authenticateToken)
 router.get("/admin/checkAuth",verifyToken,checkAuthAdmin)
+router.get('/send-verification-token',verifyToken, sendVerificationUserEmail)
 router.post('/register',upload.none(), createClientValidation,checkValidation,registerClient);
 router.post('/verify-email',upload.none(),verifyEmail)
 router.post('/login', upload.none(),loginValidation,checkValidation,loginClient);
