@@ -34,7 +34,7 @@ BRIKOOL is deployed on **Vercel**, ensuring a reliable, fast, and scalable exper
 
 ### 🌐 Project URL
 
-Visit the live project here: [BRIKOOL Live Platform](https://your-project-url.com)  
+Visit the live project here: [BRIKOOL Live Platform](https://brikool-client.vercel.app)  
 
 ---
 
